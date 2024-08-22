@@ -1,0 +1,290 @@
+/* AuthPages.css */
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f0f0;
+  height: 100%;
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: fit-content;
+  padding: 1rem;
+}
+
+.auth-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  background-color: #4a90e2;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  padding: 2px;
+  animation: logoEntrance 0.5s ease-out;
+}
+
+.logo-quadrant {
+  background-color: white;
+  border-radius: 2px;
+}
+
+.logo-quadrant:nth-child(3) {
+  background-color: #4a90e2;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-left: 15px;
+}
+
+.logo-text span {
+  color: #4a90e2;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  animation: slideUp 0.5s ease-out 0.2s both;
+}
+
+.tagline {
+  color: #333;
+  margin-bottom: 1rem;
+  animation: slideUp 0.5s ease-out 0.2s both;
+}
+
+.description {
+  color: #666;
+  margin-bottom: 2rem;
+  animation: slideUp 0.5s ease-out 0.4s both;
+}
+
+form {
+  text-align: left;
+  animation: slideUp 0.5s ease-out 0.4s both;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  animation: fadeIn 0.5s ease-out 0.6s both;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: #4a90e2;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #3a7bc8;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: white;
+  color: #4a90e2;
+  border: 1px solid #4a90e2;
+}
+
+.btn-secondary:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+}
+
+.auth-redirect {
+  margin-top: 1.5rem;
+  color: #666;
+  animation: fadeIn 0.5s ease-out 0.8s both;
+}
+
+.auth-redirect a {
+  color: #4a90e2;
+  text-decoration: none;
+}
+
+.auth-redirect a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  margin-top: 2rem;
+  color: #666;
+  font-size: 0.9rem;
+  animation: fadeIn 0.5s ease-out 1s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoEntrance {
+  from {
+    transform: scale(0.8) rotate(-10deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+
+.logo {
+  width: 50px;
+  height: 50px;
+  background-color: #4a90e2;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  padding: 2px;
+  animation: logoEntrance 0.5s ease-out;
+}
+
+.logo-quadrant {
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.logo-quadrant:nth-child(3) {
+  background-color: #4a90e2;
+}
+
+/* Logo animation */
+@keyframes waveQuadrant {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.logo:hover .logo-quadrant:nth-child(1) {
+  animation: waveQuadrant 1.2s ease-in-out infinite;
+}
+
+.logo:hover .logo-quadrant:nth-child(2) {
+  animation: waveQuadrant 1.2s ease-in-out infinite 0.2s;
+}
+
+.logo:hover .logo-quadrant:nth-child(3) {
+  animation: waveQuadrant 1.2s ease-in-out infinite 0.4s;
+}
+
+.logo:hover .logo-quadrant:nth-child(4) {
+  animation: waveQuadrant 1.2s ease-in-out infinite 0.6s;
+}
+
+@keyframes logoEntrance {
+  from {
+    transform: scale(0.8) rotate(-10deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.logo .logo-quadrant:nth-child(1) {
+  animation: waveQuadrant 1.2s ease-in-out infinite;
+}
+
+.logo .logo-quadrant:nth-child(2) {
+  animation: waveQuadrant 1.2s ease-in-out infinite 0.2s;
+}
+
+.logo .logo-quadrant:nth-child(3) {
+  animation: waveQuadrant 1.2s ease-in-out infinite 0.4s;
+}
+
+.logo .logo-quadrant:nth-child(4) {
+  animation: waveQuadrant 1.2s ease-in-out infinite 0.6s;
+}
