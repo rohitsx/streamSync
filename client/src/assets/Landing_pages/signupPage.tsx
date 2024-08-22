@@ -5,6 +5,7 @@ import './LandingPage.css';
 const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('')
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -25,6 +26,16 @@ const SignupPage = () => {
         </div>
         <h2>Create your account</h2>
         <form onSubmit={handleSubmit}>
+        <div className="form-group">
+            <label htmlFor="name">Name</label>
+            <input
+              type="Name"
+              id="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
