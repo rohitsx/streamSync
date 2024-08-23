@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
+import Logo from '../logo/logo';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -14,15 +15,7 @@ const LoginPage = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <div className="logo-container">
-          <div className="logo">
-            <div className="logo-quadrant"></div>
-            <div className="logo-quadrant"></div>
-            <div className="logo-quadrant"></div>
-            <div className="logo-quadrant"></div>
-          </div>
-          <h1 className="logo-text">stream<span>Sync</span></h1>
-        </div>
+        <Logo/>
         <h2>Welcome back</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
