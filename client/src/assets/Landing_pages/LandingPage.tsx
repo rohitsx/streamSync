@@ -6,8 +6,8 @@ const LandingPage = () => {
     <div className="auth-container">
       <div className="auth-card">
         <Logo />
-        <h2 className="tagline">Synchronize Your Streaming Experience</h2>
-        <p className="description">streamSync helps you watch together, no matter where you are.</p>
+        <h2 className="tagline">Seamlessly Connect with Your Favorite People</h2>
+        {/* <p className="description">streamSync helps you watch together, no matter where you are.</p> */}
         <div className="cta-buttons">
           <Link to="/signup" className="btn btn-primary">Sign Up</Link>
           <Link to="/login" className="btn btn-secondary">Log In</Link>
