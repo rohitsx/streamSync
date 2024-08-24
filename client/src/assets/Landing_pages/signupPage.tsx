@@ -1,16 +1,33 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './LandingPage.css';
 import Logo from '../logo/logo';
+import axios from 'axios';
+import NotifcationBox from '../notification/notification';
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('')
+  const [notification, setNotification] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    // Handle signup logic here
+    axios.post(`${import.meta.env.VITE_API}singup`, {
+      'name': name,
+      'email': email,
+      'password': password
+    }).then(res =>{
+      if (res.data == "success_singup") {
+        setNotification('Account register, Please login')
+        setTimeout(() => {
+          navigate('/login')
+        }, 2000);
+      }
+      if (res.data == "email_Exit") setNotification('email alredy exits please login using same email.')
+    })
+
   };
 
   return (
@@ -18,6 +35,7 @@ const SignupPage = () => {
       <div className="auth-card">
         <Logo />
         <h2>Create your account</h2>
+        <NotifcationBox notificationMessage={notification} setNotification={setNotification} color={'blue'} />
         <form onSubmit={handleSubmit}>
         <div className="form-group">
             <label htmlFor="name">Name</label>

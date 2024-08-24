@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import "./LandingPage.css";
 import Logo from '../logo/logo';
-const LandingPage = () => {
+
+function LandingPage() {
+
+
   return (
     <div className="auth-container">
       <div className="auth-card">
@@ -18,6 +21,6 @@ const LandingPage = () => {
       </div>
     </div>
   );
-};
+}
 
 export default LandingPage;
