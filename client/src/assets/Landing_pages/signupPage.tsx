@@ -14,18 +14,20 @@ const SignupPage = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    axios.post(`${import.meta.env.VITE_API}singup`, {
+    axios.post(`${import.meta.env.VITE_API}signup`, {
       'name': name,
       'email': email,
       'password': password
     }).then(res =>{
-      if (res.data == "success_singup") {
+      console.log(res.status);
+      
+      if (res.status == 201) {
         setNotification('Account register, Please login')
         setTimeout(() => {
           navigate('/login')
         }, 2000);
       }
-      if (res.data == "email_Exit") setNotification('email alredy exits please login using same email.')
+      if (res.status == 400) setNotification('email alredy exits please login using same email.')
     })
 
   };

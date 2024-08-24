@@ -14,17 +14,48 @@ const LoginPage = () => {
 
   const navigate = useNavigate()
 
+  axios.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalRequest = error.config;
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        const refreshToken = localStorage.getItem('refreshToken');
+        try {
+          const res = await axios.post(`${import.meta.env.VITE_API}refresh-token`, { refreshToken });
+          const { accessToken } = res.data;
+          localStorage.setItem('accessToken', accessToken);
+          axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+          return axios(originalRequest);
+        } catch (refreshError) {
+          // Handle refresh token error (e.g., redirect to login)
+          return Promise.reject(refreshError);
+        }
+      }
+      return Promise.reject(error);
+    }
+  );
+
   const handleSubmit = (e: any) => {
     e.preventDefault();
     axios.post(`${import.meta.env.VITE_API}login`, {
       "email": email,
       "password": password
-    }).then(res => {      
-      if (res.data == 'success_login') {
+    }).then(res => {
+      if (res.data.accessToken) {
+        localStorage.setItem('accessToken', res.data.accessToken);
+        localStorage.setItem('refreshToken', res.data.refreshToken);
+        localStorage.setItem('name', res.data.name);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.accessToken}`;
         navigate('/home');
       }
-      if (res.data == 'wrong_id_pass') setNotification('Incorrect username or password. If you are not a user, visit the signup page.')
-    }).catch(() => setNotification('server error please try again'))  
+    }).catch((error) => {
+      if (error.response && error.response.data === 'wrong_id_pass') {
+        setNotification('Incorrect email or password');
+      } else {
+        setNotification('Server error. Please try again.');
+      }
+    });
   };
 
   return (
