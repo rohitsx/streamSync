@@ -11,7 +11,7 @@ const HomePage = () => {
     const token = localStorage.getItem('token');
     const userName = localStorage.getItem('name');
     if (!token) {
-      navigate('/login');
+      navigate('/');
     } else {
       setName(userName || '');
     }
