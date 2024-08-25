@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import "./LandingPage.css";
 import Logo from '../logo/logo';
+import isLoggedIn from '../../utils/isLoggedIn';
 
 function LandingPage() {
-
-
+  isLoggedIn()
+  
   return (
     <div className="auth-container">
       <div className="auth-card">

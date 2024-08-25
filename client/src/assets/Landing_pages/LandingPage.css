@@ -6,7 +6,7 @@ html {
   padding: 0;
   font-family: 'Arial', sans-serif;
   background-color: #f0f0f0;
-  width: 350px;
+  max-width: 350px;
 }
 
 .auth-container {
@@ -86,6 +86,11 @@ input {
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none;
+  white-space: nowrap;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
 }
 
 .btn-primary {
@@ -152,4 +157,3 @@ footer {
     transform: translateY(0);
   }
 }
-

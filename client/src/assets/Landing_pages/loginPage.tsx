@@ -5,36 +5,16 @@ import Logo from '../logo/logo';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import NotifcationBox from '../notification/notification';
+import isLoggedIn from '../../utils/isLoggedIn';
 
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [notification, setNotification] = useState<string | null>(null)
+  isLoggedIn()
 
   const navigate = useNavigate()
-
-  axios.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      const originalRequest = error.config;
-      if (error.response.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
-        const refreshToken = localStorage.getItem('refreshToken');
-        try {
-          const res = await axios.post(`${import.meta.env.VITE_API}refresh-token`, { refreshToken });
-          const { accessToken } = res.data;
-          localStorage.setItem('accessToken', accessToken);
-          axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-          return axios(originalRequest);
-        } catch (refreshError) {
-          // Handle refresh token error (e.g., redirect to login)
-          return Promise.reject(refreshError);
-        }
-      }
-      return Promise.reject(error);
-    }
-  );
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -42,20 +22,15 @@ const LoginPage = () => {
       "email": email,
       "password": password
     }).then(res => {
-      if (res.data.accessToken) {
-        localStorage.setItem('accessToken', res.data.accessToken);
-        localStorage.setItem('refreshToken', res.data.refreshToken);
-        localStorage.setItem('name', res.data.name);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.accessToken}`;
+      if (res.data.message === 'success_login') {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('name', res.data.userName);
         navigate('/home');
       }
-    }).catch((error) => {
-      if (error.response && error.response.data === 'wrong_id_pass') {
-        setNotification('Incorrect email or password');
-      } else {
-        setNotification('Server error. Please try again.');
-      }
-    });
+
+      if (res.data === 'incorrect_email') setNotification('This email is not registered');
+      if (res.data === 'incorrect_pass') setNotification('Incorrect password. Please try again.');
+    }).catch(() => setNotification('server error please try again'))
   };
 
   return (

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import isLoggedIn from '../../utils/isLoggedIn';
 
 const HomePage = () => {
   const [name, setName] = useState('');
   const navigate = useNavigate();
+  isLoggedIn()
 
   useEffect(() => {
     const token = localStorage.getItem('token');

@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
-import { MongoClient, Db, Collection } from 'mongodb';
+import { MongoClient, Db, Collection, ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -12,28 +12,28 @@ app.use(cors());
 app.use(express.json());
 
 const client: MongoClient = new MongoClient(process.env.db_connection_string || '');
+const JWT_Token: string = process.env.JWT_SECRET || '';
 let db: Db;
 let usersCollection: Collection;
 
 client.connect()
   .then(() => {
     console.log('DB connected');
-    db = client.db('your_database_name');
+    db = client.db('streamSync');
     usersCollection = db.collection('users');
   })
   .catch(err => console.log('MongoDB connection error:', err));
 
 app.post('/signup', async (req, res) => {
-  console.log(req.body);
-
+  console.log("/singup");
+  
   try {
     const { name, email, password } = req.body;
 
     // Check if user already exists
     const existingUser = await usersCollection.findOne({ email });
-    if (existingUser) {
-      return res.status(400).send('email_exists');
-    }
+
+    if (existingUser) return res.send('email_exists');
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -49,59 +49,55 @@ app.post('/signup', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
+  console.log('/login');
+  
+
   try {
     const { email, password } = req.body;
 
     // Find user
     const user = await usersCollection.findOne({ email });
-    if (!user) {
-      return res.status(400).send('wrong_id_pass');
-    }
+    if (!user) return res.send('incorrect_email');
 
     // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).send('wrong_id_pass');
-    }
+    if (!isPasswordValid) return res.send('incorrect_pass');
 
-    // Create access token (short-lived)
-    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '15m' });
+    const token = jwt.sign({ userId: user._id }, JWT_Token, { expiresIn: '30d' });
 
-    // Create refresh token (long-lived)
-    const refreshToken = jwt.sign({ userId: user._id }, process.env.REFRESH_TOKEN_SECRET || 'your_refresh_token_secret', { expiresIn: '30d' });
-
-    // Store refresh token in database
-    await usersCollection.updateOne({ _id: user._id }, { $set: { refreshToken } });
-
-    res.status(200).json({ accessToken, refreshToken, name: user.name });
+    res.status(200).json({ message: 'success_login', token, userName: user.name });
   } catch (error) {
     console.error(error);
-    res.status(500).send('server_error');
+    res.status(500).json({ message: 'server_error' });
   }
 });
 
-app.post('/refresh-token', async (req, res) => {
-  const { refreshToken } = req.body;
 
-  if (!refreshToken) {
-    return res.status(401).json({ error: 'Refresh Token Required' });
+app.post('/validate-token', async (req, res) => {
+  console.log('valdata-token');
+  
+
+  const token = req.body.token;
+  if (!token) {
+    return res.status(401).json({ valid: false });
   }
 
   try {
-    const decoded: any = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || 'your_refresh_token_secret');
-    const user = await usersCollection.findOne({ _id: decoded.userId, refreshToken });
+    const jwtToken = jwt.verify(token, JWT_Token) as { userId: string };
+    const userId = jwtToken.userId;
 
-    if (!user) {
-      return res.status(403).json({ error: 'Invalid Refresh Token' });
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+    
+    if (user) {
+      res.json({ valid: true, userName: user.name });
+    } else {
+      res.status(404).json({ valid: false, message: 'User not found' });
     }
-
-    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET || 'your_jwt_secret', { expiresIn: '15m' });
-
-    res.json({ accessToken });
   } catch (error) {
-    return res.status(403).json({ error: 'Invalid Refresh Token' });
+    res.status(401).json({ valid: false });
   }
 });
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
