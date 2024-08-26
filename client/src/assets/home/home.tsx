@@ -20,6 +20,8 @@ const HomePage = () => {
   return (
     <div>
       <h1>Welcome, {name}!</h1>
+      <button onClick={() => navigate('/host')}>Host Stream</button>
+      <button onClick={() => navigate('/join')}>Join Stream</button>
     </div>
   );
 };
