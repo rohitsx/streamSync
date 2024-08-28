@@ -1,27 +1,42 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSocketContext } from '../context/socketContext'
 import NotifcationBox from '../assets/notification/notification'
+import { useSocketContext } from '../context/socketContext';
 
 export default function JoinStream() {
     const [username, setUsername] = useState('')
     const [notificationMessage, setNotification] = useState<string | null>(null);
-    const socket = useSocketContext()
-    const navigate = useNavigate()
+    const socket = useSocketContext();
+    const navigate = useNavigate();
 
-    const handleJoin = async (e: any) => {
+    const handleJoin = async (e: React.FormEvent) => {
         e.preventDefault()
-        if (!socket) return
+        if (!socket) {
+            setNotification("Connection not established. Please try again.");
+            return;
+        }
 
-        socket.emit('joinRoom', username)
-        socket.on('inValidRoom', () => {
-            setNotification(`Room '${username}' not found. Please try again.`);
-            setUsername('');
-            return
-        })
-        socket.on('validRoom', () => navigate(`/join/${username}`))
+        if (username.length > 1) {
+            socket.emit('joinRoom', username)
+        } else {
+            setNotification("Username must be longer than 1 character.");
+        }
     }
 
+    useEffect(() => {
+        if (socket) {
+            socket.on('inValidRoom', () => {
+                setNotification(`Room '${username}' not found. Please try again.`);
+                setUsername('');
+            });
+            socket.on('validRoom', () => navigate(`/join/${username}`));
+
+            return () => {
+                socket.off("validRoom");
+                socket.off("inValidRoom");
+            }
+        }
+    }, [socket, username, navigate]);
 
     return (
         <div>

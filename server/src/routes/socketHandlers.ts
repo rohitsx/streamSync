@@ -26,10 +26,15 @@ export function handleSocketConnection(socket: Socket, io: Server) {
       rooms.set(username, new Set());
     }
     socket.join(username)
+    io.to(socket.id).emit('participantsUpdate', Array.from(rooms.get(username)))
 
     console.log('created room', rooms);
 
   });
+
+  socket.on('getUsers', (username) => {
+    io.to(socket.id).emit('participantsUpdate', Array.from(rooms.get(username)))
+  })
 
   socket.on('leave-room', (roomId: string) => {
     socket.leave(roomId);
