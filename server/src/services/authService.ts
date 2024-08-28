@@ -3,14 +3,16 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import { getDb } from '../config/database';
+import { JWT_SECRET } from '../config/environment';
+import { log } from 'console';
 
 const JWT_Token: string = process.env.JWT_SECRET || '';
 
 export const signup = async (req: Request, res: Response) => {
   console.log("/signup");
-  
+
   try {
-    const { name, email, password } = req.body;
+    const { username, email, password } = req.body;
     const db = getDb();
     const usersCollection = db.collection('users');
 
@@ -22,7 +24,7 @@ export const signup = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Insert new user
-    await usersCollection.insertOne({ name, email, password: hashedPassword });
+    await usersCollection.insertOne({ username, email, password: hashedPassword });
 
     res.status(201).send('success_signup');
   } catch (error) {
@@ -49,7 +51,7 @@ export const login = async (req: Request, res: Response) => {
 
     const token = jwt.sign({ userId: user._id }, JWT_Token, { expiresIn: '30d' });
 
-    res.status(200).json({ message: 'success_login', token, userName: user.name });
+    res.status(200).json({ message: 'success_login', token, username: user.username });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'server_error' });
@@ -71,9 +73,10 @@ export const validateToken = async (req: Request, res: Response) => {
     const db = getDb();
     const usersCollection = db.collection('users');
     const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+    console.log(user);
     
     if (user) {
-      res.json({ valid: true, userName: user.name });
+      res.json({ valid: true, username: user.username });
     } else {
       res.status(404).json({ valid: false, message: 'User not found' });
     }

@@ -1,43 +1,43 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './LandingPage.css';
-import Logo from '../logo/logo';
+import Logo from '../assets/logo/logo';
 import axios from 'axios';
-import NotifcationBox from '../notification/notification';
-import isLoggedIn from '../../utils/isLoggedIn';
+import NotifcationBox from '../assets/notification/notification';
+import isLoggedIn from '../utils/isLoggedIn';
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('')
+  const [username, setUsername] = useState('');
   const [notification, setNotification] = useState<string | null>(null);
-  const [notificationColor, setNotificationColur] = useState<'blue' | 'red'>('red')
+  const [notificationColor, setNotificationColur] = useState<'blue' | 'red'>('red');
   const navigate = useNavigate();
-  isLoggedIn()
+  isLoggedIn();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
     axios.post(`${import.meta.env.VITE_API}signup`, {
-      'name': name,
+      'username': username,
       'email': email,
       'password': password
     }).then(res => {
       if (res.status === 201) {
-        setNotification('Account register, Please login')
-        setNotificationColur('blue')
+        setNotification('Account registered, Please login');
+        setNotificationColur('blue');
         setTimeout(() => {
-          navigate('/login')
+          navigate('/login');
         }, 2000);
       }
       if (res.data === 'email_exists') {
-        setNotification('This email is already registered.')
-        setNotificationColur('red')
+        setNotification('This email is already registered.');
+        setNotificationColur('red');
       }
     }).catch(() => {
-      setNotification('server error please try again')
-      setNotificationColur('red')
-    })
-  }
+      setNotification('server error please try again');
+      setNotificationColur('red');
+    });
+  };
 
   return (
     <div className="auth-container">
@@ -47,12 +47,12 @@ const SignupPage = () => {
         <NotifcationBox notificationMessage={notification} setNotification={setNotification} color={notificationColor} />
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="username">Username</label>
             <input
-              type="Name"
-              id="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
@@ -74,8 +74,7 @@ const SignupPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-            />
-          </div>
+            />          </div>
           <button type="submit" className="btn btn-primary">Sign Up</button>
         </form>
         <p className="auth-redirect">

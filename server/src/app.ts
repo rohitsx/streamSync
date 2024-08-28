@@ -2,18 +2,33 @@ import express from 'express';
 import cors from 'cors';
 import { connectToDatabase } from './config/database';
 import authRoutes from './routes/auth';
+import { createServer } from "http";
+import { Server } from "socket.io";
+import 'dotenv/config'
+import { handleSocketConnection } from './routes/socketHandlers';
 
 const app = express();
 const port = 3000;
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.PUBLIC_WEBSOCKET_URL || "http://localhost:5173"
+  }
+});
 
 app.use(cors());
 app.use(express.json());
 
 app.use('/', authRoutes);
 
+io.on("connection", (socket) => {
+  console.log(`New connection: ${socket.id}`);
+  handleSocketConnection(socket, io);
+});
+
 connectToDatabase()
   .then(() => {
-    app.listen(port, () => {
+    httpServer.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
   })

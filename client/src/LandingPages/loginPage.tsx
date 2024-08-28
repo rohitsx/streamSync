@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
-import Logo from '../logo/logo';
+import Logo from '../assets/logo/logo';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import NotifcationBox from '../notification/notification';
-import isLoggedIn from '../../utils/isLoggedIn';
+import NotifcationBox from '../assets/notification/notification';
+import isLoggedIn from '../utils/isLoggedIn';
 
 
 const LoginPage = () => {
@@ -24,7 +24,9 @@ const LoginPage = () => {
     }).then(res => {
       if (res.data.message === 'success_login') {
         localStorage.setItem('token', res.data.token);
-        localStorage.setItem('name', res.data.userName);
+        console.log(res.data);
+        
+        localStorage.setItem('username', res.data.username);
         navigate('/home');
       }
 
