@@ -10,11 +10,20 @@ export default function AudienceView() {
     useEffect(() => {
         if (socket) {
             socket.emit('getUsers', hostName)
+
+            const handleBeforeUnload = () => {
+                socket.emit("leaveRoom", hostName)
+            }
+
+            window.addEventListener('beforeunload', handleBeforeUnload)
+
             return () => {
                 socket.off('getUsers')
+                window.removeEventListener('beforeunload', handleBeforeUnload)
             }
         }
-    }, [socket])
+    }, [socket, hostName])
+
 
     return <div>
         <h1>AudienceView</h1>
