@@ -8,11 +8,13 @@ import HostStream from './streamPages/hostStream';
 import "./App.css"
 import JoinStream from './streamPages/joinStream';
 import { SocketProvider } from './context/socketContext';
+import AudienceView from './streamPages/audienceView';
+import HostView from './streamPages/hostView';
 
 const App: React.FC = () => {
 
   const defaultPage = useMemo(() => {
-    const name = localStorage.getItem('name');
+    const name = localStorage.getItem('username');
     return name ? <Home /> : <LandingPage />;
   }, []);
 
@@ -24,11 +26,13 @@ const App: React.FC = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/home" element={<Home />} />
-          <Route path={"/host/:username"} element={<HostStream />} />
-          <Route path={"/join_stream"} element={<JoinStream />} />
+          <Route path={"/host"} element={<HostStream />} />
+          <Route path={"/join"} element={<JoinStream />} />
+          <Route path={"/host/:username"} element={<HostView />} />
+          <Route path={"/join/:username"} element={<AudienceView />} />
         </Routes>
       </Router>
-    </SocketProvider >
+    </SocketProvider>
   );
 };
 

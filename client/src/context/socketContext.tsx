@@ -2,14 +2,9 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-interface SocketContextType {
-    socket: Socket | null;
-    participants: string[];
-}
+const SocketContext = createContext<Socket | null>(null);
 
-const SocketContext = createContext<SocketContextType | undefined>(undefined);
-
-export const useSocketContext = (): SocketContextType => {
+export const useSocketContext = (): Socket => {
     const context = useContext(SocketContext);
     if (!context) {
         throw new Error('useSocketContext must be used within a SocketProvider');
@@ -19,7 +14,6 @@ export const useSocketContext = (): SocketContextType => {
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
     const [socket, setSocket] = useState<Socket | null>(null);
-    const [participants, setParticipants] = useState<string[]>([]);
     const username = localStorage.getItem('username');
 
     useEffect(() => {
@@ -38,24 +32,8 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [username]);
 
-    useEffect(() => {
-        if (!socket) return;
-
-        socket.emit('join', username);
-
-        socket.on('participantsUpdate', (updatedParticipants) => {
-            setParticipants(updatedParticipants);
-        });
-
-        return () => {
-            if (socket) {
-                socket.off('participantsUpdate');
-            }
-        };
-    }, [socket, username]);
-
     return (
-        <SocketContext.Provider value={{ socket, participants }}>
+        <SocketContext.Provider value={socket}>
             {children}
         </SocketContext.Provider>
     );

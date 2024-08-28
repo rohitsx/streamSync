@@ -18,7 +18,7 @@ const HomePage = () => {
     <div>
       <h1>Welcome, {username}!</h1>
       <button onClick={() => navigate('/host/' + username)}>Host Stream</button>
-      <button onClick={() => navigate('/join_stream')}>Join Stream</button>
+      <button onClick={() => navigate('/join')}>Join Stream</button>
     </div>
   );
 };

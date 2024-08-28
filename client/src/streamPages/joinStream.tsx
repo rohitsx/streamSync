@@ -5,26 +5,24 @@ import NotifcationBox from '../assets/notification/notification'
 
 export default function JoinStream() {
     const [username, setUsername] = useState('')
-    const navigate = useNavigate()
-    const { socket } = useSocketContext()
     const [notificationMessage, setNotification] = useState<string | null>(null);
+    const socket = useSocketContext()
+    const navigate = useNavigate()
 
-    const handleJoin = (e: any) => {
+    const handleJoin = async (e: any) => {
         e.preventDefault()
-        console.log(socket);
-
         if (!socket) return
 
         socket.emit('joinRoom', username)
-        socket.on('worngUsername', () => {
-            setNotification(`No room with ${username} name, try again`);
+        socket.on('inValidRoom', () => {
+            setNotification(`Room '${username}' not found. Please try again.`);
             setUsername('');
-            return;
+            return
         })
-        if (username.trim()) {
-            navigate(`/host/${username}`)
-        }
+        socket.on('validRoom', () => navigate(`/join/${username}`))
     }
+
+
     return (
         <div>
             <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
