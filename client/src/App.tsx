@@ -7,6 +7,7 @@ import Home from './LandingPages/home';
 import HostStream from './streamPages/hostStream';
 import "./App.css"
 import JoinStream from './streamPages/joinStream';
+import { SocketProvider } from './context/socketContext';
 
 const App: React.FC = () => {
 
@@ -16,16 +17,18 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={defaultPage} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/home" element={<Home />} />
-        <Route path={"/host/:username"} element={<HostStream />} />
-        <Route path={"/join_stream"} element={<JoinStream />} />
-      </Routes>
-    </Router>
+    <SocketProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={defaultPage} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/home" element={<Home />} />
+          <Route path={"/host/:username"} element={<HostStream />} />
+          <Route path={"/join_stream"} element={<JoinStream />} />
+        </Routes>
+      </Router>
+    </SocketProvider >
   );
 };
 

@@ -73,7 +73,6 @@ export const validateToken = async (req: Request, res: Response) => {
     const db = getDb();
     const usersCollection = db.collection('users');
     const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-    console.log(user);
     
     if (user) {
       res.json({ valid: true, username: user.username });
