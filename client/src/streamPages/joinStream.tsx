@@ -18,6 +18,7 @@ export default function JoinStream() {
 
         if (username.length > 1) {
             socket.emit('joinRoom', username)
+            localStorage.setItem('hostname', username)
         } else {
             setNotification("Username must be longer than 1 character.");
         }
@@ -33,14 +34,17 @@ export default function JoinStream() {
 
             return () => {
                 socket.off("validRoom");
-                socket.off("inValidRoom");
+                socket.off("invalidRoom");
             }
         }
-    }, [socket, username, navigate]);
+    }, [socket, username]);
+
+
 
     return (
         <div>
             <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
+
             <form onSubmit={handleJoin}>
                 <input
                     type="text"

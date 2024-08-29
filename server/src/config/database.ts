@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const connectionString = process.env.db_connection_string || '';
+
 const client = new MongoClient(connectionString);
 let db: Db;
 

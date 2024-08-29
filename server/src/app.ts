@@ -22,7 +22,6 @@ app.use(express.json());
 app.use('/', authRoutes);
 
 io.on("connection", (socket) => {
-  console.log(`New connection: ${socket.id}`);
   handleSocketConnection(socket, io);
 });
 

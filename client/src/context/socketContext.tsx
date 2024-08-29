@@ -20,7 +20,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
             transports: ['websocket'],
             auth: { username: username.current }
         });
-
+        
         setSocket(newSocket);
 
         return () => {
