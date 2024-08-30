@@ -20,32 +20,33 @@ export default function AudienceView() {
 
     useEffect(() => {
         localStorage.setItem('defaultPage', 'audience')
-        if (!roomId) {
-            navigate(`/join/${localStorage.getItem('roomId')}`)
-            return
-        }
-        if (socket && roomId) {
-            socket.emit('getUsers', roomId)
+        if (!roomId) navigate(`/join/${localStorage.getItem('roomId')}`)
+    }, [])
 
+    useEffect(() => {
+        if (socket) {
+            socket.emit('joinRoom', localStorage.getItem('hostname'))
+            socket.emit('getUsers', roomId)
             socket.on('closeRoom', () => {
                 setNotification('host closed room redirecting home')
                 localStorage.setItem('defaultPage', 'home')
-                const timer = setTimeout(() => {
+                setTimeout(() => {
                     navigate('/home')
-                }, 3000);
-                return () => clearTimeout(timer)
-            })
+                }, 3000)
 
+            })
             socket.on('getSocketId', (v) => {
                 setStrangerData(v)
                 console.log(v);
             })
 
             return () => {
-                socket.off('closeRoom')
+                socket.off('getusers');
+                socket.off('closerRoom');
+                socket.off('getsocketid');
             }
         }
-    }, [socket, roomId])
+    }, [socket])
 
     function changePage() {
         socket && socket.emit('leaveRoom', roomId)

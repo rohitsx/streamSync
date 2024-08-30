@@ -63,7 +63,7 @@ export default class SocketService {
         try {
             if (!roomId) throw new Error("Invalid roomId");
 
-            console.log(this._username, "getting user for", roomId);
+            console.log(this._username, "getting user for", roomId, '\n');
 
             const room = SocketService.getRoom(roomId);
             if (room) this._io.to(this._socket.id).emit('participantsUpdate', Array.from(room));
@@ -78,12 +78,10 @@ export default class SocketService {
         try {
             if (!roomId) throw new Error("Invalid roomId");
 
-            console.log(this._username, "leaving from", roomId);
+            console.log(this._username, "leaving from", roomId, '\n');
 
             const room = SocketService.getRoom(roomId);
             if (room) {
-                console.log('comparision', room, roomId);
-
                 if (room.has(this._username)) {
                     this._socket.leave(this._username);
                     const checkroom = room.delete(this._username);
@@ -120,12 +118,14 @@ export default class SocketService {
 
     getSocketId(username: string) {
         try {
-            console.log('from getsocketid', username, 'socketid', this._socket.id);
+            console.log(username, 'asking socketId and username for', this._username, '\n');
+
 
             const strangerSocket = SocketService._users.get(username);
-
-            this._io.to(this._socket.id).emit('getSocketId', strangerSocket ? strangerSocket : null);
-            strangerSocket && this._io.to(strangerSocket).emit('getSocketId', { socketId: this._socket.id, username: this._username })
+            if (strangerSocket) {
+                this._io.to(this._socket.id).emit('getSocketId', { SocketId: strangerSocket, username: username });
+                this._io.to(strangerSocket).emit('getSocketId', { socketId: this._socket.id, username: this._username })
+            }
         } catch (err) {
             console.error('Error getting socket id', err);
         }

@@ -32,9 +32,9 @@ export default function HostView() {
                 const dp = localStorage.getItem('deaultPage')
                 dp !== 'host' && setNotification('Joining last room')
             })
-            socket.on('getSocketId', (audienceSocketId) => {
+            socket.on('getSocketId', (data) => {
 
-                setStrangerData({ username: StrangerData.username, socketId: audienceSocketId })
+                setStrangerData({ username: data.username, socketId: data.socketId })
             })
 
             return () => {
@@ -50,15 +50,9 @@ export default function HostView() {
             const response = await axios.post(`${import.meta.env.VITE_API}validate-token`, { token });
             const validatedUsername = response.data.username;
 
-            if (validatedUsername === username && socket) {
+            if (validatedUsername === username && socket) socket.emit('createRoom', username);
+            else throw new Error('Token validation failed');
 
-                console.log('socketid', socket.id);
-
-                socket.emit('createRoom', username);
-
-            } else {
-                throw new Error('Token validation failed');
-            }
         } catch (error) {
             console.error('Token validation failed', error);
             setNotification('Server error, please try again later');
@@ -77,7 +71,7 @@ export default function HostView() {
             <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
             <h1>Host View</h1>
             <ConnectedUser username={username} strangerData={StrangerData} view={'host'} />
-            <HandelParticipant getUsername={true} setStrangerData={setStrangerData} strangerData={StrangerData} />
+            <HandelParticipant getUsername={true} />
             <button onClick={changePage}>Close Room</button>
         </div>
     );

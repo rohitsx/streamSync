@@ -20,7 +20,7 @@ export default function JoinStream() {
         if (username.length > 1) {
             setUpdateSocket(username)
             socket.emit('joinRoom', username)
-            localStorage.setItem('hostname', username)
+
         } else {
             setNotification("Username must be longer than 1 character.");
         }
@@ -33,7 +33,10 @@ export default function JoinStream() {
                 setNotification(`Room '${username}' not found. Please try again.`);
                 setUsername('');
             });
-            socket.on('validRoom', () => navigate(`/join/${username}`));
+            socket.on('validRoom', () => {
+                localStorage.setItem('hostname', username)
+                navigate(`/join/${username}`)
+            });
             return () => {
                 socket.off("validRoom");
                 socket.off("invalidRoom");

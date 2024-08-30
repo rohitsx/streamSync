@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+
 
 interface ConnectedUserProps {
     username: string | null,
@@ -8,10 +8,6 @@ interface ConnectedUserProps {
 
 export default function ConnectedUser({ username = null, strangerData, view }: ConnectedUserProps) {
 
-useEffect(() => {
-    console.log(strangerData);
-    
-}, [strangerData])
     return <div>
         <div>{username}</div>
         <div>{strangerData.username}</div>
