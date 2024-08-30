@@ -25,7 +25,7 @@ export default function AudienceView() {
                 localStorage.setItem('defaultPage', 'home')
                 const timer = setTimeout(() => {
                     navigate('/home')
-                }, 4000);
+                }, 3000);
                 return () => clearTimeout(timer)
             })
 
@@ -42,8 +42,8 @@ export default function AudienceView() {
     }
     return <div>
         <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
-        <button onClick={changePage}>Leave Room</button>
         <h1>AudienceView</h1>
         <HandelParticipant />
+        <button onClick={changePage}>Leave Room</button>
     </div>
 }

@@ -57,11 +57,10 @@ export default function HostView() {
 
     return (
         <div>
-            <button onClick={changePage}>Go back</button>
-            <button></button>
             <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
             <h1>Host View</h1>
             <HandelParticipant />
+            <button onClick={changePage}>Close Room</button>
         </div>
     );
 }
