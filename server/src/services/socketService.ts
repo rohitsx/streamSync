@@ -1,19 +1,20 @@
 import { Socket, Server as io } from "socket.io";
 
 export default class SocketService {
-    private static _rooms: Map<string, Set<string>> = new Map(); //replace this database in future
+    constructor(
+        private _socket: Socket,
+        private _io: io,
+        private _username: string = _socket.handshake.auth.username
+    ) {
+        console.log('SocketService constructor:', {
+            socketId: this._socket.id,
+            username: this._username,
+        });
+    };
 
-    private _socket: Socket;
-    private _io: io;
-    protected _username: any;
+    private static _rooms: Map<string, Set<string>> = new Map(); //replace this database in futured
 
-    constructor(socket: Socket, io: io) {
-        this._socket = socket;
-        this._io = io;
-        this._username = socket.handshake.auth.username;
-    }
-
-    private getRoom(roomId: string): Set<string> | undefined {
+    private static getRoom(roomId: string): Set<string> | undefined {
         if (!roomId) {
             throw new Error("Invalid roomId");
         }
@@ -25,13 +26,13 @@ export default class SocketService {
             if (!roomId) {
                 throw new Error("Invalid roomId");
             }
+            if (this._socket) {
+                const room = SocketService.getRoom(roomId);
+                room ? this._socket.emit('joiningLastRoom') : SocketService._rooms.set(roomId, new Set());
 
-            console.log(this._username, 'creating room', roomId);
-
-            const room = this.getRoom(roomId);
-            room ? this._socket.emit('joiningLastRoom') : SocketService._rooms.set(roomId, new Set());
-
-            this._socket.join(roomId);
+                console.log(this._username, 'creating room', roomId, SocketService._rooms);
+                this._socket.join(roomId);
+            }
         } catch (error) {
             console.error(`Error creating room: ${error}`);
         }
@@ -39,26 +40,20 @@ export default class SocketService {
 
     joinRoom(roomId: string): void {
         try {
-            if (!roomId) {
-                throw new Error("Invalid roomId");
-            }
+            if (!roomId) throw new Error("Invalid roomId")
 
-            console.log(this._username, 'joining the room', roomId);
+            console.log(this._username, 'joining the room', roomId, SocketService._rooms);
 
-            const room = this.getRoom(roomId);
-            if (room) {
-                room.has(roomId) ? this._socket.emit('joiningLastRoom') : room.add(roomId);
-
-            } else {
-                throw new Error("Invalid room");
-            }
+            const room = SocketService.getRoom(roomId);
+            if (room) room.has(roomId) ? this._socket.emit('joiningLastRoom') : room.add(this._username);
+            else throw new Error("Invalid room");
 
             this._socket.emit('validRoom');
             this._socket.join(roomId);
             this._io.to(roomId).emit('participantsUpdate', Array.from(room));
         } catch (error) {
             console.error(`Error joining room: ${error}`);
-            this._socket.emit('errorJoiningRoom', error);
+            this._socket.emit('invalidRoom');
         }
     }
 
@@ -70,7 +65,7 @@ export default class SocketService {
 
             console.log(this._username, "getting user for", roomId);
 
-            const room = this.getRoom(roomId);
+            const room = SocketService.getRoom(roomId);
             if (room) this._io.to(roomId).emit('participantsUpdate', Array.from(room));
             else throw new Error("Room not found");
 
@@ -88,7 +83,7 @@ export default class SocketService {
 
             console.log(this._username, "leaving from", roomId);
 
-            const room = this.getRoom(roomId);
+            const room = SocketService.getRoom(roomId);
             if (room) {
                 if (room.has(roomId)) {
                     this._socket.leave(roomId);

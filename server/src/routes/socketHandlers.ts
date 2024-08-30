@@ -5,15 +5,15 @@ const rooms = new Map();
 
 export function handleSocketConnection(socket: Socket, io: Server) {
 
-const mySocketService = new SocketService(socket, io);
+  const mySocketService = new SocketService(socket, io);
 
-socket.on('createRoom', mySocketService.createRoom);
-socket.on('joinRoom', mySocketService.joinRoom);
-socket.on('getUser', mySocketService.getUser);
-socket.on('leaveRoom', mySocketService.leaveRoom);
-  
-  
-  const clientUsername = socket.handshake.auth.username;
+  socket.on('createRoom', (roomId: string) => mySocketService.createRoom(roomId));
+  socket.on('joinRoom', (roomId: string) => mySocketService.joinRoom(roomId));
+  socket.on('getUser', (roomId: string) => mySocketService.getUser(roomId));
+  socket.on('leaveRoom', (roomId: string) => mySocketService.leaveRoom(roomId));
+
+
+  // const clientUsername = socket.handshake.auth.username;
 
 
   // socket.on('joinRoom', (roomName) => {
