@@ -1,63 +1,69 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSocketContext } from "../context/socketContext";
 import HandelParticipant from "./streamUtlis/participants";
-import { useNavigate, useParams } from "react-router-dom";
 import useDefaultPage from "../hook/useDefaultPage";
-import NotifcationBox from "../assets/notification/notification";
 import ConnectedUser from "./streamUtlis/connectedUser";
+import NotifcationBox from "../assets/notification/notification";
 
 export default function AudienceView() {
     const username = useMemo(() => localStorage.getItem('username') || '', []);
+    const roomId = useMemo(() => localStorage.getItem('roomId') || '', []);
     const socket = useSocketContext();
-    const roomId = Object.values(useParams())[0]
-    const [updateDefaultPage] = useDefaultPage()
-    const navigate = useNavigate()
-    const [notificationMessage, setNotification] = useState<string | null>(null)
-    const [StrangerData, setStrangerData] = useState<{
+    const [updateDefaultPage] = useDefaultPage();
+    const navigate = useNavigate();
+    const [notification, setNotification] = useState<string | null>(null);
+    const [strangerData, setStrangerData] = useState<{
         username: string | null,
         socketId: string | null
     }>({ username: null, socketId: null })
-
     useEffect(() => {
-        localStorage.setItem('defaultPage', 'audience')
-        if (!roomId) navigate(`/join/${localStorage.getItem('roomId')}`)
-    }, [])
+        localStorage.setItem('defaultPage', 'audience');
+        if (!socket || !roomId) return;
 
-    useEffect(() => {
-        if (socket) {
-            socket.emit('joinRoom', localStorage.getItem('hostname'))
-            socket.emit('getUsers', roomId)
-            socket.on('closeRoom', () => {
-                setNotification('host closed room redirecting home')
-                localStorage.setItem('defaultPage', 'home')
-                setTimeout(() => {
-                    navigate('/home')
-                }, 3000)
+        socket.emit('joinRoom', roomId);
+        socket.emit('getUsers', roomId);
 
-            })
-            socket.on('getSocketId', (v) => {
-                setStrangerData(v)
-                console.log(v);
-            })
+        const handleCloseRoom = () => {
+            setNotification('Host closed room. Redirecting home...');
+            localStorage.setItem('defaultPage', 'home');
+            setTimeout(() => navigate('/home'), 3000);
+        };
 
-            return () => {
-                socket.off('getusers');
-                socket.off('closerRoom');
-                socket.off('getsocketid');
-            }
+        const handleGetSocketId = (data: { username: string, socketId: string }) => {
+            setStrangerData(data);
+            console.log(data);
+        };
+
+        socket.on('closeRoom', handleCloseRoom);
+        socket.on('getSocketId', handleGetSocketId);
+
+        return () => {
+            socket.off('closeRoom', handleCloseRoom);
+            socket.off('getSocketId', handleGetSocketId);
+            socket.off('getUsers');
+        };
+    }, [socket, roomId, navigate]);
+
+    const changePage = useCallback(() => {
+        if (socket && roomId) {
+            socket.emit('leaveRoom', roomId);
         }
-    }, [socket])
+        updateDefaultPage('home');
+        navigate('/home');
+    }, [socket, roomId, updateDefaultPage, navigate]);
 
-    function changePage() {
-        socket && socket.emit('leaveRoom', roomId)
-        updateDefaultPage('home')
-        navigate('/home')
+    if (!roomId) {
+        return <div>Error: No room ID found. Please join a room first.</div>;
     }
-    return <div>
-        <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
-        <h1>AudienceView</h1>
-        <ConnectedUser username={username} strangerData={StrangerData} view={'audience'} />
-        <HandelParticipant />
-        <button onClick={changePage}>Leave Room</button>
-    </div>
+
+    return (
+        <div>
+            <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
+            <h1>AudienceView</h1>
+            <ConnectedUser username={username} strangerData={strangerData} view="audience" />
+            <HandelParticipant />
+            <button onClick={changePage}>Leave Room</button>
+        </div>
+    );
 }

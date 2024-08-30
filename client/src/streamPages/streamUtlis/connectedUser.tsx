@@ -9,6 +9,7 @@ interface ConnectedUserProps {
 export default function ConnectedUser({ username = null, strangerData, view }: ConnectedUserProps) {
 
     return <div>
+        {view == 'host' ? <div>.</div> : <></>}
         <div>{username}</div>
         <div>{strangerData.username}</div>
     </div>

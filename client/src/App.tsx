@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import SignupPage from './LandingPages/signupPage';
 import LoginPage from './LandingPages/loginPage';
 import Home from './LandingPages/home';
@@ -25,7 +25,7 @@ const App: React.FC = () => {
           <Route path="/home" element={<Home />} />
           {/* <Route path="/host/:username" element={<HostView />} /> */}
           <Route path="/join" element={<JoinStream />} />
-          <Route path="/join/:username" element={<AudienceView />} />
+          <Route path="/join-view" element={<AudienceView />} />
           <Route path="/host-view" element={<HostView />} />
         </Routes>
       </Router>
