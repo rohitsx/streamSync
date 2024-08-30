@@ -59,9 +59,9 @@ export default function AudienceView() {
 
     return (
         <div>
-            <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
             <h1>AudienceView</h1>
-            <ConnectedUser username={username} strangerData={strangerData} view="audience" />
+            <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
+            <ConnectedUser username={username} strangerData={strangerData} setStrangerData={setStrangerData} view="audience" />
             <HandelParticipant />
             <button onClick={changePage}>Leave Room</button>
         </div>

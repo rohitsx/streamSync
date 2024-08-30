@@ -56,7 +56,7 @@ export default function JoinStream() {
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Enter username"
                 />
-                <button type="submit">Join Stream</button>
+                <button type="submit">Send Request</button>
             </form>
         </div>
     );

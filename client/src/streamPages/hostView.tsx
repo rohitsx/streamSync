@@ -27,14 +27,18 @@ export default function HostView() {
             return;
         }
         if (socket) {
+            console.log('inside socket working in host');
+            
             validateToken(token)
             socket.on('joiningLastRoom', () => {
                 const dp = localStorage.getItem('deaultPage')
                 dp !== 'host' && setNotification('Joining last room')
             })
             socket.on('getSocketId', (data) => {
+                console.log('getSocketId', data);
+                
 
-                setStrangerData({ username: data.username, socketId: data.socketId })
+                setStrangerData({ username: data.username, socketId: data.SocketId })
             })
 
             return () => {
@@ -68,9 +72,9 @@ export default function HostView() {
 
     return (
         <div>
-            <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
             <h1>Host View</h1>
-            <ConnectedUser username={username} strangerData={StrangerData} view={'host'} />
+            <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
+            <ConnectedUser username={username} strangerData={StrangerData} setStrangerData={setStrangerData} view={'host'} />
             <HandelParticipant getUsername={true} />
             <button onClick={changePage}>Close Room</button>
         </div>
