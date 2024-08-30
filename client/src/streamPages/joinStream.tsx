@@ -8,6 +8,7 @@ export default function JoinStream() {
     const [notificationMessage, setNotification] = useState<string | null>(null);
     const socket = useSocketContext();
     const navigate = useNavigate();
+    const [updateSocket, setUpdateSocket] = useState<string | null>(null)
 
     const handleJoin = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -17,6 +18,7 @@ export default function JoinStream() {
         }
 
         if (username.length > 1) {
+            setUpdateSocket(username)
             socket.emit('joinRoom', username)
             localStorage.setItem('hostname', username)
         } else {
@@ -25,19 +27,20 @@ export default function JoinStream() {
     }
 
     useEffect(() => {
-        if (socket) {
+        if (socket && updateSocket) {
+            console.log('created socket')
             socket.on('invalidRoom', () => {
                 setNotification(`Room '${username}' not found. Please try again.`);
                 setUsername('');
             });
             socket.on('validRoom', () => navigate(`/join/${username}`));
-
             return () => {
                 socket.off("validRoom");
                 socket.off("invalidRoom");
             }
         }
-    }, [socket, username]);
+    }, [updateSocket]);
+
 
 
 

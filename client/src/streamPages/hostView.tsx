@@ -5,6 +5,7 @@ import { useSocketContext } from "../context/socketContext";
 import NotifcationBox from "../assets/notification/notification";
 import HandelParticipant from "./streamUtlis/participants";
 import useDefaultPage from "../hook/useDefaultPage";
+import ConnectedUser from "./streamUtlis/connectedUser";
 
 
 export default function HostView() {
@@ -13,6 +14,10 @@ export default function HostView() {
     const socket = useSocketContext();
     const navigate = useNavigate();
     const [updateDefaultPage] = useDefaultPage()
+    const [StrangerData, setStrangerData] = useState<{
+        username: string | null,
+        socketId: string | null
+    }>({ username: null, socketId: null })
 
     useEffect(() => {
         localStorage.setItem('defaultPage', 'host')
@@ -21,7 +26,22 @@ export default function HostView() {
             navigate('/login');
             return;
         }
-        if (socket) validateToken(token);
+        if (socket) {
+            validateToken(token)
+            socket.on('joiningLastRoom', () => {
+                const dp = localStorage.getItem('deaultPage')
+                dp !== 'host' && setNotification('Joining last room')
+            })
+            socket.on('getSocketId', (audienceSocketId) => {
+
+                setStrangerData({ username: StrangerData.username, socketId: audienceSocketId })
+            })
+
+            return () => {
+                socket.off('joiningLastRoom')
+                socket.off('getSocketId')
+            }
+        }
 
     }, [socket]);
 
@@ -32,11 +52,9 @@ export default function HostView() {
 
             if (validatedUsername === username && socket) {
 
+                console.log('socketid', socket.id);
+
                 socket.emit('createRoom', username);
-                socket.on('joiningLastRoom', () => {
-                    const dp = localStorage.getItem('deaultPage')
-                    dp !== 'host' && setNotification('Joining last room')
-                })
 
             } else {
                 throw new Error('Token validation failed');
@@ -54,12 +72,12 @@ export default function HostView() {
         navigate('/home')
     }
 
-
     return (
         <div>
             <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
             <h1>Host View</h1>
-            <HandelParticipant />
+            <ConnectedUser username={username} strangerData={StrangerData} view={'host'} />
+            <HandelParticipant getUsername={true} setStrangerData={setStrangerData} strangerData={StrangerData} />
             <button onClick={changePage}>Close Room</button>
         </div>
     );

@@ -9,6 +9,7 @@ export default class SocketService {
     ) { };
 
     private static _rooms: Map<string, Set<string>> = new Map(); //replace this database in futured
+    private static _users: Map<string, string> = new Map();
 
     private static getRoom(roomId: string): Set<string> | undefined {
         if (!roomId) throw new Error("Invalid roomId");
@@ -46,6 +47,7 @@ export default class SocketService {
             if (room) room.has(roomId) ? this._socket.emit('joiningLastRoom') : room.add(this._username);
             else throw new Error("Invalid room");
 
+            SocketService._users.set(this._username, this._socket.id);
             console.log(this._username, 'joining the room', roomId, SocketService._rooms);
 
             this._io.to(this._socket.id).emit('validRoom');
@@ -68,7 +70,7 @@ export default class SocketService {
             else throw new Error("Room not found");
 
         } catch (error) {
-            console.error(`Error getting user: ${error}`);
+            console.error(`Error getting user: ${error}`, roomId);
         }
     }
 
@@ -84,11 +86,8 @@ export default class SocketService {
 
                 if (room.has(this._username)) {
                     this._socket.leave(this._username);
-                    console.log('room before delte', this._username);
-
                     const checkroom = room.delete(this._username);
-                    console.log("check room", checkroom, room);
-
+                    SocketService._users.delete(this._username)
 
                     checkroom && this._io.to(roomId).emit('participantsUpdate', Array.from(room));
                 } else {
@@ -116,6 +115,19 @@ export default class SocketService {
 
         } catch (error) {
             console.error('Error closing room', error);
+        }
+    }
+
+    getSocketId(username: string) {
+        try {
+            console.log('from getsocketid', username, 'socketid', this._socket.id);
+
+            const strangerSocket = SocketService._users.get(username);
+
+            this._io.to(this._socket.id).emit('getSocketId', strangerSocket ? strangerSocket : null);
+            strangerSocket && this._io.to(strangerSocket).emit('getSocketId', { socketId: this._socket.id, username: this._username })
+        } catch (err) {
+            console.error('Error getting socket id', err);
         }
     }
 }

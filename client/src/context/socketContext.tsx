@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 const SocketContext = createContext<Socket | null>(null);
@@ -13,14 +13,13 @@ export const useSocketContext = (): Socket | null => {
 
 export const SocketProvider = ({ children }: { children: ReactNode }) => {
     const [socket, setSocket] = useState<Socket | null>(null);
-    const username = useRef<string | null>(localStorage.getItem('username'))
 
     useEffect(() => {
         const newSocket = io(import.meta.env.VITE_APP_WEBSOCKET_URL, {
             transports: ['websocket'],
-            auth: { username: username.current }
-        });        
-        
+            auth: { username: localStorage.getItem('username') }
+        });
+
         setSocket(newSocket);
 
         return () => {

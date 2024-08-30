@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { useSocketContext } from "../../context/socketContext";
-import { useParams } from "react-router-dom";
 
+interface handleParticipantsProps {
+    getUsername?: boolean | null;
+    setStrangerData?: (data: any) => void;
+    strangerData?: {
+        username: string | null,
+        socketId: string | null
+    }
+}
 
-export default function HandelParticipant() {
+export default function HandelParticipant({ getUsername = null, setStrangerData = () => { }, strangerData }: handleParticipantsProps) {
     const [participants, setParticipants] = useState<[string] | []>([]);
     const socket = useSocketContext();
-    const hostName = Object.values(useParams())[0];
 
 
     useEffect(() => {
@@ -20,20 +26,33 @@ export default function HandelParticipant() {
     }, [socket]);
 
     const handleParticipantsUpdate = (receivedParticipants: [string]) => {
+        console.log('recvide participant', receivedParticipants);
+
         setParticipants(receivedParticipants);
-        console.log('working', participants);
     };
 
     if (participants.length === 0) {
         return <p>No participants yet.</p>;
     }
 
+    function handelgetuser(username: string) {
+
+        if (!getUsername) return
+        if (socket) {
+            console.log('parciapent getUser working');
+            console.log();
+            
+            setStrangerData({ username: username, socketId: strangerData?.socketId })
+            socket.emit('getSocketId', username)
+        }
+        else console.log('can"t share the socket id socket not working');
+    }
+
     return (
         <div>
-            <h2>Room: {hostName}</h2>
             <ul>
                 {participants.map((username, index) => (
-                    <li key={index}>
+                    <li key={index} onClick={() => handelgetuser(username)}>
                         {username}
                     </li>
                 ))}

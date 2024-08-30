@@ -1,16 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSocketContext } from "../context/socketContext";
 import HandelParticipant from "./streamUtlis/participants";
 import { useNavigate, useParams } from "react-router-dom";
 import useDefaultPage from "../hook/useDefaultPage";
 import NotifcationBox from "../assets/notification/notification";
+import ConnectedUser from "./streamUtlis/connectedUser";
 
 export default function AudienceView() {
+    const username = useMemo(() => localStorage.getItem('username') || '', []);
     const socket = useSocketContext();
     const roomId = Object.values(useParams())[0]
     const [updateDefaultPage] = useDefaultPage()
     const navigate = useNavigate()
     const [notificationMessage, setNotification] = useState<string | null>(null)
+    const [StrangerData, setStrangerData] = useState<{
+        username: string | null,
+        socketId: string | null
+    }>({ username: null, socketId: null })
 
     useEffect(() => {
         localStorage.setItem('defaultPage', 'audience')
@@ -20,6 +26,7 @@ export default function AudienceView() {
         }
         if (socket && roomId) {
             socket.emit('getUsers', roomId)
+
             socket.on('closeRoom', () => {
                 setNotification('host closed room redirecting home')
                 localStorage.setItem('defaultPage', 'home')
@@ -27,6 +34,11 @@ export default function AudienceView() {
                     navigate('/home')
                 }, 3000);
                 return () => clearTimeout(timer)
+            })
+
+            socket.on('getSocketId', (v) => {
+                setStrangerData(v)
+                console.log(v);
             })
 
             return () => {
@@ -43,6 +55,7 @@ export default function AudienceView() {
     return <div>
         <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
         <h1>AudienceView</h1>
+        <ConnectedUser username={username} strangerData={StrangerData} view={'audience'} />
         <HandelParticipant />
         <button onClick={changePage}>Leave Room</button>
     </div>
