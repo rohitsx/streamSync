@@ -6,12 +6,7 @@ export default class SocketService {
         private _socket: Socket,
         private _io: io,
         private _username: string = _socket.handshake.auth.username
-    ) {
-        console.log('SocketService constructor:', {
-            socketId: this._socket.id,
-            username: this._username,
-        });
-    };
+    ) {};
 
     private static _rooms: Map<string, Set<string>> = new Map(); //replace this database in futured
 
@@ -27,7 +22,6 @@ export default class SocketService {
 
             if (this._socket) {
                 const checkRoom = SocketService._rooms.has(roomId);
-                console.log('checkroom', checkRoom);
 
                 checkRoom ? this._socket.emit('joiningLastRoom') : SocketService._rooms.set(roomId, new Set());
 
@@ -47,10 +41,7 @@ export default class SocketService {
 
     joinRoom(roomId: string): void {
         try {
-            if (!roomId) {
-                console.log("wrong room code", roomId);
-                throw new Error("Invalid roomId")
-            }
+            if (!roomId) throw new Error("Invalid roomId")
 
             const room = SocketService.getRoom(roomId);
             if (room) room.has(roomId) ? this._socket.emit('joiningLastRoom') : room.add(this._username);
@@ -91,12 +82,17 @@ export default class SocketService {
 
             const room = SocketService.getRoom(roomId);
             if (room) {
-                console.log(room);
+                console.log('comparision', room, roomId);
 
-                if (room.has(roomId)) {
-                    this._socket.leave(roomId);
-                    room.delete(roomId);
-                    this._io.to(roomId).emit('participantsUpdate', Array.from(room));
+                if (room.has(this._username)) {
+                    this._socket.leave(this._username);
+                    console.log('room before delte', this._username);
+                    
+                    const checkroom = room.delete(this._username);
+                    console.log("check room", checkroom, room);
+                    
+
+                    checkroom && this._io.to(roomId).emit('participantsUpdate', Array.from(room));
                 } else {
                     throw new Error("Not in room");
                 }

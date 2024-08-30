@@ -31,7 +31,7 @@ export default function AudienceView() {
         navigate('/home')
     }
     return <div>
-        <button onClick={changePage}>Go back</button>
+        <button onClick={changePage}>Leave Room</button>
         <h1>AudienceView</h1>
         <HandelParticipant />
     </div>

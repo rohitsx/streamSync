@@ -6,7 +6,7 @@ const rooms = new Map();
 export function handleSocketConnection(socket: Socket, io: Server) {
 
   const mySocketService = new SocketService(socket, io);
-  console.log(socket.handshake.auth)
+  
   socket.on('createRoom', (roomId: string) => mySocketService.createRoom(roomId));
   socket.on('joinRoom', (roomId: string) => mySocketService.joinRoom(roomId));
   socket.on('getUsers', (roomId: string) => mySocketService.getUser(roomId));
