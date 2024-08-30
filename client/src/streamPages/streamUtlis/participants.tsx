@@ -2,30 +2,29 @@ import { useEffect, useState } from "react";
 import { useSocketContext } from "../../context/socketContext";
 import { useParams } from "react-router-dom";
 
-interface Participant {
-    socketId: string;
-    username: string;
-}
 
 export default function HandelParticipant() {
-    const [participants, setParticipants] = useState<Participant[]>([]);
+    const [participants, setParticipants] = useState<[string] | []>([]);
     const socket = useSocketContext();
     const hostName = Object.values(useParams())[0]
 
     useEffect(() => {
         if (socket) {
             socket.on('participantsUpdate', handleParticipantsUpdate);
-
+            console.log('socket created');
+            
             return () => {
                 socket.off('participantsUpdate');
             }
         }
     }, [socket]);
 
-    const handleParticipantsUpdate = (receivedParticipants: Participant[]) => {
+    const handleParticipantsUpdate = (receivedParticipants: [string]) => {
+        console.log(receivedParticipants);
+
         setParticipants(receivedParticipants);
-        console.log('working');
-        
+        console.log('working', participants);
+
     };
 
     if (participants.length === 0) {
@@ -36,9 +35,9 @@ export default function HandelParticipant() {
         <div>
             <h2>Room: {hostName}</h2>
             <ul>
-                {participants.map((participant) => (
-                    <li key={participant.socketId}>
-                        {participant.username}
+                {participants.map((username, index) => (
+                    <li key={index}>
+                        {username}
                     </li>
                 ))}
             </ul>

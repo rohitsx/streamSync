@@ -26,9 +26,7 @@ export default function JoinStream() {
 
     useEffect(() => {
         if (socket) {
-            socket.on('inValidRoom', () => {
-                console.log('invalideroom');
-                
+            socket.on('invalidRoom', () => {
                 setNotification(`Room '${username}' not found. Please try again.`);
                 setUsername('');
             });

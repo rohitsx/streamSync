@@ -34,7 +34,8 @@ export default function HostView() {
 
                 socket.emit('createRoom', username);
                 socket.on('joiningLastRoom', () => {
-                    setNotification('Joining last room')
+                    const dp = localStorage.getItem('deaultPage')
+                    dp !== 'host' && setNotification('Joining last room')
                 })
 
             } else {
@@ -57,6 +58,7 @@ export default function HostView() {
     return (
         <div>
             <button onClick={changePage}>Go back</button>
+            <button></button>
             <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
             <h1>Host View</h1>
             <HandelParticipant />

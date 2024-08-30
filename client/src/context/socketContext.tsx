@@ -19,7 +19,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
         const newSocket = io(import.meta.env.VITE_APP_WEBSOCKET_URL, {
             transports: ['websocket'],
             auth: { username: username.current }
-        });
+        });        
         
         setSocket(newSocket);
 

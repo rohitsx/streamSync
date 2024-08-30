@@ -6,29 +6,27 @@ import useDefaultPage from "../hook/useDefaultPage";
 
 export default function AudienceView() {
     const socket = useSocketContext();
-    const hostName = Object.values(useParams())[0]
+    const roomId = Object.values(useParams())[0]
     const [updateDefaultPage] = useDefaultPage()
-    const navigate = useNavigate()
+    const navigate = useNavigate()    
 
     useEffect(() => {
         localStorage.setItem('defaultPage', 'audience')
-        if (!hostName) {
-            navigate(`/join/${localStorage.getItem('hostname')}`)
+        if (!roomId) {
+            navigate(`/join/${localStorage.getItem('roomId')}`)
             return
         }
-        if (socket && hostName) {
-            console.log('send request', hostName);
-
-            socket.emit('getUsers', hostName)
+        if (socket && roomId) {
+            socket.emit('getUsers', roomId)
 
             return () => {
                 socket.off('getUsers')
             }
         }
-    }, [socket, hostName])
+    }, [socket, roomId])
 
     function changePage() {
-        socket && socket.emit('leaveRoom')
+        socket && socket.emit('leaveRoom', roomId)
         updateDefaultPage('home')
         navigate('/home')
     }
