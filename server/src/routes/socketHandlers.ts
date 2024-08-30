@@ -11,6 +11,7 @@ export function handleSocketConnection(socket: Socket, io: Server) {
   socket.on('joinRoom', (roomId: string) => mySocketService.joinRoom(roomId));
   socket.on('getUsers', (roomId: string) => mySocketService.getUser(roomId));
   socket.on('leaveRoom', (roomId: string) => mySocketService.leaveRoom(roomId));
+  socket.on('closeRoom', (roomId: string) => mySocketService.closeRoom(roomId))
 
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`);

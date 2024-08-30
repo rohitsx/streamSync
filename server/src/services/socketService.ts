@@ -6,7 +6,7 @@ export default class SocketService {
         private _socket: Socket,
         private _io: io,
         private _username: string = _socket.handshake.auth.username
-    ) {};
+    ) { };
 
     private static _rooms: Map<string, Set<string>> = new Map(); //replace this database in futured
 
@@ -49,11 +49,11 @@ export default class SocketService {
 
             console.log(this._username, 'joining the room', roomId, SocketService._rooms);
 
-            this._socket.emit('validRoom');
+            this._io.to(this._socket.id).emit('validRoom');
             this._io.to(roomId).emit('participantsUpdate', Array.from(room));
             this._socket.join(roomId);
         } catch (error) {
-            this._socket.emit('invalidRoom');
+            this._io.to(this._socket.id).emit('invalidRoom')
             console.error(`Error joining room: ${error}`);
         }
     }
@@ -70,7 +70,6 @@ export default class SocketService {
 
         } catch (error) {
             console.error(`Error getting user: ${error}`);
-            this._socket.emit('errorGettingUser', error);
         }
     }
 
@@ -87,10 +86,10 @@ export default class SocketService {
                 if (room.has(this._username)) {
                     this._socket.leave(this._username);
                     console.log('room before delte', this._username);
-                    
+
                     const checkroom = room.delete(this._username);
                     console.log("check room", checkroom, room);
-                    
+
 
                     checkroom && this._io.to(roomId).emit('participantsUpdate', Array.from(room));
                 } else {
@@ -101,7 +100,23 @@ export default class SocketService {
             }
         } catch (error) {
             console.error(`Error leaving room: ${error}`);
-            this._socket.emit('errorLeavingRoom', error);
+        }
+    }
+
+    closeRoom(roomId: string): void {
+        try {
+            if (!roomId) throw new Error("Invalid roomId");
+
+            console.log(this._username, "user , closing room");
+
+            const room = SocketService.getRoom(roomId);
+            if (room) {
+                SocketService._rooms.delete(roomId)
+                this._io.to(roomId).emit('closeRoom')
+            }
+
+        } catch (error) {
+            console.error('Error closing room', error);
         }
     }
 }

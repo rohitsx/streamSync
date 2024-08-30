@@ -6,13 +6,13 @@ import { useParams } from "react-router-dom";
 export default function HandelParticipant() {
     const [participants, setParticipants] = useState<[string] | []>([]);
     const socket = useSocketContext();
-    const hostName = Object.values(useParams())[0]
+    const hostName = Object.values(useParams())[0];
+
 
     useEffect(() => {
         if (socket) {
             socket.on('participantsUpdate', handleParticipantsUpdate);
-            console.log('socket created');
-            
+
             return () => {
                 socket.off('participantsUpdate');
             }
@@ -20,11 +20,8 @@ export default function HandelParticipant() {
     }, [socket]);
 
     const handleParticipantsUpdate = (receivedParticipants: [string]) => {
-        console.log(receivedParticipants);
-
         setParticipants(receivedParticipants);
         console.log('working', participants);
-
     };
 
     if (participants.length === 0) {
