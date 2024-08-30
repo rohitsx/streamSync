@@ -22,15 +22,15 @@ export default function AudienceView() {
             socket.emit('getUsers', roomId)
             socket.on('closeRoom', () => {
                 setNotification('host closed room redirecting home')
+                localStorage.setItem('defaultPage', 'home')
+                const timer = setTimeout(() => {
+                    navigate('/home')
+                }, 4000);
+                return () => clearTimeout(timer)
             })
-            const timer = setTimeout(() => {
-                navigate('/home')
-            }, 4000);
-
 
             return () => {
                 socket.off('closeRoom')
-                clearTimeout(timer)
             }
         }
     }, [socket, roomId])

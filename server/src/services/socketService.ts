@@ -23,7 +23,7 @@ export default class SocketService {
             if (this._socket) {
                 const checkRoom = SocketService._rooms.has(roomId);
 
-                checkRoom ? this._socket.emit('joiningLastRoom') : SocketService._rooms.set(roomId, new Set());
+                !checkRoom && SocketService._rooms.set(roomId, new Set());
 
                 const room = SocketService.getRoom(roomId);
                 room && this._io.to(this._socket.id).emit('participantsUpdate', Array.from(room));
@@ -35,7 +35,6 @@ export default class SocketService {
             }
         } catch (error) {
             console.error(`Error creating room: ${error}`);
-            this._socket.emit('tryAgian')
         }
     }
 
