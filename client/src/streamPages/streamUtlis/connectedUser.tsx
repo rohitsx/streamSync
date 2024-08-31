@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Socket } from "socket.io-client";
 import { useSocketContext } from "../../context/socketContext";
 import StartMic from "../webRtcSpecific/webRtc";
@@ -18,8 +18,12 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
 
     function hangUpCall(e: React.FormEvent) {
         e.preventDefault();
+        if (socket) {
+            socket.emit('hangupCall', strangerData.socketId);
+
+        }
+        setEndCall(true)
         setStrangerData({ username: null, socketId: null });
-        socket && socket.emit('hangupCall', strangerData.socketId);
     }
 
     function muteCall(e: React.FormEvent) {
@@ -28,6 +32,13 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
         setEndCall(true)
     }
 
+    useEffect(() => {
+        socket && socket.on('hangupCall', () => {
+            setStrangerData({ username: null, socketId: null });
+            setEndCall(true)
+        });
+    }, [])
+
     return (
         <PeerConnectionProvider>
             <div>
@@ -35,7 +46,7 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
                     <div>
                         <div>{username}</div>
                         <div onClick={hangUpCall}>Hangup Call</div>
-                        <StartMic strangerData={strangerData} view={view} toggelMic={toggelMic} endCall={endCall} setEndCall={setEndCall}/>
+                        <StartMic strangerData={strangerData} view={view} toggelMic={toggelMic} endCall={endCall} setEndCall={setEndCall} />
                         <div onClick={muteCall}>{toggelMic ? 'Mute' : 'Unmute'} Call</div>
                         <div>{strangerData.username}</div>
                     </div>) : (

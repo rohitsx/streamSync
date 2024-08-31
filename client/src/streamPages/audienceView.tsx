@@ -5,6 +5,7 @@ import HandelParticipant from "./streamUtlis/participants";
 import useDefaultPage from "../hook/useDefaultPage";
 import ConnectedUser from "./streamUtlis/connectedUser";
 import NotifcationBox from "../assets/notification/notification";
+import SoalSendingComponent from "../PaymentPage/paymentBar";
 
 export default function AudienceView() {
     const username = useMemo(() => localStorage.getItem('username') || '', []);
@@ -63,6 +64,7 @@ export default function AudienceView() {
             <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
             <ConnectedUser username={username} strangerData={strangerData} setStrangerData={setStrangerData} view="audience" />
             <HandelParticipant />
+            <SoalSendingComponent />
             <button onClick={changePage}>Leave Room</button>
         </div>
     );

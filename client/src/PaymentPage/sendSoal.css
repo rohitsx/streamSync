@@ -1,0 +1,32 @@
+.smiley-face {
+    width: 24px;
+    height: 24px;
+    background: #4B5563;
+    border-radius: 50%;
+    position: relative;
+    margin-left: 4px;
+}
+
+.smiley-face::before,
+.smiley-face::after {
+    content: '';
+    position: absolute;
+    background: #4B5563;
+}
+
+.smiley-face::before {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    top: 8px;
+    left: 6px;
+    box-shadow: 8px 0 0 #4B5563;
+}
+
+.smiley-face::after {
+    width: 8px;
+    height: 8px;
+    border-radius: 0 0 8px 8px;
+    bottom: 6px;
+    left: 8px;
+}
