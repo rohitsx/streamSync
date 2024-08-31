@@ -92,8 +92,8 @@ export default function StartMic({ strangerData, view }: WebRtcProps) {
     }, [strangerData])
 
     return <div>
-        <video ref={audioElement} id="localVideo" autoPlay playsInline muted /> <br />
-        <video ref={remoteAudioElement} id="remoteVideo" autoPlay playsInline muted />
+        <video ref={audioElement} id="localVideo" autoPlay playsInline  /> <br />
+        <video ref={remoteAudioElement} id="remoteVideo" autoPlay playsInline  />
     </div>
 
 }
