@@ -41,18 +41,20 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
 
     return (
         <PeerConnectionProvider>
-            <div>
+            <div className="connected-user">
                 {strangerData.socketId ? (
-                    <div>
-                        <div>{username}</div>
-                        <div onClick={hangUpCall}>Hangup Call</div>
+                    <div className="call-controls">
+                        <div className="user-name">{username}</div>
+                        <div className="hangup-call" onClick={hangUpCall}>Hangup Call</div>
                         <StartMic strangerData={strangerData} view={view} toggelMic={toggelMic} endCall={endCall} setEndCall={setEndCall} />
-                        <div onClick={muteCall}>{toggelMic ? 'Mute' : 'Unmute'} Call</div>
-                        <div>{strangerData.username}</div>
-                    </div>) : (
-                    <div>{username}</div>
+                        <div className="mute-call" onClick={muteCall}>{toggelMic ? 'Mute' : 'Unmute'} Call</div>
+                        <div className="stranger-name">{strangerData.username}</div>
+                    </div>
+                ) : (
+                    <div className="user-name">{username}</div>
                 )}
             </div>
+
         </PeerConnectionProvider>
     )
 }

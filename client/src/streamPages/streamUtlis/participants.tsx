@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSocketContext } from "../../context/socketContext";
 
+
 export default function HandelParticipant({ getUsername = false }: { getUsername?: true | false }) {
     const [participants, setParticipants] = useState<string[] | []>([]);
     const socket = useSocketContext();
@@ -34,14 +35,15 @@ export default function HandelParticipant({ getUsername = false }: { getUsername
     }
 
     return (
-        <div>
-            <ul>
+        <div className="participants">
+            <ul className="participants-list">
                 {participants.map((username, index) => (
-                    <li key={index} onClick={() => handelgetuser(username)}>
+                    <li key={index} className="participant-item" onClick={() => handelgetuser(username)}>
                         {username}
                     </li>
                 ))}
             </ul>
         </div>
+
     );
 }

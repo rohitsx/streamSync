@@ -7,8 +7,8 @@ import Home from './LandingPages/home';
 import "./App.css"
 import JoinStream from './streamPages/joinStream';
 import { SocketProvider } from './context/socketContext';
-import AudienceView from './streamPages/audienceView';
-import HostView from './streamPages/hostView';
+import AudienceView from './streamPages/view/audienceView';
+import HostView from './streamPages/view/hostView';
 import useDefaultPage from './hook/useDefaultPage';
 
 

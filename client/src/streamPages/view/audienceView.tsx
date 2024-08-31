@@ -1,11 +1,11 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSocketContext } from "../context/socketContext";
-import HandelParticipant from "./streamUtlis/participants";
-import useDefaultPage from "../hook/useDefaultPage";
-import ConnectedUser from "./streamUtlis/connectedUser";
-import NotifcationBox from "../assets/notification/notification";
-import SoalSendingComponent from "../PaymentPage/paymentBar";
+import { useSocketContext } from "../../context/socketContext";
+import HandelParticipant from "../streamUtlis/participants";
+import useDefaultPage from "../../hook/useDefaultPage";
+import ConnectedUser from "../streamUtlis/connectedUser";
+import NotifcationBox from "../../assets/notification/notification";
+import SoalSendingComponent from "../../PaymentPage/paymentBar";
 
 export default function AudienceView() {
     const username = useMemo(() => localStorage.getItem('username') || '', []);
@@ -59,13 +59,14 @@ export default function AudienceView() {
     }
 
     return (
-        <div>
-            <h1>AudienceView</h1>
+        <div className="audience-view">
+            <h1 className="audience-title">Audience View</h1>
             <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
             <ConnectedUser username={username} strangerData={strangerData} setStrangerData={setStrangerData} view="audience" />
             <HandelParticipant />
             <SoalSendingComponent />
-            <button onClick={changePage}>Leave Room</button>
+            <button onClick={changePage} className="leave-room-button">Leave Room</button>
         </div>
+
     );
 }

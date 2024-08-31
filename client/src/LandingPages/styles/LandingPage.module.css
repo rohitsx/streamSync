@@ -1,33 +1,27 @@
-/* AuthPages.css */
-
 body,
 html {
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
   background-color: #f0f0f0;
-  max-width: 350px;
+  color: #333;
 }
 
-.auth-container {
+.authcontainer {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: fit-content;
   padding: 1rem;
 }
 
-.auth-card {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  width: 100%;
-  max-width: 400px;
+.authcard {
+  background-color: #fff;
+  padding: 1.8rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   animation: fadeIn 0.5s ease-out;
 }
-
 
 h2 {
   color: #333;
@@ -38,21 +32,21 @@ h2 {
 .tagline {
   color: #333;
   margin-bottom: 1rem;
-  animation: slideUp 0.5s ease-out 0.2s both;
+  animation: slideUp 0.5s ease-out 0.4s both;
 }
 
 .description {
   color: #666;
   margin-bottom: 2rem;
-  animation: slideUp 0.5s ease-out 0.4s both;
+  animation: slideUp 0.5s ease-out 0.6s both;
 }
 
 form {
   text-align: left;
-  animation: slideUp 0.5s ease-out 0.4s both;
+  animation: slideUp 0.5s ease-out 0.8s both;
 }
 
-.form-group {
+.formgroup {
   margin-bottom: 1rem;
 }
 
@@ -64,13 +58,14 @@ label {
 
 input {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
+  box-sizing: border-box;
 }
 
-.cta-buttons {
+.ctabuttons {
   display: flex;
   justify-content: center;
   gap: 1rem;
@@ -84,48 +79,46 @@ input {
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
   text-decoration: none;
   white-space: nowrap;
   display: inline-block;
   overflow: hidden;
-  text-overflow: ellipsis;
-
 }
 
-.btn-primary {
+.btnprimary {
   background-color: #4a90e2;
-  color: white;
+  color: #fff;
 }
 
-.btn-primary:hover {
+.btnprimary:hover {
   background-color: #3a7bc8;
   transform: translateY(-2px);
 }
 
-.btn-secondary {
-  background-color: white;
+.btnsecondary {
+  background-color: #fff;
   color: #4a90e2;
   border: 1px solid #4a90e2;
 }
 
-.btn-secondary:hover {
+.btnsecondary:hover {
   background-color: #f0f0f0;
   transform: translateY(-2px);
 }
 
-.auth-redirect {
+.authredirect {
   margin-top: 1.5rem;
   color: #666;
-  animation: fadeIn 0.5s ease-out 0.8s both;
+  animation: fadeIn 0.5s ease-out 1.2s both;
 }
 
-.auth-redirect a {
+.authredirect a {
   color: #4a90e2;
   text-decoration: none;
 }
 
-.auth-redirect a:hover {
+.authredirect a:hover {
   text-decoration: underline;
 }
 

@@ -3,15 +3,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     margin: 0;
     font-family: 'Arial', sans-serif;
+    height: 100vh;
 }
-.logo-container {
+
+.logoContainer {
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-bottom: .5rem;
 }
+
 .logo {
     width: 60px;
     height: 60px;
@@ -19,8 +22,9 @@ body {
     border-radius: 15px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .wave {
     position: absolute;
     width: 100%;
@@ -29,30 +33,36 @@ body {
     bottom: 0;
     animation: wave 2s infinite linear;
 }
+
 .wave:nth-child(2) {
     bottom: 10px;
     opacity: 0.5;
     animation-delay: 0.5s;
 }
+
 .wave:nth-child(3) {
     bottom: 20px;
     opacity: 0.3;
     animation-delay: 1s;
 }
+
 @keyframes wave {
     0% {
         transform: translateX(-100%);
     }
+
     100% {
         transform: translateX(100%);
     }
 }
+
 .text {
     font-size: 24px;
     font-weight: bold;
     color: #333;
     margin-left: 15px;
 }
+
 .text span {
     color: #4a90e2;
 }

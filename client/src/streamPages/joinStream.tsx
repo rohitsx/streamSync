@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NotifcationBox from '../assets/notification/notification';
 import { useSocketContext } from '../context/socketContext';
+import styles from './style/joinStream.module.css'
 
 export default function JoinStream() {
     const [username, setUsername] = useState('');
@@ -47,16 +48,17 @@ export default function JoinStream() {
     }, [socket, username, navigate]);
 
     return (
-        <div>
+        <div className={styles.joinstream}>
             <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
-            <form onSubmit={handleJoin}>
+            <form onSubmit={handleJoin} className={styles.joinform}>
                 <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Enter username"
+                    className={styles.joininput}
                 />
-                <button type="submit">Send Request</button>
+                <button type="submit" className={`${styles.btn} ${styles.btnprimary}`}>Send Request</button>
             </form>
         </div>
     );

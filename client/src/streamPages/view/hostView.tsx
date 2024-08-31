@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useSocketContext } from "../context/socketContext";
-import NotifcationBox from "../assets/notification/notification";
-import HandelParticipant from "./streamUtlis/participants";
-import useDefaultPage from "../hook/useDefaultPage";
-import ConnectedUser from "./streamUtlis/connectedUser";
+import { useSocketContext } from "../../context/socketContext";
+import NotifcationBox from "../../assets/notification/notification";
+import HandelParticipant from "../streamUtlis/participants";
+import useDefaultPage from "../../hook/useDefaultPage";
+import ConnectedUser from "../streamUtlis/connectedUser";
 
 
 export default function HostView() {
@@ -66,12 +66,12 @@ export default function HostView() {
     }
 
     return (
-        <div>
-            <h1>Host View</h1>
+        <div className="host-view">
+            <h1 className="host-title">Host View</h1>
             <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
             <ConnectedUser username={username} strangerData={StrangerData} setStrangerData={setStrangerData} view={'host'} />
             <HandelParticipant getUsername={true} />
-            <button onClick={changePage}>Close Room</button>
+            <button onClick={changePage} className="close-room-button">Close Room</button>
         </div>
     );
 }

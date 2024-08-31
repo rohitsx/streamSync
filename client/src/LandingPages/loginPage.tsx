@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './LandingPage.css';
-import Logo from '../assets/logo/logo';
 import axios from 'axios';
 import NotifcationBox from '../assets/notification/notification';
 import isLoggedIn from '../utils/isLoggedIn';
-
+import styles from './styles/LandingPage.module.css'
+import Logo from '../assets/logo/logo';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -23,10 +22,10 @@ const LoginPage = () => {
       if (res.data.message === 'success_login') {
         localStorage.setItem('token', res.data.token);
         console.log(res.data);
-        
+
         localStorage.setItem('username', res.data.username);
         console.log("username from login page", localStorage.getItem('username'));
-        
+
         window.location.reload();
       }
 
@@ -36,13 +35,13 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <Logo />
+    <div className={styles.authcontainer}>
+      <div className={styles.authcard}>
+       <Logo />
         <h2>Welcome back</h2>
         <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className={styles.formgroup}>
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -52,7 +51,7 @@ const LoginPage = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className={styles.formgroup}>
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -62,10 +61,10 @@ const LoginPage = () => {
               required
             />
           </div>
-          <button type="submit" className="btn btn-primary">Log In</button>
+          <button type="submit" className={`${styles.btn} ${styles.btnprimary}`}>Log In</button>
         </form>
-        <p className="auth-redirect">
-          Don't have an account? <Link to="/signup">Sign Up</Link>
+        <p className={styles.authredirect}>
+          Don't have an account? <Link to="/signup" className={styles.link}>Sign Up</Link>
         </p>
       </div>
     </div>

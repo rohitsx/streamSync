@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './LandingPage.css';
 import Logo from '../assets/logo/logo';
 import axios from 'axios';
 import NotifcationBox from '../assets/notification/notification';
 import isLoggedIn from '../utils/isLoggedIn';
+import styles from './styles/LandingPage.module.css'
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -40,13 +40,13 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
+    <div className={styles.authcontainer}>
+      <div className={styles.authcard}>
         <Logo />
         <h2>Create your account</h2>
         <NotifcationBox notificationMessage={notification} setNotification={setNotification} color={notificationColor} />
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
+          <div className={styles.formgroup}>
             <label htmlFor="username">Username</label>
             <input
               type="text"
@@ -56,7 +56,7 @@ const SignupPage = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className={styles.formgroup}>
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -66,7 +66,7 @@ const SignupPage = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className={styles.formgroup}>
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -74,14 +74,16 @@ const SignupPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-            />          </div>
-          <button type="submit" className="btn btn-primary">Sign Up</button>
+            />
+          </div>
+          <button type="submit" className={`${styles.btn} ${styles.btnprimary}`}>Sign Up</button>
         </form>
-        <p className="auth-redirect">
-          Already have an account? <Link to="/login">Log In</Link>
+        <p className={styles.authredirect}>
+          Already have an account? <Link to="/login" className={styles.link}>Log In</Link>
         </p>
       </div>
     </div>
+
   );
 };
 

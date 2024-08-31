@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import isLoggedIn from '../utils/isLoggedIn';
+import styles from './styles/home.module.css'
 
 const HomePage = () => {
   const [username, setUsername] = useState('');
@@ -15,10 +16,16 @@ const HomePage = () => {
   }, [navigate]);
 
   return (
-    <div>
+    <div className={styles.homecontainer}>
       <h1>Welcome, {username}!</h1>
-      <button onClick={() => navigate('/host-view')}>Host Stream</button>
-      <button onClick={() => navigate('/join')}>Send Request</button>
+      <div className={styles.ctabuttons}>
+        <button className={`${styles.btn} ${styles.btnprimary}`} onClick={() => navigate('/host-view')}>
+          Host Stream
+        </button>
+        <button className={`${styles.btn} ${styles.btnprimary}`} onClick={() => navigate('/join')}>
+          Send Request
+        </button>
+      </div>
     </div>
   );
 };

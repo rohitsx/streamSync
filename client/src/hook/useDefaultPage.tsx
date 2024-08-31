@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import LandingPage from '../LandingPages/LandingPage';
 import Home from '../LandingPages/home';
-import HostView from '../streamPages/hostView';
-import AudienceView from '../streamPages/audienceView';
+import HostView from '../streamPages/view/hostView';
+import AudienceView from '../streamPages/view/audienceView';
 
 export default function useDefaultPage(): [(newPage: string) => void, JSX.Element | null] {
     const [defaultPage, setDefaultPage] = useState<JSX.Element | null>(null);

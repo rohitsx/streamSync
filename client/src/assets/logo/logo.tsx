@@ -1,12 +1,12 @@
-import "./logo.css"
+import style from "./logo.module.css"
 
 export default function Logo() {
-    return <div className="logo-container">
-            <div className="logo">
-                <div className="wave"></div>
-                <div className="wave"></div>
-                <div className="wave"></div>
-            </div>
-            <div className="text">stream<span>Sync</span></div>
+    return <div className={style.logoContainer}>
+        <div className={style.logo}>
+            <div className={style.wave}></div>
+            <div className={style.wave}></div>
+            <div className={style.wave}></div>
         </div>
+        <div className={style.text}>stream<span>Sync</span></div>
+    </div>
 }
