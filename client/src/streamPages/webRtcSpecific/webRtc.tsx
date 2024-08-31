@@ -11,14 +11,14 @@ interface WebRtcProps {
 export default function StartMic({ strangerData, view }: WebRtcProps) {
     const socket: Socket | null = useSocketContext();
     const pc = usePcContext();
-    const audioElement = useRef<HTMLVideoElement | null>(null)
-    const remoteAudioElement = useRef<HTMLVideoElement | null>(null)
+    const audioElement = useRef<HTMLAudioElement | null>(null)
+    const remoteAudioElement = useRef<HTMLAudioElement | null>(null)
     const polite = useRef(view === 'host');
     const makingOffer = useRef(false)
     const ignoreOffer = useRef(false)
 
     async function getAudio() {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true })
         for (const track of stream.getTracks()) { pc.addTrack(track, stream) }
         if (audioElement.current) audioElement.current.srcObject = stream
     }
@@ -28,8 +28,6 @@ export default function StartMic({ strangerData, view }: WebRtcProps) {
         getAudio();
 
         pc.ontrack = ({ track, streams }) => {
-            console.log('recived track');
-            
             track.onunmute = () => {
                 console.log("track unmuted");
                 if (remoteAudioElement.current?.srcObject) return
@@ -92,8 +90,8 @@ export default function StartMic({ strangerData, view }: WebRtcProps) {
     }, [strangerData])
 
     return <div>
-        <video ref={audioElement} id="localVideo" autoPlay playsInline  /> <br />
-        <video ref={remoteAudioElement} id="remoteVideo" autoPlay playsInline  />
+        <audio id="audioElement" ref={audioElement}></audio>
+        <audio id="audioElement" ref={remoteAudioElement}></audio>
     </div>
 
 }
