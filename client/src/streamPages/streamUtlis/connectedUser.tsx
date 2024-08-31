@@ -36,7 +36,7 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
                     <div>
                         <div>{username}</div>
                         <div onClick={hangUpCall}>Hangup Call</div>
-                        <StartMic strangerData={strangerData} view={'host'} />
+                        <StartMic strangerData={strangerData} view={view} />
                         <div onClick={muteCall}>{audioElement.current?.muted ? 'Unmute' : 'Mute'} Call</div>
                         <div>{strangerData.username}</div>
                     </div>) : (

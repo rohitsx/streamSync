@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useSocketContext } from "../../context/socketContext";
 import usePcContext from "../../context/peerConnectionContext";
 import { Socket } from "socket.io-client";
@@ -21,12 +21,11 @@ export default function StartMic({ strangerData, view }: WebRtcProps) {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
         for (const track of stream.getTracks()) { pc.addTrack(track, stream) }
         if (audioElement.current) audioElement.current.srcObject = stream
-        return stream
     }
 
     useEffect(() => {
         if (!strangerData.socketId) return;
-        const stream = getAudio();
+        getAudio();
 
         pc.ontrack = ({ track, streams }) => {
             track.onunmute = () => {
