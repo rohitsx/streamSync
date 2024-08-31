@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSocketContext } from "../../context/socketContext";
 import usePcContext from "../../context/peerConnectionContext";
 import { Socket } from "socket.io-client";
@@ -17,11 +17,13 @@ export default function StartMic({ strangerData, view, toggelMic }: WebRtcProps)
     const polite = useRef(view === 'host');
     const makingOffer = useRef(false)
     const ignoreOffer = useRef(false)
+    const [stream, setStream] = useState<MediaStream | null>(null)
 
     async function getAudio() {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
         for (const track of stream.getTracks()) { pc.addTrack(track, stream) }
         if (audioElement.current) audioElement.current.srcObject = stream
+        setStream(stream)
     }
 
     useEffect(() => {
@@ -90,13 +92,10 @@ export default function StartMic({ strangerData, view, toggelMic }: WebRtcProps)
     }, [strangerData])
 
     useEffect(() => {
-        if (audioElement.current && audioElement.current.srcObject) {
-            const audioTracks = (audioElement.current.srcObject as MediaStream).getAudioTracks();
-            audioTracks.forEach((track) => {
-                track.enabled = !toggelMic;
-            });
+        if (stream) {
+            stream.getAudioTracks()[0].enabled = toggelMic;
         }
-    }, [toggelMic]);
+    }, [stream, toggelMic])
 
     return <div>
         <audio ref={audioElement} autoPlay></audio>
