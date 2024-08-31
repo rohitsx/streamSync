@@ -18,14 +18,13 @@ export default function StartMic({ strangerData, view }: WebRtcProps) {
     const ignoreOffer = useRef(false)
 
     async function getAudio() {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
         for (const track of stream.getTracks()) { pc.addTrack(track, stream) }
         if (audioElement.current) audioElement.current.srcObject = stream
     }
 
     useEffect(() => {
         if (!strangerData.socketId) return;
-        getAudio();
 
         pc.ontrack = ({ track, streams }) => {
             track.onunmute = () => {
@@ -90,8 +89,8 @@ export default function StartMic({ strangerData, view }: WebRtcProps) {
     }, [strangerData])
 
     return <div>
-        <audio id="audioElement" ref={audioElement}></audio>
-        <audio id="audioElement" ref={remoteAudioElement}></audio>
+        <audio id="audioElement" ref={audioElement}  autoPlay></audio>
+        <audio id="audioElement" ref={remoteAudioElement}  autoPlay></audio>
     </div>
 
 }
