@@ -6,10 +6,12 @@ import { Socket } from "socket.io-client";
 interface WebRtcProps {
     strangerData: { username: string | null, socketId: string | null },
     view: 'host' | 'audience',
-    toggelMic: boolean
+    toggelMic: boolean,
+    endCall: boolean,
+    setEndCall: (data: boolean) => void
 }
 
-export default function StartMic({ strangerData, view, toggelMic }: WebRtcProps) {
+export default function StartMic({ strangerData, view, toggelMic, endCall, setEndCall }: WebRtcProps) {
     const socket: Socket | null = useSocketContext();
     const pc = usePcContext();
     const audioElement = useRef<HTMLAudioElement | null>(null)
@@ -24,7 +26,12 @@ export default function StartMic({ strangerData, view, toggelMic }: WebRtcProps)
             'audio': {
                 echoCancellation: true,
                 noiseSuppression: true,
-                autoGainControl: true
+                autoGainControl: true,
+                advanced: [
+                    { echoCancellation: { exact: true } },
+                    { noiseSuppression: { exact: true } },
+                    { autoGainControl: { exact: true } }
+                ]
             }
         })
         for (const track of stream.getTracks()) { pc.addTrack(track, stream) }
@@ -102,6 +109,22 @@ export default function StartMic({ strangerData, view, toggelMic }: WebRtcProps)
             stream.getAudioTracks()[0].enabled = toggelMic;
         }
     }, [stream, toggelMic])
+
+    useEffect(() => {
+        if (endCall) {
+            pc.close();
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop())
+
+                return () => {
+                    stream.getTracks().forEach(track => track.stop())
+                    setStream(null)
+                    pc.close()
+                    setEndCall(false)
+                }
+            }
+        }
+    }, [endCall])
 
     return <div>
         <audio ref={audioElement} autoPlay></audio>
