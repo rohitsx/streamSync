@@ -5,10 +5,11 @@ import { Socket } from "socket.io-client";
 
 interface WebRtcProps {
     strangerData: { username: string | null, socketId: string | null },
-    view: 'host' | 'audience'
+    view: 'host' | 'audience',
+    toggelMic: boolean
 }
 
-export default function StartMic({ strangerData, view }: WebRtcProps) {
+export default function StartMic({ strangerData, view, toggelMic }: WebRtcProps) {
     const socket: Socket | null = useSocketContext();
     const pc = usePcContext();
     const audioElement = useRef<HTMLAudioElement | null>(null)
@@ -88,9 +89,20 @@ export default function StartMic({ strangerData, view }: WebRtcProps) {
         })
     }, [strangerData])
 
+    useEffect(() => {
+
+    }, [toggelMic])
+
     return <div>
-        <audio id="audioElement" ref={audioElement}  autoPlay></audio>
-        <audio id="audioElement" ref={remoteAudioElement}  autoPlay></audio>
+        {!toggelMic ? (
+            <>
+                <audio id="audioElement" ref={audioElement} autoPlay muted></audio>
+                <audio id="audioElement" ref={remoteAudioElement} autoPlay muted></audio></>
+        ) : (
+            <>
+                <audio id="audioElement" ref={audioElement} autoPlay ></audio>
+                <audio id="audioElement" ref={remoteAudioElement} autoPlay></audio></>
+        )}
     </div>
 
 }

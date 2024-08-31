@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useState } from "react"
 import { Socket } from "socket.io-client";
 import { useSocketContext } from "../../context/socketContext";
 import StartMic from "../webRtcSpecific/webRtc";
@@ -13,8 +13,7 @@ interface ConnectedUserProps {
 
 export default function ConnectedUser({ username = null, strangerData, setStrangerData, view }: ConnectedUserProps) {
     const socket: Socket | null = useSocketContext()
-    const audioElement = useRef<HTMLAudioElement | null>(null)
-    // startMic({ audioElement: audioElement, strangerData: strangerData, view: view });
+    const [toggelMic, setToggelMic] = useState(false)
 
     function hangUpCall(e: React.FormEvent) {
         e.preventDefault();
@@ -24,9 +23,7 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
 
     function muteCall(e: React.FormEvent) {
         e.preventDefault();
-        if (audioElement.current) {
-            audioElement.current.muted = !audioElement.current.muted;
-        }
+        setToggelMic(!toggelMic);
     }
 
     return (
@@ -36,8 +33,8 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
                     <div>
                         <div>{username}</div>
                         <div onClick={hangUpCall}>Hangup Call</div>
-                        <StartMic strangerData={strangerData} view={view} />
-                        <div onClick={muteCall}>{audioElement.current?.muted ? 'Unmute' : 'Mute'} Call</div>
+                        <StartMic strangerData={strangerData} view={view} toggelMic={toggelMic}/>
+                        <div onClick={muteCall}>{toggelMic ? 'Unmute' : 'Mute'} Call</div>
                         <div>{strangerData.username}</div>
                     </div>) : (
                     <div>{username}</div>
