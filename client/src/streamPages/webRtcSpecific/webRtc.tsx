@@ -100,7 +100,7 @@ export default function StartMic({ strangerData, view, toggelMic }: WebRtcProps)
 
     return <div>
         <audio ref={audioElement} autoPlay></audio>
-        <audio ref={remoteAudioElement} autoPlay muted></audio>
+        <audio ref={remoteAudioElement} autoPlay></audio>
     </div>
 
 }
