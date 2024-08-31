@@ -25,7 +25,7 @@ export default function StartMic({ strangerData, view }: WebRtcProps) {
 
     useEffect(() => {
         if (!strangerData.socketId) return;
-
+        getAudio();
         pc.ontrack = ({ track, streams }) => {
             track.onunmute = () => {
                 console.log("track unmuted");
