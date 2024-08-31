@@ -20,7 +20,13 @@ export default function StartMic({ strangerData, view, toggelMic }: WebRtcProps)
     const [stream, setStream] = useState<MediaStream | null>(null)
 
     async function getAudio() {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+        const stream = await navigator.mediaDevices.getUserMedia({
+            'audio': {
+                echoCancellation: true,
+                noiseSuppression: true,
+                autoGainControl: true
+            }
+        })
         for (const track of stream.getTracks()) { pc.addTrack(track, stream) }
         if (audioElement.current) audioElement.current.srcObject = stream
         setStream(stream)
