@@ -13,7 +13,7 @@ interface ConnectedUserProps {
 
 export default function ConnectedUser({ username = null, strangerData, setStrangerData, view }: ConnectedUserProps) {
     const socket: Socket | null = useSocketContext()
-    const [toggelMic, setToggelMic] = useState(false)
+    const [toggelMic, setToggelMic] = useState(true)
 
     function hangUpCall(e: React.FormEvent) {
         e.preventDefault();
@@ -33,8 +33,8 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
                     <div>
                         <div>{username}</div>
                         <div onClick={hangUpCall}>Hangup Call</div>
-                        <StartMic strangerData={strangerData} view={view} toggelMic={toggelMic}/>
-                        <div onClick={muteCall}>{toggelMic ? 'Unmute' : 'Mute'} Call</div>
+                        <StartMic strangerData={strangerData} view={view} toggelMic={toggelMic} />
+                        <div onClick={muteCall}>{toggelMic ? 'Mute' : 'Unmute'} Call</div>
                         <div>{strangerData.username}</div>
                     </div>) : (
                     <div>{username}</div>
