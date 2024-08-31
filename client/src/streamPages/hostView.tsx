@@ -28,18 +28,13 @@ export default function HostView() {
         }
         if (socket) {
             console.log('inside socket working in host');
-            
+
             validateToken(token)
             socket.on('joiningLastRoom', () => {
                 const dp = localStorage.getItem('deaultPage')
                 dp !== 'host' && setNotification('Joining last room')
             })
-            socket.on('getSocketId', (data) => {
-                console.log('getSocketId', data);
-                
-
-                setStrangerData({ username: data.username, socketId: data.SocketId })
-            })
+            socket.on('getSocketId', (data) => setStrangerData({ username: data.username, socketId: data.SocketId }))
 
             return () => {
                 socket.off('joiningLastRoom')

@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './LandingPage.css';
 import Logo from '../assets/logo/logo';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import NotifcationBox from '../assets/notification/notification';
 import isLoggedIn from '../utils/isLoggedIn';
 
@@ -14,9 +13,9 @@ const LoginPage = () => {
   const [notification, setNotification] = useState<string | null>(null)
   isLoggedIn()
 
-  const navigate = useNavigate()
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     axios.post(`${import.meta.env.VITE_API}login`, {
       "email": email,
       "password": password
@@ -24,11 +23,11 @@ const LoginPage = () => {
       if (res.data.message === 'success_login') {
         localStorage.setItem('token', res.data.token);
         console.log(res.data);
-
+        
         localStorage.setItem('username', res.data.username);
         console.log("username from login page", localStorage.getItem('username'));
-
-        navigate('/home');
+        
+        window.location.reload();
       }
 
       if (res.data === 'incorrect_email') setNotification('This email is not registered');

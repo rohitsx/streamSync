@@ -1,7 +1,8 @@
-import React from "react"
+import React, { useRef } from "react"
 import { Socket } from "socket.io-client";
 import { useSocketContext } from "../../context/socketContext";
-
+import StartMic from "../webRtcSpecific/webRtc";
+import { PeerConnectionProvider } from "../../context/peerConnectionContext";
 
 interface ConnectedUserProps {
     username: string | null,
@@ -11,10 +12,10 @@ interface ConnectedUserProps {
 }
 
 export default function ConnectedUser({ username = null, strangerData, setStrangerData, view }: ConnectedUserProps) {
-
-    console.log(strangerData);
-    
     const socket: Socket | null = useSocketContext()
+    const audioElement = useRef<HTMLAudioElement | null>(null)
+    // startMic({ audioElement: audioElement, strangerData: strangerData, view: view });
+
     function hangUpCall(e: React.FormEvent) {
         e.preventDefault();
         setStrangerData({ username: null, socketId: null });
@@ -23,15 +24,25 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
 
     function muteCall(e: React.FormEvent) {
         e.preventDefault();
-
+        if (audioElement.current) {
+            audioElement.current.muted = !audioElement.current.muted;
+        }
     }
 
-    return <div>
-        {strangerData.socketId ? (<div>
-            <div>{username}</div>
-            <div onClick={hangUpCall}>Hangup Call</div>
-            <div onClick={muteCall}>Mute Call</div>
-            <div>{strangerData.username}</div>
-        </div>) : (<div>{username}</div>)}
-    </div>
+    return (
+        <PeerConnectionProvider>
+            <div>
+                {strangerData.socketId ? (
+                    <div>
+                        <div>{username}</div>
+                        <div onClick={hangUpCall}>Hangup Call</div>
+                        <StartMic strangerData={strangerData} view={'host'} />
+                        <div onClick={muteCall}>{audioElement.current?.muted ? 'Unmute' : 'Mute'} Call</div>
+                        <div>{strangerData.username}</div>
+                    </div>) : (
+                    <div>{username}</div>
+                )}
+            </div>
+        </PeerConnectionProvider>
+    )
 }
