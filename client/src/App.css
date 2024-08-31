@@ -9,3 +9,7 @@ html {
   height: 600px; 
   max-height: 700px;
 }
+
+video{
+  width: 200px;
+}
