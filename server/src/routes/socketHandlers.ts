@@ -16,11 +16,10 @@ export function handleSocketConnection(socket: Socket, io: Server) {
   socket.on('closeRoom', (roomId: string) => mySocketService.closeRoom(roomId));
   socket.on('getSocketId', (username: string) => mySocketService.getSocketId(username));
   socket.on('message', m => io.to(m.to).emit('message', m));
-  socket.on('hangupCall', (socketId: string) =>{
-    console.log("recived hangup order", socketId);
-    
-    io.to(socketId).emit('hangupCall')
-  });
+  socket.on('hangupCall', (socketId: string) => { io.to(socketId).emit('hangupCall') });
+  socket.on('soalStreamRequest', (soal: {
+    soal: { message: string, soalQuantity: number, roomId: string }
+  }) => mySocketService.soal(soal))
 
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`);

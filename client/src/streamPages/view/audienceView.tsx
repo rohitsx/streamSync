@@ -5,7 +5,8 @@ import HandelParticipant from "../streamUtlis/participants";
 import useDefaultPage from "../../hook/useDefaultPage";
 import ConnectedUser from "../streamUtlis/connectedUser";
 import NotifcationBox from "../../assets/notification/notification";
-import SoalSendingComponent from "../../PaymentPage/paymentBar";
+import SendSoal from "../../PaymentComponent/crypto/soal";
+import styles from '../style/hostView.module.css'
 
 export default function AudienceView() {
     const username = useMemo(() => localStorage.getItem('username') || '', []);
@@ -18,11 +19,12 @@ export default function AudienceView() {
         username: string | null,
         socketId: string | null
     }>({ username: null, socketId: null })
+
+
     useEffect(() => {
         localStorage.setItem('defaultPage', 'audience');
         if (!socket || !roomId) return;
 
-        socket.emit('joinRoom', roomId);
         socket.emit('getUsers', roomId);
 
         const handleCloseRoom = () => {
@@ -59,14 +61,12 @@ export default function AudienceView() {
     }
 
     return (
-        <div className="audience-view">
-            <h1 className="audience-title">Audience View</h1>
+        <div className={styles.hostContainer}>
             <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
             <ConnectedUser username={username} strangerData={strangerData} setStrangerData={setStrangerData} view="audience" />
             <HandelParticipant />
-            <SoalSendingComponent />
-            <button onClick={changePage} className="leave-room-button">Leave Room</button>
+            <SendSoal />
+            <button onClick={changePage} className={styles.closeButton}>Leave Room</button>
         </div>
-
     );
 }

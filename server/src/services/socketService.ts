@@ -1,4 +1,3 @@
-import { emit } from "process";
 import { Socket, Server as io } from "socket.io";
 
 export default class SocketService {
@@ -128,6 +127,41 @@ export default class SocketService {
             }
         } catch (err) {
             console.error('Error getting socket id', err);
+        }
+    }
+
+    soal(soalStr: {
+        soal: {
+            message: string,
+            soalQuantity: number,
+            roomId: string
+        }
+    }): void {
+        try {
+            const roomId = soalStr.soal.roomId;
+            if (!roomId) throw new Error("Invalid roomId");
+            const room = SocketService.getRoom(roomId);
+            if (room) {
+                if (room.has(this._username)) {
+                    room.delete(this._username);
+
+                    const roomArray = [this._username, ...room];
+                    room.clear()
+                    roomArray.forEach(value => room.add(value));
+                    this._io.to(roomId).emit('participantsUpdate', Array.from(room));
+                    this._io.to(roomId).emit('participantsUpdateMessage', {
+                        username : this._username,
+                        message : soalStr.soal.message,
+                        soalQuantity: soalStr.soal.soalQuantity
+                    })
+                }
+            } else {
+                throw new Error("Invalid room");
+
+            }
+
+        } catch (err) {
+            console.error('Error send Soal', err);
         }
     }
 }

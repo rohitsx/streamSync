@@ -6,6 +6,7 @@ import NotifcationBox from "../../assets/notification/notification";
 import HandelParticipant from "../streamUtlis/participants";
 import useDefaultPage from "../../hook/useDefaultPage";
 import ConnectedUser from "../streamUtlis/connectedUser";
+import styles from '../style/hostView.module.css'
 
 
 export default function HostView() {
@@ -66,12 +67,11 @@ export default function HostView() {
     }
 
     return (
-        <div className="host-view">
-            <h1 className="host-title">Host View</h1>
+        <div className={styles.hostContainer}>
             <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
             <ConnectedUser username={username} strangerData={StrangerData} setStrangerData={setStrangerData} view={'host'} />
             <HandelParticipant getUsername={true} />
-            <button onClick={changePage} className="close-room-button">Close Room</button>
+            <button className={styles.closeButton} onClick={changePage}>Close Room</button>
         </div>
     );
 }

@@ -1,0 +1,59 @@
+.hostContainer {
+    background-color: #fff;
+    padding: 1.8rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+    max-width: 350px;
+    width: 350px;
+    max-height: 600px;
+    margin: auto;
+}
+
+.hostTitle {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    animation: slideUp 0.5s ease-out 0.2s both;
+}
+
+.closeButton {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #4a90e2;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.closeButton:hover {
+    background-color: #3a7bc8;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

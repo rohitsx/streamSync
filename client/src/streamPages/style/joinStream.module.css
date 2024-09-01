@@ -25,9 +25,11 @@ body {
     padding: 30px;
     background-color: white;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     width: 250px;
     height: 140px;
+    animation: fadeIn 0.3s ease-out 0.1s both;
+    
 }
 
 /* Form styling */
@@ -72,4 +74,16 @@ body {
 .btnprimary:hover {
     background-color: #3a7bc8;
     transform: translateY(-2px);
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(0px); /* Slightly improved effect */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(3px);
+    }
 }

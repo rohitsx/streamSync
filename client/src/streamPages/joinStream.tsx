@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NotifcationBox from '../assets/notification/notification';
 import { useSocketContext } from '../context/socketContext';
-import styles from './style/joinStream.module.css'
+import styles from './style/joinStream.module.css';
 
 export default function JoinStream() {
     const [username, setUsername] = useState('');
@@ -10,8 +10,7 @@ export default function JoinStream() {
     const socket = useSocketContext();
     const navigate = useNavigate();
 
-    const handleJoin = useCallback((e: React.FormEvent) => {
-        e.preventDefault();
+    const handleJoin = useCallback(() => {
         if (!socket) {
             setNotification("Connection not established. Please try again.");
             return;
@@ -47,19 +46,29 @@ export default function JoinStream() {
         };
     }, [socket, username, navigate]);
 
+    const handleKeyPress = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); 
+            handleJoin();
+        }
+    };
+
     return (
         <div className={styles.joinstream}>
             <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
-            <form onSubmit={handleJoin} className={styles.joinform}>
+            <div className={styles.joinform}>
                 <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    onKeyDown={handleKeyPress} 
                     placeholder="Enter username"
                     className={styles.joininput}
                 />
-                <button type="submit" className={`${styles.btn} ${styles.btnprimary}`}>Send Request</button>
-            </form>
+                <button type="button" onClick={handleJoin} className={`${styles.btn} ${styles.btnprimary}`}>
+                    Send Request
+                </button>
+            </div>
         </div>
     );
 }

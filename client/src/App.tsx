@@ -23,7 +23,6 @@ const App: React.FC = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/home" element={<Home />} />
-          {/* <Route path="/host/:username" element={<HostView />} /> */}
           <Route path="/join" element={<JoinStream />} />
           <Route path="/join-view" element={<AudienceView />} />
           <Route path="/host-view" element={<HostView />} />

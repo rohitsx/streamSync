@@ -1,0 +1,120 @@
+.soalSenderContainer {
+    background-color: #fff;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.notification {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.closeNotification {
+    background: none;
+    border: none;
+    color: #721c24;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 1rem;
+}
+
+.messageInput {
+    width: 100%;
+    border: 1px solid #ccc;
+    height: 20px;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.amountControl {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.amountSlider {
+    width: 80%;
+    -webkit-appearance: none;
+    flex-grow: 1;
+    height: 5px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+}
+
+.amountSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #4a90e2;
+    cursor: pointer;
+}
+
+.amountSlider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #4a90e2;
+    cursor: pointer;
+}
+
+.amountDisplay {
+    font-size: 0.9rem;
+    color: #333;
+    white-space: nowrap;
+}
+
+.inputAndBtn {
+    display: flex;
+}
+
+.btn {
+    text-align: center;
+    align-items: center;
+    width: 20%;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.btnPrimary {
+    background-color: #4a90e2;
+    color: #fff;
+}
+
+.btnPrimary:hover {
+    background-color: #3a7bc8;
+    transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

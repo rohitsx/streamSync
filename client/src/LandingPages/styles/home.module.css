@@ -16,7 +16,7 @@
     font-size: 1.5rem;
     margin-bottom: 2rem;
     color: #333;
-    animation: fadeIn 0.5s ease-out 0.4s both;
+    animation: fadeIn 0.3s ease-out 0.1s both;
 }
 
 .homecontainer div {
@@ -60,21 +60,21 @@
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(5px); /* Slightly improved effect */
+        transform: translateY(0px); /* Slightly improved effect */
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(3px);
     }
 }
 
 @keyframes btnfadeIn {
     from {
         opacity: 0;
-        transform: translateY(5px); /* Slightly improved effect */
+        transform: translateY(0px); /* Slightly improved effect */
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(3px);
     }
 }
