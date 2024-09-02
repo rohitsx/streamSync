@@ -3,7 +3,6 @@ import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
 import SignupPage from './LandingPages/signupPage';
 import LoginPage from './LandingPages/loginPage';
 import Home from './LandingPages/home';
-// import HostStream from './streamPages/hostStream';
 import "./App.css"
 import JoinStream from './streamPages/joinStream';
 import { SocketProvider } from './context/socketContext';
@@ -17,17 +16,17 @@ const App: React.FC = () => {
   const [, defaultPage] = useDefaultPage();
   return (
     <SocketProvider>
-      <Router>
-        <Routes>
-          <Route path='/' element={defaultPage} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/join" element={<JoinStream />} />
-          <Route path="/join-view" element={<AudienceView />} />
-          <Route path="/host-view" element={<HostView />} />
-        </Routes>
-      </Router>
+        <Router>
+          <Routes>
+            <Route path='/' element={defaultPage} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/join" element={<JoinStream />} />
+            <Route path="/join-view" element={<AudienceView />} />
+            <Route path="/host-view" element={<HostView />} />
+          </Routes>
+        </Router>
     </SocketProvider>
   );
 };

@@ -5,7 +5,7 @@ import HandelParticipant from "../streamUtlis/participants";
 import useDefaultPage from "../../hook/useDefaultPage";
 import ConnectedUser from "../streamUtlis/connectedUser";
 import NotifcationBox from "../../assets/notification/notification";
-import SendSoal from "../../PaymentComponent/crypto/soal";
+import SendSoal from "../../PaymentComponent/crypto/soal/soal";
 import styles from '../style/hostView.module.css'
 
 export default function AudienceView() {
