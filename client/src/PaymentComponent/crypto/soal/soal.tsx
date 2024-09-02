@@ -13,11 +13,12 @@ import {
 } from "@solana/web3.js";
 
 
-export default function SendSoal() {
-    const [amount, setAmount] = useState(0.00);
+export default function SendSoal({ amount, setAmount }: { amount: number, setAmount: (amount: number) => void}) {
+
     const [message, setMessage] = useState('');
     const socket = useSocketContext()
     const [notificationMessage, setNotification] = useState<string | null>(null)
+    const [hostpublicId, setHostPublicId] = useState<string | null>(null);
     const navigate = useNavigate()
 
 
@@ -56,7 +57,7 @@ export default function SendSoal() {
             SystemProgram.transfer({
                 fromPubkey: keyPair.publicKey,
                 toPubkey: toKeypair,
-                lamports: amount * 1000000000,
+                lamports: 1000000000,
             }),
         );
 
@@ -69,10 +70,24 @@ export default function SendSoal() {
     }
 
     useEffect(() => {
-        socket?.on('getSocketId', (data: { username: string, socketId: string, hostPublicId: string }) => {
-            soalSend(data.hostPublicId);
+        if (!socket) return;
+        socket.on('hostPublicId', (data) => {
+            console.log('data lololololo', data);
+
         })
-    }, [message, amount]);
+
+        return () => { socket.off('hostPublicId') }
+    }, [amount]);
+
+    useEffect(() => {
+        if (hostpublicId) {
+            console.log('hostpublicId', hostpublicId);
+
+            soalSend(hostpublicId);
+        }
+
+        return () => setHostPublicId(null)
+    }, [hostpublicId])
 
     return (
         <div className={styles.soalSenderContainer}>

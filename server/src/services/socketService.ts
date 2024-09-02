@@ -133,6 +133,7 @@ export default class SocketService {
             if (strangerSocket) {
                 this._io.to(this._socket.id).emit('getSocketId', { SocketId: strangerSocket, username: username });
                 this._io.to(strangerSocket).emit('getSocketId', { socketId: this._socket.id, username: this._username, hostPublicKey: publickey })
+                this._io.to(strangerSocket).emit('hostPublicId', publickey )
             }
         } catch (err) {
             console.error('Error getting socket id', err);

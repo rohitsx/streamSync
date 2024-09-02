@@ -30,7 +30,7 @@ export default function CreateSoalWallet() {
         <div className={styles.container}>
             {localStorage.getItem('walletKey') ? (
                 <div className={styles.balance}>
-                    $ {balance === 0 ? '0.00' : balance}0
+                    $ {balance === 0 ? '0.00' : balance}
                 </div>
             ) : (
                 <button className={styles.button} onClick={createWallet}>

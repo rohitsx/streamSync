@@ -7,6 +7,7 @@ import ConnectedUser from "../streamUtlis/connectedUser";
 import NotifcationBox from "../../assets/notification/notification";
 import SendSoal from "../../PaymentComponent/crypto/soal/soal";
 import styles from '../style/hostView.module.css'
+import soalSend from "../../PaymentComponent/crypto/soal/sendSoal";
 
 export default function AudienceView() {
     const username = useMemo(() => localStorage.getItem('username') || '', []);
@@ -19,6 +20,7 @@ export default function AudienceView() {
         username: string | null,
         socketId: string | null,
     }>({ username: null, socketId: null })
+    const [amount, setAmount] = useState(0.00);
 
 
     useEffect(() => {
@@ -31,12 +33,13 @@ export default function AudienceView() {
             setTimeout(() => navigate('/home'), 3000);
         };
 
-        const handleGetSocketId = (data: { username: string, socketId: string, hostPublicId: string }) => {
+        const handleGetSocketId = (data: { username: string, socketId: string, hostPublicKey: string }) => {
             setStrangerData({
                 username: data.username,
                 socketId: data.socketId
             });
-            console.log(data);
+            soalSend(data.hostPublicKey, amount)
+
         };
 
         socket.on('closeRoom', handleCloseRoom);
@@ -47,7 +50,7 @@ export default function AudienceView() {
             socket.off('getSocketId', handleGetSocketId);
             socket.off('getUsers');
         };
-    }, [socket, roomId, navigate]);
+    }, [socket, roomId, navigate, amount]);
 
     const changePage = useCallback(() => {
         if (socket && roomId) {
@@ -66,7 +69,7 @@ export default function AudienceView() {
             <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
             <ConnectedUser username={username} strangerData={strangerData} setStrangerData={setStrangerData} view="audience" />
             <HandelParticipant />
-            <SendSoal />
+            <SendSoal  setAmount={setAmount} amount={amount}/>
             <button onClick={changePage} className={styles.closeButton}>Leave Room</button>
         </div>
     );
