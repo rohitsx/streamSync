@@ -1,0 +1,40 @@
+/* react.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    padding: 10px;
+    /* Slightly dark white background */
+    /* Optional: Adds a subtle shadow */
+}
+
+.balance {
+    font-size: 2rem;
+    color: #2d2a2a;
+    /* Adjust color as needed */
+    font-weight:600;
+}
+
+.button {
+    background-color: #008CBA;
+    /* Adjust color as needed */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    /* Make text bold */
+}
+
+.button:hover {
+    background-color: #005f6a;
+    /* Adjust hover color as needed */
+}

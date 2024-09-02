@@ -12,7 +12,6 @@ const HomePage = () => {
   const socket = useSocketContext()
   isLoggedIn()
 
-  console.log(import.meta.env.VITE_RPC_END_POINT);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -21,10 +20,7 @@ const HomePage = () => {
     else setUsername(userusername || '');
   }, [navigate]);
 
-  useEffect(() => {
-    console.log('socket connected id', socket?.id);
-
-  }, [socket])
+  useEffect(() => { }, [socket])
 
   return (
     <div className={styles.homecontainer}>

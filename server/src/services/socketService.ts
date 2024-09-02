@@ -9,6 +9,10 @@ export default class SocketService {
 
     private static _rooms: Map<string, Set<string>> = new Map(); //replace this database in futured
     private static _users: Map<string, string> = new Map();
+    private static _primeUsers: Map<string, Map<string, {
+        message: string,
+        soalQuantity: number
+    }>> = new Map();
 
     private static getRoom(roomId: string): Set<string> | undefined {
         if (!roomId) throw new Error("Invalid roomId");
@@ -65,7 +69,10 @@ export default class SocketService {
             console.log(this._username, "getting user for", roomId, '\n');
 
             const room = SocketService.getRoom(roomId);
-            if (room) this._io.to(this._socket.id).emit('participantsUpdate', Array.from(room));
+            if (room) {
+                this._io.to(this._socket.id).emit('participantsUpdate', Array.from(room));
+                this._io.to(this._socket.id).emit('primeUserUpdate', Object.fromEntries(SocketService._primeUsers));
+            }
             else throw new Error("Room not found");
 
         } catch (error) {
@@ -107,6 +114,8 @@ export default class SocketService {
             const room = SocketService.getRoom(roomId);
             if (room) {
                 SocketService._rooms.delete(roomId)
+                SocketService._users.clear()
+                SocketService._primeUsers.clear()
                 this._io.to(roomId).emit('closeRoom')
             }
 
@@ -115,7 +124,7 @@ export default class SocketService {
         }
     }
 
-    getSocketId(username: string) {
+    getSocketId({ username, publickey }: { username: string, publickey: string }) {
         try {
             console.log(username, 'asking socketId and username for', this._username, '\n');
 
@@ -123,7 +132,7 @@ export default class SocketService {
             const strangerSocket = SocketService._users.get(username);
             if (strangerSocket) {
                 this._io.to(this._socket.id).emit('getSocketId', { SocketId: strangerSocket, username: username });
-                this._io.to(strangerSocket).emit('getSocketId', { socketId: this._socket.id, username: this._username })
+                this._io.to(strangerSocket).emit('getSocketId', { socketId: this._socket.id, username: this._username, hostPublicKey: publickey })
             }
         } catch (err) {
             console.error('Error getting socket id', err);
@@ -134,34 +143,51 @@ export default class SocketService {
         soal: {
             message: string,
             soalQuantity: number,
-            roomId: string
+            roomId: string,
         }
     }): void {
         try {
-            const roomId = soalStr.soal.roomId;
+            const { roomId, message, soalQuantity } = soalStr.soal;
             if (!roomId) throw new Error("Invalid roomId");
+
             const room = SocketService.getRoom(roomId);
             if (room) {
                 if (room.has(this._username)) {
+                    // Remove the user from the room
                     room.delete(this._username);
 
-                    const roomArray = [this._username, ...room];
-                    room.clear()
-                    roomArray.forEach(value => room.add(value));
+                    // Add the user to _primeUsers with roomId
+                    if (!SocketService._primeUsers.has(roomId)) {
+                        SocketService._primeUsers.set(roomId, new Map());
+                    }
+                    const roomPrimeUsers = SocketService._primeUsers.get(roomId);
+                    if (roomPrimeUsers) {
+                        roomPrimeUsers.set(this._username, {
+                            message,
+                            soalQuantity,
+                        });
+                    }
+
+                    // Emit updates
                     this._io.to(roomId).emit('participantsUpdate', Array.from(room));
-                    this._io.to(roomId).emit('participantsUpdateMessage', {
-                        username : this._username,
-                        message : soalStr.soal.message,
-                        soalQuantity: soalStr.soal.soalQuantity
-                    })
+                    this._io.to(roomId).emit('primeUserUpdate', this.getPrimeUsersForRoom(roomId));
+                } else {
+                    throw new Error("User not found in the room");
                 }
             } else {
                 throw new Error("Invalid room");
-
             }
-
         } catch (err) {
-            console.error('Error send Soal', err);
+            console.error('Error sending Soal', err);
         }
+    }
+
+    // Helper method to get prime users for a specific room
+    private getPrimeUsersForRoom(roomId: string): object {
+        const roomPrimeUsers = SocketService._primeUsers.get(roomId);
+        if (roomPrimeUsers) {
+            return Object.fromEntries(roomPrimeUsers);
+        }
+        return {};
     }
 }

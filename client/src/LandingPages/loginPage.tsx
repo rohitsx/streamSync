@@ -21,10 +21,8 @@ const LoginPage = () => {
     }).then(res => {
       if (res.data.message === 'success_login') {
         localStorage.setItem('token', res.data.token);
-        console.log(res.data);
 
         localStorage.setItem('username', res.data.username);
-        console.log("username from login page", localStorage.getItem('username'));
 
         window.location.reload();
       }

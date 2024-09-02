@@ -14,7 +14,7 @@ export function handleSocketConnection(socket: Socket, io: Server) {
   socket.on('getUsers', (roomId: string) => mySocketService.getUser(roomId));
   socket.on('leaveRoom', (roomId: string) => mySocketService.leaveRoom(roomId));
   socket.on('closeRoom', (roomId: string) => mySocketService.closeRoom(roomId));
-  socket.on('getSocketId', (username: string) => mySocketService.getSocketId(username));
+  socket.on('getSocketId', ({ username, publickey }: { username: string, publickey: string }) => mySocketService.getSocketId({ username, publickey }));
   socket.on('message', m => io.to(m.to).emit('message', m));
   socket.on('hangupCall', (socketId: string) => { io.to(socketId).emit('hangupCall') });
   socket.on('soalStreamRequest', (soal: {

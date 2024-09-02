@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSocketContext } from '../../../context/socketContext';
 import NotifcationBox from '../../../assets/notification/notification';
 import { useNavigate } from 'react-router-dom';
-import styles from './soal.module.css'
+import styles from './styles/soal.module.css'
 import getSolConnection from '../../../utils/getSolConnection';
 import getKeyPair from '../../../utils/getkeyPair';
 import {
@@ -11,7 +11,6 @@ import {
     Transaction,
     sendAndConfirmTransaction,
 } from "@solana/web3.js";
-import { Buffer } from 'buffer';
 
 
 export default function SendSoal() {
@@ -22,7 +21,8 @@ export default function SendSoal() {
     const navigate = useNavigate()
 
 
-    const handeSoalSend = useCallback(() => {
+    const handeSoalSend = useCallback((e: React.FormEvent) => {
+        e.preventDefault();
         if (!socket) {
             setNotification("Connection not established. Please try again.");
             return;
@@ -43,15 +43,14 @@ export default function SendSoal() {
             }
         });
 
-        soalSend()
 
         setMessage('')
     }, [socket, message, amount]);
 
-    async function soalSend() {
+    async function soalSend(hostPublicId: string) {
         const connection = getSolConnection();
         const keyPair = getKeyPair()
-        const toKeypair = new PublicKey('2Avud4f3iSeyMJeNkq35fCT8pKhMD6AahBJpbSHWueKK')
+        const toKeypair = new PublicKey(hostPublicId)
 
         const transferTransaction = new Transaction().add(
             SystemProgram.transfer({
@@ -61,7 +60,7 @@ export default function SendSoal() {
             }),
         );
 
-        console.log('this worked');
+        console.log('this send solana worked');
 
 
         await sendAndConfirmTransaction(connection, transferTransaction, [
@@ -70,10 +69,10 @@ export default function SendSoal() {
     }
 
     useEffect(() => {
-        socket?.on('getUserId', () => {
-            //sendSoal()
+        socket?.on('getSocketId', (data: { username: string, socketId: string, hostPublicId: string }) => {
+            soalSend(data.hostPublicId);
         })
-    }, [socket, amount])
+    }, [message, amount]);
 
     return (
         <div className={styles.soalSenderContainer}>

@@ -17,7 +17,7 @@ export default function AudienceView() {
     const [notification, setNotification] = useState<string | null>(null);
     const [strangerData, setStrangerData] = useState<{
         username: string | null,
-        socketId: string | null
+        socketId: string | null,
     }>({ username: null, socketId: null })
 
 
@@ -25,16 +25,17 @@ export default function AudienceView() {
         localStorage.setItem('defaultPage', 'audience');
         if (!socket || !roomId) return;
 
-        socket.emit('getUsers', roomId);
-
         const handleCloseRoom = () => {
             setNotification('Host closed room. Redirecting home...');
             localStorage.setItem('defaultPage', 'home');
             setTimeout(() => navigate('/home'), 3000);
         };
 
-        const handleGetSocketId = (data: { username: string, socketId: string }) => {
-            setStrangerData(data);
+        const handleGetSocketId = (data: { username: string, socketId: string, hostPublicId: string }) => {
+            setStrangerData({
+                username: data.username,
+                socketId: data.socketId
+            });
             console.log(data);
         };
 
