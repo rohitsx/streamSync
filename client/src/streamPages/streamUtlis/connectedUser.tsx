@@ -3,6 +3,8 @@ import { Socket } from "socket.io-client";
 import { useSocketContext } from "../../context/socketContext";
 import StartMic from "../webRtcSpecific/webRtc";
 import { PeerConnectionProvider } from "../../context/peerConnectionContext";
+import styles from "../style/connectedUser.module.css"
+import { Phone, PhoneOff, Mic, MicOff } from 'lucide-react';
 
 interface ConnectedUserProps {
     username: string | null,
@@ -39,22 +41,28 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
         });
     }, [])
 
+
     return (
         <PeerConnectionProvider>
-            <div className="connected-user">
+            <div className={styles['connected-user']}>
                 {strangerData.socketId ? (
-                    <div className="call-controls">
-                        <div className="user-name">{username}</div>
-                        <div className="hangup-call" onClick={hangUpCall}>Hangup Call</div>
-                        <StartMic strangerData={strangerData} view={view} toggelMic={toggelMic} endCall={endCall} setEndCall={setEndCall} />
-                        <div className="mute-call" onClick={muteCall}>{toggelMic ? 'Mute' : 'Unmute'} Call</div>
-                        <div className="stranger-name">{strangerData.username}</div>
+                    <div className={styles['call-controls']}>
+                        <div className={styles['user-name']}>{username}</div>
+                        <div className={styles['hangup-call']} onClick={hangUpCall} title="Hang up"></div>
+                        < StartMic strangerData={strangerData} view={view} toggelMic={toggelMic} endCall={endCall} setEndCall={setEndCall} />
+                        <div
+                            className={`${styles['mute-call']} ${!toggelMic ? styles['unmuted'] : ''}`}
+                            onClick={muteCall}
+                            title={toggelMic ? 'Unmute' : 'Mute'}
+                        ></div>
+                        <div className={`${styles['stranger-name']} ${!strangerData.socketId && styles['stranger-name-exit']}`}>
+                            {strangerData.username}
+                        </div>
                     </div>
                 ) : (
-                    <div className="user-name">{username}</div>
+                    <div className={styles['user-name']}>{username}</div>
                 )}
             </div>
-
         </PeerConnectionProvider>
     )
 }

@@ -13,7 +13,7 @@ import {
 } from "@solana/web3.js";
 
 
-export default function SendSoal({ amount, setAmount }: { amount: number, setAmount: (amount: number) => void}) {
+export default function SendSoal({ amount, setAmount }: { amount: number, setAmount: (amount: number) => void }) {
 
     const [message, setMessage] = useState('');
     const socket = useSocketContext()
@@ -91,10 +91,6 @@ export default function SendSoal({ amount, setAmount }: { amount: number, setAmo
 
     return (
         <div className={styles.soalSenderContainer}>
-            <NotifcationBox
-                notificationMessage={notificationMessage}
-                setNotification={setNotification}
-            />
             <div className={styles.inputGroup}>
                 <input
                     type="text"
@@ -114,12 +110,15 @@ export default function SendSoal({ amount, setAmount }: { amount: number, setAmo
                             onChange={(e) => setAmount(Number(e.target.value))}
                             className={styles.amountSlider}
                         />
+                        <span className={styles.amountDisplay}>{amount.toFixed(1)}</span>
                     </div>
                     <button onClick={handeSoalSend} className={`${styles.btn} ${styles.btnPrimary}`}>
                         Send
                     </button>
                 </div>
             </div>
+            <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} color={'blue'} />
         </div>
+
     );
 }

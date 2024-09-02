@@ -1,120 +1,86 @@
 .soalSenderContainer {
+    width: 100%;
+    padding: 10px;
     background-color: #fff;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    animation: fadeIn 0.5s ease-out;
-}
-
-.notification {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.closeNotification {
-    background: none;
-    border: none;
-    color: #721c24;
-    font-size: 1.2rem;
-    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .inputGroup {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    margin-bottom: 1rem;
+    gap: 8px;
 }
 
 .messageInput {
     width: 100%;
+    padding: 8px;
     border: 1px solid #ccc;
-    height: 20px;
-    border-radius: 4px;
-    font-size: 1rem;
-    box-sizing: border-box;
+    border-radius: 5px;
+    font-size: 14px;
+    height: 36px;
+}
+
+.inputAndBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .amountControl {
+    flex-grow: 1;
     display: flex;
     align-items: center;
-    gap: 1rem;
-    width: 100%;
+    background-color: #f0f0f0;
+    padding: 5px;
+    border-radius: 20px;
+    height: 36px;
 }
 
 .amountSlider {
-    width: 80%;
-    -webkit-appearance: none;
     flex-grow: 1;
+    -webkit-appearance: none;
+    appearance: none;
     height: 5px;
-    border-radius: 5px;
-    background: #d3d3d3;
+    background: #e0e0e0;
     outline: none;
+    border-radius: 5px;
 }
 
 .amountSlider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: #4a90e2;
+    width: 18px;
+    height: 18px;
+    background: #4CAF50;
     cursor: pointer;
-}
-
-.amountSlider::-moz-range-thumb {
-    width: 15px;
-    height: 15px;
     border-radius: 50%;
-    background: #4a90e2;
-    cursor: pointer;
 }
 
 .amountDisplay {
-    font-size: 0.9rem;
+    min-width: 30px;
+    text-align: right;
+    font-size: 16px;
+    font-weight: bold;
     color: #333;
-    white-space: nowrap;
-}
-
-.inputAndBtn {
-    display: flex;
+    margin-left: 8px;
 }
 
 .btn {
-    text-align: center;
-    align-items: center;
-    width: 20%;
+    padding: 8px 15px;
     border: none;
     border-radius: 5px;
-    font-size: 1rem;
+    font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    text-decoration: none;
-    white-space: nowrap;
-    display: inline-block;
+    transition: background-color 0.3s;
+    height: 36px;
 }
 
 .btnPrimary {
-    background-color: #4a90e2;
-    color: #fff;
+    background-color: #f0f0f0;
+    color: #333;
 }
 
 .btnPrimary:hover {
-    background-color: #3a7bc8;
-    transform: translateY(-2px);
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+    background-color: #e0e0e0;
 }
