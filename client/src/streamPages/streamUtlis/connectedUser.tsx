@@ -4,7 +4,6 @@ import { useSocketContext } from "../../context/socketContext";
 import StartMic from "../webRtcSpecific/webRtc";
 import { PeerConnectionProvider } from "../../context/peerConnectionContext";
 import styles from "../style/connectedUser.module.css"
-import { Phone, PhoneOff, Mic, MicOff } from 'lucide-react';
 
 interface ConnectedUserProps {
     username: string | null,
@@ -47,7 +46,7 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
             <div className={styles['connected-user']}>
                 {strangerData.socketId ? (
                     <div className={styles['call-controls']}>
-                        <div className={styles['user-name']}>{username}</div>
+                        <div className={styles['user-name']}>{ username}</div>
                         <div className={styles['hangup-call']} onClick={hangUpCall} title="Hang up"></div>
                         < StartMic strangerData={strangerData} view={view} toggelMic={toggelMic} endCall={endCall} setEndCall={setEndCall} />
                         <div
@@ -60,7 +59,7 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
                         </div>
                     </div>
                 ) : (
-                    <div className={styles['user-name']}>{username}</div>
+                    <div className={styles['user-name']}>{localStorage.getItem('roomId')}</div>
                 )}
             </div>
         </PeerConnectionProvider>
