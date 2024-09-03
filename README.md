@@ -1,6 +1,6 @@
 # StreamSync
 
-![ezgif-5-69ea68a897](https://github.com/user-attachments/assets/5b591a3d-3d23-4cbe-b7b9-cd545e8df928)
+![ezgif-5-69ea68a897](https://github.com/user-attachments/assets/541ab9dd-3791-420c-9d1f-8ae58233bb67)
 
 **Empower Your Live Streams with StreamSync**  
 Connect with your audience like never before.
