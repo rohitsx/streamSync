@@ -6,6 +6,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import 'dotenv/config'
 import { handleSocketConnection } from './routes/socketHandlers';
+import Redis from './config/redis';
 
 const app = express();
 const port = 3000;
@@ -24,6 +25,11 @@ app.use('/', authRoutes);
 io.on("connection", (socket) => {
   handleSocketConnection(socket, io);
 });
+
+
+Redis.connect()
+  .then(() => console.log("redis connected"))
+  .catch(err => console.log("error connecting redis", err))
 
 connectToDatabase()
   .then(() => {

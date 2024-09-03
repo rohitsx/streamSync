@@ -9,7 +9,7 @@ export function handleSocketConnection(socket: Socket, io: Server) {
 
   const mySocketService = new SocketService(socket, io);
 
-  socket.on('createRoom', (roomId: string) => mySocketService.createRoom(roomId));
+  socket.on('createRoom', (roomId: string, publicKey: string) => mySocketService.createRoom(roomId, publicKey));
   socket.on('joinRoom', (roomId: string) => mySocketService.joinRoom(roomId));
   socket.on('getUsers', (roomId: string) => mySocketService.getUser(roomId));
   socket.on('leaveRoom', (roomId: string) => mySocketService.leaveRoom(roomId));

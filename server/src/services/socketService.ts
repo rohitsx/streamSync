@@ -1,10 +1,14 @@
+import { RedisClientType } from "redis";
 import { Socket, Server as io } from "socket.io";
+import RedisClient from "../config/redis";
+import { createRedisRoom } from "./redisService";
 
 export default class SocketService {
     constructor(
         private _socket: Socket,
         private _io: io,
-        private _username: string = _socket.handshake.auth.username
+        private _username: string = _socket.handshake.auth.username,
+        private _client: RedisClientType = RedisClient.getInstance()
     ) { };
 
     private static _rooms: Map<string, Set<string>> = new Map(); //replace this database in futured
@@ -20,12 +24,16 @@ export default class SocketService {
         return SocketService._rooms.get(roomId);
     }
 
-    createRoom(roomId: string): void {
+    createRoom(roomId: string, publicKey: string): void {
         try {
             if (!roomId) throw new Error("Invalid roomId");
 
             if (this._socket) {
+                //redis
+                createRedisRoom(roomId, publicKey)
+                    .catch(err => console.log('err creating roomId ' + roomId, err))
                 const checkRoom = SocketService._rooms.has(roomId);
+
 
                 !checkRoom && SocketService._rooms.set(roomId, new Set());
 
@@ -47,8 +55,7 @@ export default class SocketService {
             if (!roomId) throw new Error("Invalid roomId")
 
             const room = SocketService.getRoom(roomId);
-            if (room) room.has(roomId) ? this._socket.emit('joiningLastRoom') : room.add(this._username);
-            else throw new Error("Invalid room");
+            if (!room) throw new Error("Invalid room");
 
             SocketService._users.set(this._username, this._socket.id);
             console.log(this._username, 'joining the room', roomId, SocketService._rooms);
@@ -133,7 +140,7 @@ export default class SocketService {
             if (strangerSocket) {
                 this._io.to(this._socket.id).emit('getSocketId', { SocketId: strangerSocket, username: username });
                 this._io.to(strangerSocket).emit('getSocketId', { socketId: this._socket.id, username: this._username, hostPublicKey: publickey })
-                this._io.to(strangerSocket).emit('hostPublicId', publickey )
+                this._io.to(strangerSocket).emit('hostPublicId', publickey)
             }
         } catch (err) {
             console.error('Error getting socket id', err);

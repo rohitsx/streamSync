@@ -3,8 +3,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
 import { getDb } from '../config/database';
-import { JWT_SECRET } from '../config/environment';
-import { log } from 'console';
 
 const JWT_Token: string = process.env.JWT_SECRET || '';
 
