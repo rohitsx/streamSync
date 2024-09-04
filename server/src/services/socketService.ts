@@ -1,14 +1,13 @@
 import { RedisClientType } from "redis";
 import { Socket, Server as io } from "socket.io";
-import RedisClient from "../config/redis";
-import { createRedisRoom } from "./redisService";
+import redisService from "./redisService";
 
 export default class SocketService {
     constructor(
         private _socket: Socket,
         private _io: io,
         private _username: string = _socket.handshake.auth.username,
-        private _client: RedisClientType = RedisClient.getInstance()
+        private _client = new redisService()
     ) { };
 
     private static _rooms: Map<string, Set<string>> = new Map(); //replace this database in futured
@@ -24,29 +23,15 @@ export default class SocketService {
         return SocketService._rooms.get(roomId);
     }
 
-    createRoom(roomId: string, publicKey: string): void {
+    async createRoom(roomId: string, publicKey: string): Promise<void> {
         try {
             if (!roomId) throw new Error("Invalid roomId");
 
-            if (this._socket) {
-                //redis
-                createRedisRoom(roomId, publicKey)
-                    .catch(err => console.log('err creating roomId ' + roomId, err))
-                const checkRoom = SocketService._rooms.has(roomId);
+            await this._client.createRedisRoom(roomId, publicKey)
 
-
-                !checkRoom && SocketService._rooms.set(roomId, new Set());
-
-                const room = SocketService.getRoom(roomId);
-                room && this._io.to(this._socket.id).emit('participantsUpdate', Array.from(room));
-
-                console.log(this._username, 'creating room', roomId, SocketService._rooms);
-                this._socket.join(roomId);
-            } else {
-                throw new Error('socket not created')
-            }
         } catch (error) {
-            console.error(`Error creating room: ${error}`);
+            error === 'Room already exists' ? this.getUser(roomId) :
+                console.error(`Error creating room: ${error}`);
         }
     }
 
@@ -73,12 +58,14 @@ export default class SocketService {
         try {
             if (!roomId) throw new Error("Invalid roomId");
 
+            // redis
+            const room = this._client.getRedisRoom(roomId);
+
             console.log(this._username, "getting user for", roomId, '\n');
 
-            const room = SocketService.getRoom(roomId);
+            // const room = SocketService.getRoom(roomId);
             if (room) {
-                this._io.to(this._socket.id).emit('participantsUpdate', Array.from(room));
-                this._io.to(this._socket.id).emit('primeUserUpdate', Object.fromEntries(SocketService._primeUsers));
+                this._io.to(this._socket.id).emit('participantsUpdate', room);
             }
             else throw new Error("Room not found");
 
