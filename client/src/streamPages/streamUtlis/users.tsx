@@ -6,7 +6,7 @@ type UsersProp = {
     handleGetUser: (username: string) => void;
 }
 
-const primeColors = ['#D32F2F', '#7B1FA2', '#1976D2', '#388E3C', '#FFA000', '#E64A19', '#5D4037', '#455A64'];
+//const primeColors = ['#D32F2F', '#7B1FA2', '#1976D2', '#388E3C', '#FFA000', '#E64A19', '#5D4037', '#455A64'];
 const regularColors = ['#FFCDD2', '#E1BEE7', '#BBDEFB', '#C8E6C9', '#FFECB3', '#FFCCBC', '#D7CCC8', '#CFD8DC'];
 
 export default function Users({ users, handleGetUser }: UsersProp) {

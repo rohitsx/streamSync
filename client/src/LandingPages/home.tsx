@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import isLoggedIn from '../utils/isLoggedIn';
 import styles from './styles/home.module.css'
