@@ -7,11 +7,12 @@ import HandelParticipant from "../streamUtlis/participants";
 import useDefaultPage from "../../hook/useDefaultPage";
 import ConnectedUser from "../streamUtlis/connectedUser";
 import styles from '../style/hostView.module.css'
+import getKeyPair from "../../utils/getkeyPair";
 
 
 export default function HostView() {
     const username = useMemo(() => localStorage.getItem('username') || '', []);
-    const [notificationMessage, setNotification] = useState<string | null>(null);
+    const [notification, setNotification] = useState<string | null>(null)
     const socket = useSocketContext();
     const navigate = useNavigate();
     const [updateDefaultPage] = useDefaultPage()
@@ -20,16 +21,14 @@ export default function HostView() {
         socketId: string | null
     }>({ username: null, socketId: null })
 
+
     useEffect(() => {
-        localStorage.setItem('defaultPage', 'host')
         const token = localStorage.getItem('token');
         if (!token) {
             navigate('/login');
             return;
         }
         if (socket) {
-            console.log('inside socket working in host');
-
             validateToken(token)
             socket.on('joiningLastRoom', () => {
                 const dp = localStorage.getItem('deaultPage')
@@ -50,15 +49,23 @@ export default function HostView() {
             const response = await axios.post(`${import.meta.env.VITE_API}validate-token`, { token });
             const validatedUsername = response.data.username;
 
-            if (validatedUsername === username && socket) socket.emit('createRoom', username);
-            else throw new Error('Token validation failed');
+            const keyPair = getKeyPair();
 
-        } catch (error) {
-            console.error('Token validation failed', error);
-            setNotification('Server error, please try again later');
+            if (validatedUsername === username && socket) {
+                socket.emit('createRoom', { roomId: username, publicKey: keyPair.publicKey.toString() });
+                localStorage.setItem('defaultPage', 'host')
+                socket.emit('getUsers', username);
+
+            } else {
+                throw new Error('Token validation failed');
+            }
+
+        } catch (error: any) {
+            console.error('Token validation or room creation failed', error.message);
             navigate('/home');
         }
-    };
+    }
+
 
     function changePage() {
         socket && socket.emit('closeRoom', username)
@@ -68,7 +75,7 @@ export default function HostView() {
 
     return (
         <div className={styles.hostContainer}>
-            <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
+            <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
             <ConnectedUser username={username} strangerData={StrangerData} setStrangerData={setStrangerData} view={'host'} />
             <HandelParticipant getUsername={true} />
             <button className={styles.closeButton} onClick={changePage}>Close Room</button>

@@ -1,4 +1,3 @@
-import { RedisClientType } from "redis";
 import { Socket, Server as io } from "socket.io";
 import redisService from "./redisService";
 
@@ -27,91 +26,88 @@ export default class SocketService {
         try {
             if (!roomId) throw new Error("Invalid roomId");
 
-            await this._client.createRedisRoom(roomId, publicKey)
+            await this._client.createRedisRoom(roomId, publicKey, this._socket);
+            await this.getUser(roomId);
+            console.log('create the room');
+            this._socket.join(roomId)
 
         } catch (error) {
-            error === 'Room already exists' ? this.getUser(roomId) :
-                console.error(`Error creating room: ${error}`);
+            console.error(`Error creating room: ${error}`);
         }
     }
 
-    joinRoom(roomId: string): void {
-        try {
-            if (!roomId) throw new Error("Invalid roomId")
-
-            const room = SocketService.getRoom(roomId);
-            if (!room) throw new Error("Invalid room");
-
-            SocketService._users.set(this._username, this._socket.id);
-            console.log(this._username, 'joining the room', roomId, SocketService._rooms);
-
-            this._io.to(this._socket.id).emit('validRoom');
-            this._io.to(roomId).emit('participantsUpdate', Array.from(room));
-            this._socket.join(roomId);
-        } catch (error) {
-            this._io.to(this._socket.id).emit('invalidRoom')
-            console.error(`Error joining room: ${error}`);
-        }
-    }
-
-    getUser(roomId: string): void {
+    async checkRoom(roomId: string): Promise<void> {
         try {
             if (!roomId) throw new Error("Invalid roomId");
 
-            // redis
-            const room = this._client.getRedisRoom(roomId);
+            await this._client.checkRoom(roomId)
+            this._io.to(this._socket.id).emit('validRoom');
+        } catch (error: any) {
+            error.message === 'invalidRoom' && this._io.to(this._socket.id).emit('invalidRoom')
 
-            console.log(this._username, "getting user for", roomId, '\n');
-
-            // const room = SocketService.getRoom(roomId);
-            if (room) {
-                this._io.to(this._socket.id).emit('participantsUpdate', room);
-            }
-            else throw new Error("Room not found");
-
-        } catch (error) {
-            console.error(`Error getting user: ${error}`, roomId);
         }
     }
 
-    leaveRoom(roomId: string): void {
+    async joinRoom(roomId: string): Promise<void> {
+        try {
+            if (!roomId) throw new Error("Invalid roomId");
+
+            //redis
+            await this._client.joinRedisRoom(roomId, this._username, this._socket)
+
+            const room = await this.getUser(roomId)
+            console.log(this._username, 'joining the room', roomId);
+
+            this._io.to(roomId).emit('participantsUpdate', room);
+            console.log('room on joining', roomId, this._username);
+            this._socket.join(this._socket.id);
+        } catch (error: any) {
+            if (error.message === 'alredy in room') {
+                const room = await this.getUser(roomId)
+                this._socket.join(roomId);
+            }
+            console.error(`Error joining room: ${error} ${roomId}`);
+        }
+    }
+
+    async getUser(roomId: string): Promise<{ score: number, value: string }[] | undefined> {
+        try {
+            if (!roomId) throw new Error("Invalid roomId")
+
+            const room = await this._client.getRedisRoom(roomId);
+            this._io.to(this._socket.id).emit('participantsUpdate', room)
+            console.log(room)
+            return room
+
+        } catch (error: any) {
+            error.message === 'stream endeded' ? this._socket.emit('streamEnded') :
+                console.error(`Error getting user: ${error}`, roomId);
+        }
+    }
+
+    async leaveRoom(roomId: string): Promise<void> {
         try {
             if (!roomId) throw new Error("Invalid roomId");
 
             console.log(this._username, "leaving from", roomId, '\n');
 
-            const room = SocketService.getRoom(roomId);
-            if (room) {
-                if (room.has(this._username)) {
-                    this._socket.leave(this._username);
-                    const checkroom = room.delete(this._username);
-                    SocketService._users.delete(this._username)
+            await this._client.leaveRoom(roomId, this._username);
 
-                    checkroom && this._io.to(roomId).emit('participantsUpdate', Array.from(room));
-                } else {
-                    throw new Error("Not in room");
-                }
-            } else {
-                throw new Error("Invalid room");
-            }
+            const room = await this._client.getRedisRoom(roomId);
+
+            this._io.to(roomId).emit('participantsUpdate', room);
         } catch (error) {
             console.error(`Error leaving room: ${error}`);
         }
     }
 
-    closeRoom(roomId: string): void {
+    async closeRoom(roomId: string): Promise<void> {
         try {
             if (!roomId) throw new Error("Invalid roomId");
 
-            console.log(this._username, "user , closing room");
+            await this._client.closeRoom(roomId, this._socket.id);
 
-            const room = SocketService.getRoom(roomId);
-            if (room) {
-                SocketService._rooms.delete(roomId)
-                SocketService._users.clear()
-                SocketService._primeUsers.clear()
-                this._io.to(roomId).emit('closeRoom')
-            }
+            this._io.to(roomId).emit('closeRoom')
 
         } catch (error) {
             console.error('Error closing room', error);

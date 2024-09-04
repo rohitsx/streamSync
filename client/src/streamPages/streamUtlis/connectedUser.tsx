@@ -46,7 +46,7 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
             <div className={styles['connected-user']}>
                 {strangerData.socketId ? (
                     <div className={styles['call-controls']}>
-                        <div className={styles['user-name']}>{ username}</div>
+                        <div className={styles['user-name']}>{username}</div>
                         <div className={styles['hangup-call']} onClick={hangUpCall} title="Hang up"></div>
                         < StartMic strangerData={strangerData} view={view} toggelMic={toggelMic} endCall={endCall} setEndCall={setEndCall} />
                         <div
@@ -59,7 +59,7 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
                         </div>
                     </div>
                 ) : (
-                    <div className={styles['user-name']}>{localStorage.getItem('roomId')}</div>
+                    <div className={styles['user-name']}>{view === 'host'? localStorage.getItem('username') : localStorage.getItem('roomId')}</div>
                 )}
             </div>
         </PeerConnectionProvider>

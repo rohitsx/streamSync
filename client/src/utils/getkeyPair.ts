@@ -5,7 +5,7 @@ export default function getKeyPair() {
 
     const privateKeyString = localStorage.getItem('walletPrivateKey');
     if (!privateKeyString) {
-        throw new Error("No private key found in localStorage");
+        throw new Error("No private key");
     }
 
     const privateKeyArray = JSON.parse(privateKeyString) as number[];

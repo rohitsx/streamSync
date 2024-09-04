@@ -21,7 +21,7 @@ export default function JoinStream() {
             return;
         }
 
-        socket.emit('joinRoom', username);
+        socket.emit('checkRoom', username);
     }, [socket, username]);
 
     useEffect(() => {

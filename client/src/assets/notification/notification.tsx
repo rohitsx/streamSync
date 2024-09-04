@@ -2,9 +2,9 @@ import { useEffect } from "react";
 import "./notification.css";
 
 interface NotifcationBoxProps {
-  notificationMessage: string | null;
-  setNotification: React.Dispatch<React.SetStateAction<string | null>>;
-  color?: 'red' | 'blue'; 
+    notificationMessage: string | null;
+    setNotification: React.Dispatch<React.SetStateAction<string | null>>;
+    color?: 'red' | 'blue';
 }
 
 export default function NotifcationBox({ notificationMessage, setNotification, color = 'red' }: NotifcationBoxProps) {
@@ -15,9 +15,10 @@ export default function NotifcationBox({ notificationMessage, setNotification, c
                 setNotification(null);
             }, 5000);
 
-            return () => clearTimeout(timer); 
+            return () => clearTimeout(timer);
         }
-    }, [notificationMessage, setNotification]);
+
+    }, [notificationMessage]);
 
     if (!notificationMessage) return null;
 

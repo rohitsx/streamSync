@@ -22,6 +22,11 @@ export default function AudienceView() {
     }>({ username: null, socketId: null })
     const [amount, setAmount] = useState(0.00);
 
+    useEffect(() => {
+
+        socket?.emit('joinRoom', roomId);
+    }, [socket])
+
 
     useEffect(() => {
         localStorage.setItem('defaultPage', 'audience');
@@ -69,7 +74,7 @@ export default function AudienceView() {
             <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
             <ConnectedUser username={username} strangerData={strangerData} setStrangerData={setStrangerData} view="audience" />
             <HandelParticipant />
-            <SendSoal  setAmount={setAmount} amount={amount}/>
+            <SendSoal setAmount={setAmount} amount={amount} />
             <button onClick={changePage} className={styles.closeButton}>Leave Room</button>
         </div>
     );
