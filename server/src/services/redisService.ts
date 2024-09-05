@@ -2,6 +2,10 @@ import { Socket } from "socket.io";
 import { getDb } from "../config/database";
 import RedisClient from "../config/redis";
 import { updateSocketIdDb } from "./authService";
+import { log } from "console";
+import { strict } from "assert";
+import { stringify } from "querystring";
+import { json } from "stream/consumers";
 
 const db = getDb();
 export default class redisService {
@@ -22,9 +26,20 @@ export default class redisService {
         updateSocketIdDb(socket)
         this.checkRoom(roomId)
 
-        const checkUser = await this._client.zScore(roomId, username);
-        console.log('check users is', checkUser)
-        if (checkUser === 0) throw new Error('alredy in room');
+        const existingEntries = await this._client.zRange(roomId, 0, -1);
+
+        for (const entry of existingEntries) {
+            console.log('existing entry', existingEntries)
+            let data: string;
+
+            try { data = JSON.parse(entry).username }
+            catch { data = entry }
+
+            if (data === username) {
+                throw new Error('alredy in room');
+            }
+        }
+
         await this._client.zAdd(roomId, { score: 0, value: username });
 
 
@@ -55,9 +70,49 @@ export default class redisService {
     async leaveRoom(roomId: string, username: string): Promise<void> {
         await this.checkRoom(roomId)
 
-        const checkUser = await this._client.zScore(roomId, username);
-        if (checkUser === 0) await this._client.zRem(roomId, username);
-        else throw new Error('user not in room')
+        const existingEntries = await this._client.zRange(roomId, 0, -1);
+
+        for (const entry of existingEntries) {
+            console.log('existing entry', existingEntries)
+            let data: string;
+
+            try { data = JSON.parse(entry).username }
+            catch { data = entry }
+
+            if (data === username) {
+                await this._client.zRem(roomId, entry);
+            }
+        }
+
+    }
+
+    async primeUser(data: {
+        message: string,
+        soalQuantity: number,
+        roomId: string,
+    }, username: string) {
+        const { message, soalQuantity, roomId } = data;
+        await this.checkRoom(roomId);
+
+        const existingEntries = await this._client.zRange(roomId, 0, -1);
+
+        for (const entry of existingEntries) {
+            console.log('existing entry', existingEntries)
+            let data: string;
+
+            try { data = JSON.parse(entry).username }
+            catch { data = entry }
+
+            if (data === username) {
+                await this._client.zRem(roomId, entry);
+                break;
+            }
+        }
+
+        await this._client.zAdd(roomId, {
+            score: soalQuantity,
+            value: JSON.stringify({ message, username })
+        });
 
     }
 }

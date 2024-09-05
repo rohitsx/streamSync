@@ -1,5 +1,6 @@
 import { Socket, Server as io } from "socket.io";
 import redisService from "./redisService";
+import { RootNodesUnavailableError } from "redis";
 
 export default class SocketService {
     constructor(
@@ -76,7 +77,6 @@ export default class SocketService {
 
             const room = await this._client.getRedisRoom(roomId);
             this._io.to(this._socket.id).emit('participantsUpdate', room)
-            console.log(room)
             return room
 
         } catch (error: any) {
@@ -130,55 +130,22 @@ export default class SocketService {
         }
     }
 
-    soal(soalStr: {
-        soal: {
-            message: string,
-            soalQuantity: number,
-            roomId: string,
-        }
-    }): void {
+    async primeUser(data: {
+        message: string,
+        soalQuantity: number,
+        roomId: string,
+    }): Promise<void> {
         try {
-            const { roomId, message, soalQuantity } = soalStr.soal;
-            if (!roomId) throw new Error("Invalid roomId");
+            await this._client.primeUser(data, this._username);
 
-            const room = SocketService.getRoom(roomId);
-            if (room) {
-                if (room.has(this._username)) {
-                    // Remove the user from the room
-                    room.delete(this._username);
+            const room = await this.getUser(data.roomId);
 
-                    // Add the user to _primeUsers with roomId
-                    if (!SocketService._primeUsers.has(roomId)) {
-                        SocketService._primeUsers.set(roomId, new Map());
-                    }
-                    const roomPrimeUsers = SocketService._primeUsers.get(roomId);
-                    if (roomPrimeUsers) {
-                        roomPrimeUsers.set(this._username, {
-                            message,
-                            soalQuantity,
-                        });
-                    }
+            console.log(this._username, 'joining the room', data.roomId);
 
-                    // Emit updates
-                    this._io.to(roomId).emit('participantsUpdate', Array.from(room));
-                    this._io.to(roomId).emit('primeUserUpdate', this.getPrimeUsersForRoom(roomId));
-                } else {
-                    throw new Error("User not found in the room");
-                }
-            } else {
-                throw new Error("Invalid room");
-            }
+            this._io.to(data.roomId).emit('participantsUpdate', room);
+
         } catch (err) {
             console.error('Error sending Soal', err);
         }
-    }
-
-    // Helper method to get prime users for a specific room
-    private getPrimeUsersForRoom(roomId: string): object {
-        const roomPrimeUsers = SocketService._primeUsers.get(roomId);
-        if (roomPrimeUsers) {
-            return Object.fromEntries(roomPrimeUsers);
-        }
-        return {};
     }
 }

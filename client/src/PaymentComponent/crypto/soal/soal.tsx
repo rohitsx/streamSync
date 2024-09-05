@@ -39,9 +39,7 @@ export default function SendSoal({ amount, setAmount }: { amount: number, setAmo
         }
 
         socket.emit('soalStreamRequest', {
-            'soal': {
-                'message': message, 'soalQuantity': amount, 'roomId': roomId
-            }
+            'message': message, 'soalQuantity': amount, 'roomId': roomId
         });
 
 
@@ -69,15 +67,15 @@ export default function SendSoal({ amount, setAmount }: { amount: number, setAmo
         ]);
     }
 
-    useEffect(() => {
-        if (!socket) return;
-        socket.on('hostPublicId', (data) => {
-            console.log('data lololololo', data);
+    // useEffect(() => {
+    //     if (!socket) return;
+    //     socket.on('hostPublicId', (data) => {
+    //         console.log('data lololololo', data);
 
-        })
+    //     })
 
-        return () => { socket.off('hostPublicId') }
-    }, [amount]);
+    //     return () => { socket.off('hostPublicId') }
+    // }, [amount]);
 
     useEffect(() => {
         if (hostpublicId) {

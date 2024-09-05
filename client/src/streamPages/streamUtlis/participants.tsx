@@ -3,13 +3,9 @@ import { useSocketContext } from "../../context/socketContext";
 import Users from "./users";
 import getKeyPair from "../../utils/getkeyPair";
 
-type usersProp = {
-    value: string,
-    score: number
-}
 
 export default function HandelParticipant({ getUsername = false }: { getUsername?: boolean }) {
-    const [users, setUsers] = useState<usersProp[] | undefined>();
+    const [users, setUsers] = useState<{ value: string, score: number }[] | undefined>();
     const socket = useSocketContext();
 
     useEffect(() => {
@@ -22,8 +18,7 @@ export default function HandelParticipant({ getUsername = false }: { getUsername
         }
     }, [socket]);
 
-    const handleParticipantsUpdate = (data: usersProp[]) => {
-        console.log(data)
+    const handleParticipantsUpdate = (data: { value: string, score: number }[]) => {
         setUsers(data)
     };
 

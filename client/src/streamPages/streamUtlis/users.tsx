@@ -1,3 +1,4 @@
+import React, { useEffect, useMemo, useState } from 'react';
 import UserIcon from './userIcons';
 import styles from '../style/participants.module.css';
 
@@ -6,40 +7,49 @@ type UsersProp = {
     handleGetUser: (username: string) => void;
 }
 
-//const primeColors = ['#D32F2F', '#7B1FA2', '#1976D2', '#388E3C', '#FFA000', '#E64A19', '#5D4037', '#455A64'];
+type ParsedUser = {
+    value: { username: string, message: string | null },
+    score: number
+}
+
+const primeColors = ['#D32F2F', '#7B1FA2', '#1976D2', '#388E3C', '#FFA000', '#E64A19', '#5D4037', '#455A64'];
 const regularColors = ['#FFCDD2', '#E1BEE7', '#BBDEFB', '#C8E6C9', '#FFECB3', '#FFCCBC', '#D7CCC8', '#CFD8DC'];
 
 export default function Users({ users, handleGetUser }: UsersProp) {
+    const parseValue = (value: string) => {
+        try {
+            return JSON.parse(value);
+        } catch {
+            return { username: value, message: null };
+        }
+    };
+
+    const updatedUsers = useMemo(() => {
+        return users?.map((user) => ({
+            value: parseValue(user.value),
+            score: user.score
+        }));
+    }, [users]);
+
     return (
         <div className={styles.container}>
             <div className={styles.userGrid}>
-                {/* Prime Users
-                {Object.entries(primeUsers).map(([username, data], index) => (
-                    <div key={`prime-${username}`} className={styles.userItem} onClick={() => handleGetUser(username)}>
-                        <UserIcon
-                            name={username}
-                            message={data.message}
-                            isPrime={true}
-                            color={primeColors[index % primeColors.length]}
-                            soalQuantity={data.soalQuantity}
-                        />
-                        <span className={styles.userName}>{username}</span>
-                    </div>
-                ))} */}
-
-                {/* Regular Users */}
-                {users?.map((users, index) => (
+                {updatedUsers?.map(({ value, score }, index) => (
                     <div
-                        key={`regular-${users.value}`}
+                        key={value.username}
                         className={styles.userItem}
-                        onClick={() => handleGetUser}
+                        onClick={() => handleGetUser(value.username)}
                     >
                         <UserIcon
-                            name={users.value}
-                            isPrime={false}
-                            color={regularColors[index % regularColors.length]}
+                            name={value.username}
+                            message={value.message}
+                            isPrime={score > 0}
+                            color={score > 0 
+                                ? primeColors[index % primeColors.length]
+                                : regularColors[index % regularColors.length]}
+                            soalQuantity={score}
                         />
-                        <span className={styles.userName}>{users.value}</span>
+                        <span className={styles.userName}>{value.username}</span>
                     </div>
                 ))}
             </div>
