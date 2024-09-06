@@ -18,7 +18,7 @@ Latest Release: [https://github.com/rohitsx/streamSync/releases/latest](https://
 
 ## Introduction
 
-StreamSync is a powerful tool for content creators, streamers, and consultants who want to enhance their live streaming experience. It combines the best features of Twitter Spaces and Super Chat to create a unique platform for audience engagement.
+StreamSync is a tool designed for creators and their audience, offering a more interactive alternative to traditional super chats, which are limited to text messages. With StreamSync, users can send super chats, but with a unique twist: if the creator is interested, they can directly speak with the audience member through our extension.
 
 ## Features
 
