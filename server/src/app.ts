@@ -12,8 +12,7 @@ const app = express();
 const port = 3000;
 const httpServer = createServer(app);
 const allowedOrigins = [
-  process.env.PUBLIC_CLIENT_URL || 'https://stream-sync-virid.vercel.app',
-  'http://localhost:5173'
+  process.env.PUBLIC_CLIENT_URL || 'https://stream-sync-virid.vercel.app' || 'http://localhost:5173'
 ];
 
 const io = new Server(httpServer, {
