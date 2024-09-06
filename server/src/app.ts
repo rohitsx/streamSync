@@ -11,16 +11,27 @@ import Redis from './config/redis';
 const app = express();
 const port = 3000;
 const httpServer = createServer(app);
+const allowedOrigins = [
+  process.env.PUBLIC_CLIENT_URL || 'https://stream-sync-virid.vercel.app',
+  'http://localhost:5173'
+];
+
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.PUBLIC_WEBSOCKET_URL || "https://stream-sync-virid.vercel.app",
+    origin: allowedOrigins,
     methods: ["GET", "POST"],
     credentials: true
   }
 });
 
 app.use(cors({
-  origin: process.env.PUBLIC_CLIENT_URL || 'https://stream-sync-virid.vercel.app',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
