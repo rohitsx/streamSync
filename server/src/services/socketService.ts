@@ -1,6 +1,7 @@
 import { Socket, Server as io } from "socket.io";
 import redisService from "./redisService";
 import { RootNodesUnavailableError } from "redis";
+import { findSocketIdByUsername } from "./authService";
 
 export default class SocketService {
     constructor(
@@ -67,6 +68,7 @@ export default class SocketService {
                 const room = await this.getUser(roomId)
                 this._socket.join(roomId);
             }
+            error.message === 'invalidRoom' && this._io.to(this._socket.id).emit('invalidRoom')
             console.error(`Error joining room: ${error} ${roomId}`);
         }
     }
@@ -76,6 +78,7 @@ export default class SocketService {
             if (!roomId) throw new Error("Invalid roomId")
 
             const room = await this._client.getRedisRoom(roomId);
+            console.log('resived users from socket',room)
             this._io.to(this._socket.id).emit('participantsUpdate', room)
             return room
 
@@ -105,21 +108,25 @@ export default class SocketService {
         try {
             if (!roomId) throw new Error("Invalid roomId");
 
+            this._io.to(roomId).emit('closeRoom');
+
             await this._client.closeRoom(roomId, this._socket.id);
 
-            this._io.to(roomId).emit('closeRoom')
-
+            console.log('Successfully closed room:', roomId);
         } catch (error) {
-            console.error('Error closing room', error);
+            console.error('Error closing room:', error);
+            // Consider re-throwing the error or handling it appropriately
         }
     }
 
-    getSocketId({ username, publickey }: { username: string, publickey: string }) {
+    async getSocketId({ username, publickey }: { username: string, publickey: string }) {
         try {
             console.log(username, 'asking socketId and username for', this._username, '\n');
 
 
-            const strangerSocket = SocketService._users.get(username);
+            const strangerSocket = await findSocketIdByUsername(username)
+            console.log(strangerSocket);
+
             if (strangerSocket) {
                 this._io.to(this._socket.id).emit('getSocketId', { SocketId: strangerSocket, username: username });
                 this._io.to(strangerSocket).emit('getSocketId', { socketId: this._socket.id, username: this._username, hostPublicKey: publickey })
@@ -140,12 +147,17 @@ export default class SocketService {
 
             const room = await this.getUser(data.roomId);
 
-            console.log(this._username, 'joining the room', data.roomId);
-
             this._io.to(data.roomId).emit('participantsUpdate', room);
 
         } catch (err) {
             console.error('Error sending Soal', err);
         }
+    }
+
+    async removePrimeUser(roomId: string) {
+        await this._client.removePrimeUser(roomId, this._username);
+
+        const room = await this.getUser(roomId);
+        this._io.to(roomId).emit('participantsUpdate', room);
     }
 }

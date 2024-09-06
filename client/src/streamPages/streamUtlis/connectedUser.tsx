@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { Socket } from "socket.io-client";
 import { useSocketContext } from "../../context/socketContext";
 import StartMic from "../webRtcSpecific/webRtc";
@@ -17,15 +17,15 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
     const [toggelMic, setToggelMic] = useState(true)
     const [endCall, setEndCall] = useState(false)
 
-    function hangUpCall(e: React.FormEvent) {
+    const hangUpCall = useCallback((e: React.FormEvent) => {
         e.preventDefault();
         if (socket) {
             socket.emit('hangupCall', strangerData.socketId);
-
+            view === "audience" && socket.emit('removePrimeUser', localStorage.getItem('roomId'));
         }
         setEndCall(true)
         setStrangerData({ username: null, socketId: null });
-    }
+    }, [strangerData, socket])
 
     function muteCall(e: React.FormEvent) {
         e.preventDefault();
@@ -35,7 +35,9 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
 
     useEffect(() => {
         socket && socket.on('hangupCall', () => {
+            console.log('recieved hangup message')
             setStrangerData({ username: null, socketId: null });
+            view === "audience" && socket.emit('removePrimeUser', localStorage.getItem('roomId'))
             setEndCall(true)
         });
     }, [])
@@ -59,7 +61,7 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
                         </div>
                     </div>
                 ) : (
-                    <div className={styles['user-name']}>{view === 'host'? localStorage.getItem('username') : localStorage.getItem('roomId')}</div>
+                    <div className={styles['user-name']}>{view === 'host' ? localStorage.getItem('username') : localStorage.getItem('roomId')}</div>
                 )}
             </div>
         </PeerConnectionProvider>

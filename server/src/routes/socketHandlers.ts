@@ -17,6 +17,7 @@ export function handleSocketConnection(socket: Socket, io: Server) {
   socket.on('message', m => io.to(m.to).emit('message', m));
   socket.on('hangupCall', (socketId: string) => { io.to(socketId).emit('hangupCall') });
   socket.on('soalStreamRequest', (soal: { message: string, soalQuantity: number, roomId: string }) => mySocketService.primeUser(soal))
+  socket.on('removePrimeUser',(roomId:string) => mySocketService.removePrimeUser(roomId))
   socket.on('disconnect', () => {
     console.log(`Socket ${socket.id} disconnected`);
   })

@@ -17,9 +17,6 @@ export default function UserIcon({ name, isPrime, message, color, soalQuantity }
     const handleMouseEnter = () => setShowFullMessage(true);
     const handleMouseLeave = () => setShowFullMessage(false);
 
-    console.log(name, isPrime,message, soalQuantity);
-    
-
     return (
         <div
             className={`${styles.userIcon} ${isPrime ? styles.premiumIcon : ''}`}

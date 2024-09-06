@@ -68,7 +68,10 @@ export default function HostView() {
 
 
     function changePage() {
-        socket && socket.emit('closeRoom', username)
+        const roomId = localStorage.getItem('username')
+        console.log(roomId);
+        
+        socket && socket.emit('closeRoom', roomId)
         updateDefaultPage('home')
         navigate('/home')
     }

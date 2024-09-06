@@ -2,10 +2,6 @@ import { Socket } from "socket.io";
 import { getDb } from "../config/database";
 import RedisClient from "../config/redis";
 import { updateSocketIdDb } from "./authService";
-import { log } from "console";
-import { strict } from "assert";
-import { stringify } from "querystring";
-import { json } from "stream/consumers";
 
 const db = getDb();
 export default class redisService {
@@ -24,7 +20,7 @@ export default class redisService {
 
     async joinRedisRoom(roomId: string, username: string, socket: Socket) {
         updateSocketIdDb(socket)
-        this.checkRoom(roomId)
+        await this.checkRoom(roomId)
 
         const existingEntries = await this._client.zRange(roomId, 0, -1);
 
@@ -50,6 +46,8 @@ export default class redisService {
 
         const room = await this._client.zRangeWithScores(roomId, -1, 0)
 
+        console.log('resived user from redis method', room)
+
         return room
     }
 
@@ -59,6 +57,7 @@ export default class redisService {
             const { publicKey, socketId } = JSON.parse(roomData);
             if (localSocketId === socketId) {
                 await this._client.hDel('roomId', roomId);
+                await this._client.del(roomId)
             } else {
                 throw new Error('local SocketId not match');
             }
@@ -114,5 +113,28 @@ export default class redisService {
             value: JSON.stringify({ message, username })
         });
 
+    }
+
+    async removePrimeUser(roomId: string, username: string) {
+        const existingEntries = await this._client.zRange(roomId, 0, -1);
+
+        for (const entry of existingEntries) {
+            console.log('existing entry', existingEntries)
+            let data: string;
+
+            try { data = JSON.parse(entry).username }
+            catch { data = entry }
+
+            if (data === username) {
+                await this._client.zRem(roomId, entry);
+            }
+
+
+            await this._client.zAdd(roomId, {
+                score: 0,
+                value: username
+            });
+
+        }
     }
 }

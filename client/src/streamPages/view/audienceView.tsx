@@ -47,8 +47,10 @@ export default function AudienceView() {
 
         };
 
-        socket.on('closeRoom', handleCloseRoom);
+
+
         socket.on('getSocketId', handleGetSocketId);
+        socket.on('invalidRoom', handleCloseRoom);
 
         return () => {
             socket.off('closeRoom', handleCloseRoom);
@@ -56,6 +58,13 @@ export default function AudienceView() {
             socket.off('getUsers');
         };
     }, [socket, roomId, navigate, amount]);
+    const handleCloseRoom = () => {
+        setNotification('Host closed room. Redirecting home...');
+        localStorage.setItem('defaultPage', 'home');
+        setTimeout(() => navigate('/home'), 3000);
+    };
+
+    socket?.on('closeRoom', handleCloseRoom);
 
     const changePage = useCallback(() => {
         if (socket && roomId) {
