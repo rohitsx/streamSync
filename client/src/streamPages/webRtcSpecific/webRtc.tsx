@@ -104,13 +104,13 @@ export default function StartMic({ strangerData, view, toggelMic, endCall, setEn
         })
     }, [strangerData])
 
-    // useEffect(() => {
-    //     if (stream) {
-    //         stream.getAudioTracks()[0].enabled = toggelMic;
-    //     }
-    // }, [stream, toggelMic])
+    useEffect(() => {
+        // if (stream) {
+        //     stream.getAudioTracks()[0].enabled = toggelMic;
+        // }
+    }, [stream, toggelMic])
 
-    useEffect(() => {   
+    useEffect(() => {
         if (endCall) {
             pc.close();
             if (stream) {
