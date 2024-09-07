@@ -35,7 +35,10 @@ export default function StartMic({ strangerData, view, toggelMic, endCall, setEn
             }
         })
         for (const track of stream.getTracks()) { pc.addTrack(track, stream) }
-        if (audioElement.current) audioElement.current.srcObject = stream
+        if (audioElement.current) {
+            audioElement.current.srcObject = stream;
+            audioElement.current.muted = true; 
+        }
         setStream(stream)
     }
 
