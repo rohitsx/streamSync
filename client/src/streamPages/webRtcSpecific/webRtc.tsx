@@ -6,24 +6,25 @@ import { Socket } from "socket.io-client";
 interface WebRtcProps {
     strangerData: { username: string | null, socketId: string | null },
     view: 'host' | 'audience',
-    toggelMic: boolean,
+    toggelMic?: boolean,
     endCall: boolean,
     setEndCall: (data: boolean) => void
 }
 
-export default function StartMic({ strangerData, view, toggelMic, endCall, setEndCall }: WebRtcProps) {
+export default function StartMic({ strangerData, view, endCall, setEndCall }: WebRtcProps) {
     const socket: Socket | null = useSocketContext();
     const pc = usePcContext();
-    const audioElement = useRef<HTMLAudioElement | null>(null)
-    const remoteAudioElement = useRef<HTMLAudioElement | null>(null)
+    // const audioElement = useRef<HTMLAudioElement | null>(null); // Local audio (may not be needed)
+    const remoteAudioElement = useRef<HTMLAudioElement | null>(null); // Remote peer's audio
     const polite = useRef(view === 'host');
-    const makingOffer = useRef(false)
-    const ignoreOffer = useRef(false)
-    const [stream, setStream] = useState<MediaStream | null>(null)
+    const makingOffer = useRef(false);
+    const ignoreOffer = useRef(false);
+    const [stream, setStream] = useState<MediaStream | null>(null);
 
+    // Get audio stream but do not play local audio
     async function getAudio() {
         const stream = await navigator.mediaDevices.getUserMedia({
-            'audio': {
+            audio: {
                 echoCancellation: true,
                 noiseSuppression: true,
                 autoGainControl: true,
@@ -33,44 +34,52 @@ export default function StartMic({ strangerData, view, toggelMic, endCall, setEn
                     { autoGainControl: { exact: true } }
                 ]
             }
-        })
-        for (const track of stream.getTracks()) { pc.addTrack(track, stream) }
-        if (audioElement.current) {
-            audioElement.current.srcObject = stream;
-            audioElement.current.muted = true; 
+        });
+        
+        // Add the local stream tracks to the peer connection
+        for (const track of stream.getTracks()) {
+            pc.addTrack(track, stream);
         }
-        setStream(stream)
+        
+        // Do not play the local audio (no need to attach to audio element)
+        setStream(stream);
     }
 
     useEffect(() => {
         if (!strangerData.socketId) return;
         getAudio();
+
+        // Handle remote audio track
         pc.ontrack = ({ track, streams }) => {
             track.onunmute = () => {
                 console.log("track unmuted");
-                if (remoteAudioElement.current?.srcObject) return
-                if (remoteAudioElement.current) remoteAudioElement.current.srcObject = streams[0]
-            }
-        }
+                if (!remoteAudioElement.current?.srcObject) {
+                    remoteAudioElement.current!.srcObject = streams[0]; // Set remote stream
+                }
+            };
+        };
 
         pc.onnegotiationneeded = async () => {
             try {
-                makingOffer.current = true
-                await pc.setLocalDescription()
+                makingOffer.current = true;
+                await pc.setLocalDescription();
                 console.log("sent offer");
-                socket ? socket.emit('message', { description: pc.localDescription, to: strangerData.socketId }) : console.log('webRrtc.tsx line 43 not working');
-
+                socket?.emit('message', { description: pc.localDescription, to: strangerData.socketId });
             } catch (err) {
-                console.error(err)
+                console.error(err);
             } finally {
-                makingOffer.current = false
+                makingOffer.current = false;
             }
-        }
-        pc.onicecandidate = ({ candidate }) => socket ? socket.emit('message', { candidate, to: strangerData.socketId }) : console.log('webRrtc.tsx line 52 not working');
+        };
 
-        socket && socket.on('message', async (m) => {
-            const [description, candidate] = [m['description'], m['candidate']]
-            if (m === undefined) return
+        pc.onicecandidate = ({ candidate }) => {
+            socket?.emit('message', { candidate, to: strangerData.socketId });
+        };
+
+        socket?.on('message', async (m) => {
+            const [description, candidate] = [m['description'], m['candidate']];
+            if (!description && !candidate) return;
+
             try {
                 if (description) {
                     const offerCollision =
@@ -84,7 +93,7 @@ export default function StartMic({ strangerData, view, toggelMic, endCall, setEn
                     }
 
                     await pc.setRemoteDescription(description);
-                    console.log("recived offer");
+                    console.log("received offer");
                     if (description.type === "offer") {
                         await pc.setLocalDescription();
                         socket.emit('message', { description: pc.localDescription, to: strangerData.socketId });
@@ -103,35 +112,26 @@ export default function StartMic({ strangerData, view, toggelMic, endCall, setEn
             } catch (err) {
                 console.error(err);
             }
-
-        })
-    }, [strangerData])
-
-    useEffect(() => {
-        // if (stream) {
-        //     stream.getAudioTracks()[0].enabled = toggelMic;
-        // }
-    }, [stream, toggelMic])
+        });
+    }, [strangerData]);
 
     useEffect(() => {
         if (endCall) {
             pc.close();
             if (stream) {
-                stream.getTracks().forEach(track => track.stop())
-
+                stream.getTracks().forEach(track => track.stop());
                 return () => {
-                    stream.getTracks().forEach(track => track.stop())
-                    setStream(null)
-                    pc.close()
-                    setEndCall(false)
-                }
+                    stream.getTracks().forEach(track => track.stop());
+                    setStream(null);
+                    pc.close();
+                    setEndCall(false);
+                };
             }
         }
-    }, [endCall])
+    }, [endCall]);
 
     return <div>
-        <audio ref={audioElement} autoPlay></audio>
-        <audio ref={remoteAudioElement} autoPlay></audio>
-    </div>
-
+        {/* No need for local audio element */}
+        <audio ref={remoteAudioElement} autoPlay></audio> {/* Only remote audio plays */}
+    </div>;
 }

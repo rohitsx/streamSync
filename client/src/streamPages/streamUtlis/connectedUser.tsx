@@ -14,7 +14,7 @@ interface ConnectedUserProps {
 
 export default function ConnectedUser({ username = null, strangerData, setStrangerData, view }: ConnectedUserProps) {
     const socket: Socket | null = useSocketContext()
-    const [toggelMic, setToggelMic] = useState(true)
+    // const [toggelMic, setToggelMic] = useState(true)
     const [endCall, setEndCall] = useState(false)
 
     const hangUpCall = useCallback((e: React.FormEvent) => {
@@ -27,11 +27,11 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
         setStrangerData({ username: null, socketId: null });
     }, [strangerData, socket])
 
-    function muteCall(e: React.FormEvent) {
-        e.preventDefault();
-        setToggelMic(!toggelMic);
-        setEndCall(true)
-    }
+    // function muteCall(e: React.FormEvent) {
+    //     e.preventDefault();
+    //     setToggelMic(!toggelMic);
+    //     setEndCall(true)
+    // }
 
     useEffect(() => {
         socket && socket.on('hangupCall', () => {
@@ -50,12 +50,12 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
                     <div className={styles['call-controls']}>
                         <div className={styles['user-name']}>{username}</div>
                         <div className={styles['hangup-call']} onClick={hangUpCall} title="Hang up"></div>
-                        < StartMic strangerData={strangerData} view={view} toggelMic={toggelMic} endCall={endCall} setEndCall={setEndCall} />
-                        <div
+                        < StartMic strangerData={strangerData} view={view}  endCall={endCall} setEndCall={setEndCall} />
+                        {/* <div
                             className={`${styles['mute-call']} ${!toggelMic ? styles['unmuted'] : ''}`}
                             onClick={muteCall}
                             title={toggelMic ? 'Unmute' : 'Mute'}
-                        ></div>
+                        ></div> */}
                         <div className={`${styles['stranger-name']} ${!strangerData.socketId && styles['stranger-name-exit']}`}>
                             {strangerData.username}
                         </div>
