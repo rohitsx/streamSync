@@ -14,9 +14,8 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.PUBLIC_CLIENT_URL ,
-    methods: ["GET", "POST"],
-    credentials: true
+    origin: process.env.PUBLIC_CLIENT_URL || 'https://stream-sync-virid.vercel.app/',
+    methods: ["GET", "POST"]
   }
 });
 
