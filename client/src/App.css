@@ -5,7 +5,7 @@ body {
   align-items: center;
   margin: 0;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  max-width: 340px;
-  max-height: 600;
+  /* max-width: 340px;
+  max-height: 600; */
   color: #333;
 }

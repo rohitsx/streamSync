@@ -3,12 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "proxy": "https://stream-sync-server.devrohit.tech/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  
   "dependencies": {
     "@react-oauth/google": "^0.12.1",
     "@solana/wallet-adapter-react": "^0.15.35",
