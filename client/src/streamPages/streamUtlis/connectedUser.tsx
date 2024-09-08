@@ -40,6 +40,8 @@ export default function ConnectedUser({ username = null, strangerData, setStrang
             view === "audience" && socket.emit('removePrimeUser', localStorage.getItem('roomId'))
             setEndCall(true)
         });
+
+        socket && socket.on('closeRoom', () => console.log('loli'))
     }, [])
 
 

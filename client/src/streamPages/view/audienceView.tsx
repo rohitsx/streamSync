@@ -48,7 +48,7 @@ export default function AudienceView() {
         };
 
 
-
+        console.log('connecting to room', socket.id);
         socket.on('getSocketId', handleGetSocketId);
         socket.on('invalidRoom', handleCloseRoom);
 

@@ -20,6 +20,8 @@ export default class SocketService {
             console.log('create the room');
             this._socket.join(roomId)
 
+
+
         } catch (error) {
             console.error(`Error creating room: ${error}`);
         }
@@ -30,6 +32,9 @@ export default class SocketService {
             if (!roomId) throw new Error("Invalid roomId");
 
             await this._client.checkRoom(roomId)
+
+            console.log('connecte to room ', roomId, this._io.sockets.adapter.rooms.get(roomId));
+
             this._io.to(this._socket.id).emit('validRoom');
         } catch (error: any) {
             error.message === 'invalidRoom' && this._io.to(this._socket.id).emit('invalidRoom')
@@ -49,7 +54,10 @@ export default class SocketService {
 
             this._io.to(roomId).emit('participantsUpdate', room);
             console.log('room on joining', roomId, this._username);
-            this._socket.join(this._socket.id);
+            this._socket.join(roomId);
+
+
+            console.log('connecte to room ', roomId, this._io.sockets.adapter.rooms.get(roomId));
         } catch (error: any) {
             if (error.message === 'alredy in room') {
                 const room = await this.getUser(roomId)
@@ -65,7 +73,7 @@ export default class SocketService {
             if (!roomId) throw new Error("Invalid roomId")
 
             const room = await this._client.getRedisRoom(roomId);
-            console.log('resived users from socket',room)
+            console.log('resived users from socket', room)
             this._io.to(this._socket.id).emit('participantsUpdate', room)
             return room
 
@@ -83,7 +91,7 @@ export default class SocketService {
 
             await this._client.leaveRoom(roomId, this._username);
 
-            const room = await this._client.getRedisRoom(roomId);            
+            const room = await this._client.getRedisRoom(roomId);
 
             this._io.to(roomId).emit('participantsUpdate', room);
         } catch (error) {
