@@ -46,13 +46,35 @@ export default class redisService {
     async getRedisRoom(roomId: string): Promise<{ value: string; score: number }[]> {
         // const checkRoom = await this.checkRoom(roomId);
 
-        const room = await this._client.zRangeWithScores(roomId, 0, 100);
-        // const withscores = await this._client.zRange(roomId, '+inf', '-inf', { BY: 'SCORE', REV: true, });
+        // const room = await this._client.zRangeWithScores(roomId, 0, 100);
+        // const withscores = await this._client.sendCommand(['ZREVRANGE', roomId, '0', '99', 'WITHSCORES']);
+
         // console.log('showing with scores', withscores);
 
-        console.log('resived user from redis method', room)
+        // console.log('resived user from redis method', room)
 
-        return room
+        // return room
+
+        const response: string[] = await this._client.sendCommand(['ZREVRANGE', roomId, '0', '99', 'WITHSCORES']);
+
+        // Convert response to the desired format
+        const resultArray: { value: string; score: number; }[] = [];
+
+        for (let i = 0; i < response.length; i += 2) {
+            const value = response[i];
+            const score = parseFloat(response[i + 1]);
+
+            resultArray.push({
+                value,
+                score
+            });
+        }
+
+        console.log(resultArray);
+        
+
+        return resultArray;
+
     }
 
     async closeRoom(roomId: string, localSocketId: string): Promise<void> {
