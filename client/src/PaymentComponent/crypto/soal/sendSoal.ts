@@ -8,7 +8,6 @@ import {
 } from "@solana/web3.js";
 
 export default async function soalSend(hostPublicId: string, amount: number) {
-    console.log(amount);
     
     const connection = getSolConnection();
     const keyPair = getKeyPair()

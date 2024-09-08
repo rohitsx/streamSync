@@ -11,19 +11,6 @@ export default class SocketService {
         private _client = new redisService()
     ) { };
 
-    private static _rooms: Map<string, Set<string>> = new Map(); //replace this database in futured
-    private static _users: Map<string, string> = new Map();
-    private static _primeUsers: Map<string, Map<string, {
-        message: string,
-        soalQuantity: number
-    }>> = new Map();
-
-    private static getRoom(roomId: string): Set<string> | undefined {
-        if (!roomId) throw new Error("Invalid roomId");
-
-        return SocketService._rooms.get(roomId);
-    }
-
     async createRoom(roomId: string, publicKey: string): Promise<void> {
         try {
             if (!roomId) throw new Error("Invalid roomId");
@@ -96,7 +83,7 @@ export default class SocketService {
 
             await this._client.leaveRoom(roomId, this._username);
 
-            const room = await this._client.getRedisRoom(roomId);
+            const room = await this._client.getRedisRoom(roomId);            
 
             this._io.to(roomId).emit('participantsUpdate', room);
         } catch (error) {

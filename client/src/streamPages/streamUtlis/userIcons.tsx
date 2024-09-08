@@ -3,11 +3,7 @@ import styles from '../style/participants.module.css';
 
 const getInitials = (name: string) => {
     const names = name.split(' ');
-    if (names.length > 1) {
-        console.log(names[0][0], names[names.length - 1][0]);
-
-        return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
-    }
+    if (names.length > 1) return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
     return name[0].toUpperCase();
 };
 

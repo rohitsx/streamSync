@@ -24,8 +24,10 @@ export default class redisService {
 
         const existingEntries = await this._client.zRange(roomId, 0, -1);
 
+        console.log('existing entries', existingEntries);
+
+
         for (const entry of existingEntries) {
-            console.log('existing entry', existingEntries)
             let data: string;
 
             try { data = JSON.parse(entry).username }
@@ -44,7 +46,9 @@ export default class redisService {
     async getRedisRoom(roomId: string): Promise<{ value: string; score: number }[]> {
         // const checkRoom = await this.checkRoom(roomId);
 
-        const room = await this._client.zRangeWithScores(roomId, -1, 0)
+        const room = await this._client.zRangeWithScores(roomId, 0, 100);
+        // const withscores = await this._client.zRange(roomId, '+inf', '-inf', { BY: 'SCORE', REV: true, });
+        // console.log('showing with scores', withscores);
 
         console.log('resived user from redis method', room)
 
@@ -70,6 +74,9 @@ export default class redisService {
         await this.checkRoom(roomId)
 
         const existingEntries = await this._client.zRange(roomId, 0, -1);
+
+        console.log(existingEntries);
+
 
         for (const entry of existingEntries) {
             console.log('existing entry', existingEntries)

@@ -67,22 +67,9 @@ export default function SendSoal({ amount, setAmount }: { amount: number, setAmo
         ]);
     }
 
-    // useEffect(() => {
-    //     if (!socket) return;
-    //     socket.on('hostPublicId', (data) => {
-    //         console.log('data lololololo', data);
-
-    //     })
-
-    //     return () => { socket.off('hostPublicId') }
-    // }, [amount]);
 
     useEffect(() => {
-        if (hostpublicId) {
-            console.log('hostpublicId', hostpublicId);
-
-            soalSend(hostpublicId);
-        }
+        if (hostpublicId) soalSend(hostpublicId);
 
         return () => setHostPublicId(null)
     }, [hostpublicId])

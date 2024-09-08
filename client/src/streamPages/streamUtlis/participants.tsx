@@ -25,8 +25,7 @@ export default function HandelParticipant({ getUsername = false }: { getUsername
     function handleGetUser(username: string) {
         if (!getUsername) return;
         const keyPair = getKeyPair()
-        console.log('share socket id', keyPair.publicKey.toString());
-
+        
         if (socket) socket.emit('getSocketId', { username: username, publickey: keyPair.publicKey.toString() });
         else console.log('Can\'t share the socket id; socket not working');
     }
