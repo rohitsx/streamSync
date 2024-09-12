@@ -1,9 +1,8 @@
 # StreamSync
 
-![ezgif-5-69ea68a897](https://github.com/user-attachments/assets/541ab9dd-3791-420c-9d1f-8ae58233bb67)
+![Screenshot 2024-09-12 195708](https://github.com/user-attachments/assets/e66a7edc-446d-40e7-9690-dd66165b02ee)
 
-**Empower Your Live Streams with StreamSync**  
-Connect with your audience like never before.
+#### StreamSync integrates voice with super chats for a more interactive streaming experience.
 
 Live Demo: [https://stream-sync.devrohit.tech/](https://stream-sync.devrohit.tech/)  
 Latest Release: [https://github.com/rohitsx/streamSync/releases/latest](https://github.com/rohitsx/streamSync/releases/latest)
