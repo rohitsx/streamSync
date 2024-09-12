@@ -1,7 +1,7 @@
 # StreamSync
 ![Screenshot 2024-09-12 195708](https://github.com/user-attachments/assets/e66a7edc-446d-40e7-9690-dd66165b02ee)
 
-### StreamSync integrates voice with super chats for a more interactive streaming experience.
+#### StreamSync integrates voice with super chats for a more interactive streaming experience.
 
 Live Demo: [https://stream-sync.devrohit.tech/](https://stream-sync.devrohit.tech/)  
 Latest Release: [https://github.com/rohitsx/streamSync/releases/latest](https://github.com/rohitsx/streamSync/releases/latest)
