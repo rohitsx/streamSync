@@ -41,7 +41,7 @@ export default function RequestAirDrop() {
                     className={styles.amountSlider}
                 />
             </div>
-            <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} color={'blue'} />
+            <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
             <button className={`${styles.button} ${styles.btnAirdrop}`} onClick={requestAirDrop}>
                 Request Airdrop
             </button>

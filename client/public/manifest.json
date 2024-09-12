@@ -1,13 +1,12 @@
 {
-    "version": "1.0.0",
-    "manifest_version": 3,
-    "name": "StreamSync",
-    "description": "This is a Chrome extension built with React and TypeScript",
-    "action": {
-        "default_popup": "./index.html"
-    },
-    "icons": {
-        "128": "icon128.png"
-    }
-    
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "name": "StreamSync",
+  "description": "This is a Chrome extension built with React and TypeScript",
+  "action": {
+    "default_popup": "./index.html"
+  },
+  "icons": {
+    "128": "icon128.png"
+  }
 }

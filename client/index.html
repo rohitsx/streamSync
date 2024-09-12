@@ -1,24 +1,24 @@
 <!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="./icon128.png" type="image/svg+xml" href="/icon.png" />
+    <title>StreamSync</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="./icon128.png" type="image/svg+xml" href="/icon.png" />
-  <title>StreamSync</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      window.global = window;
+    </script>
+    <script type="module">
+      import { Buffer } from "buffer/"; // <-- no typo here ("/")
+      import process from "process";
 
-<body>
-  <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
-  <script>window.global = window;</script>
-  <script type="module">
-    import { Buffer } from "buffer/"; // <-- no typo here ("/")
-    import process from "process";
-
-    window.Buffer = Buffer;
-    window.process = process;
-  </script>
-</body>
-
+      window.Buffer = Buffer;
+      window.process = process;
+    </script>
+  </body>
 </html>

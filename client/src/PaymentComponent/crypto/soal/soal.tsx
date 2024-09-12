@@ -102,7 +102,7 @@ export default function SendSoal({ amount, setAmount }: { amount: number, setAmo
                     </button>
                 </div>
             </div>
-            <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} color={'blue'} />
+            <NotifcationBox notificationMessage={notificationMessage} setNotification={setNotification} />
         </div>
 
     );

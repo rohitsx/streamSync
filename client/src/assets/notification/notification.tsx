@@ -23,8 +23,12 @@ export default function NotifcationBox({ notificationMessage, setNotification, c
     if (!notificationMessage) return null;
 
     return (
-        <div className={`notification-box ${color}`}>
-            <p>{notificationMessage}</p>
-        </div>
+        <>
+            {notificationMessage && (
+                <div className={`bg-${color}-100 border-l-4 border-${color}-500 text-${color}-700 p-4 rounded`} role="alert">
+                    <p>{notificationMessage}</p>
+                </div>
+            )}
+        </>
     );
 }

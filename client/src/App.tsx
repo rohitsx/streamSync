@@ -24,6 +24,7 @@ const App: React.FC = () => {
             <Route path="/home" element={<Home />} />
             <Route path="/join" element={<JoinStream />} />
             <Route path="/join-view" element={<AudienceView />} />
+          <Route path="/host-view" element={<HostView />} />
             <Route path="/host-view" element={<HostView />} />
           </Routes>
         </Router>

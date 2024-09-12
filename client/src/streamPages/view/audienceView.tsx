@@ -46,9 +46,7 @@ export default function AudienceView() {
             soalSend(data.hostPublicKey, amount)
 
         };
-
-
-        console.log('connecting to room', socket.id);
+        
         socket.on('getSocketId', handleGetSocketId);
         socket.on('invalidRoom', handleCloseRoom);
 
