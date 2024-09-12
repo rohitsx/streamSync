@@ -1,5 +1,5 @@
 # StreamSync
-![giphy (1)](https://github.com/user-attachments/assets/e579a2d5-1309-444d-8e38-47e209884d8c)
+![Screenshot 2024-09-12 195708](https://github.com/user-attachments/assets/e66a7edc-446d-40e7-9690-dd66165b02ee)
 
 **Empower Your Live Streams with StreamSync**  
 Connect with your audience like never before.
