@@ -5,9 +5,9 @@ import HandelParticipant from "../streamUtlis/participants";
 import useDefaultPage from "../../hook/useDefaultPage";
 import ConnectedUser from "../streamUtlis/connectedUser";
 import NotifcationBox from "../../assets/notification/notification";
-import SendSoal from "../../PaymentComponent/crypto/soal/soal";
+import SendSoal from "../../wallet/crypto/soal/soal";
 import styles from '../style/hostView.module.css'
-import soalSend from "../../PaymentComponent/crypto/soal/sendSoal";
+import soalSend from "../../wallet/crypto/soal/sendSoal";
 
 export default function AudienceView() {
     const username = useMemo(() => localStorage.getItem('username') || '', []);

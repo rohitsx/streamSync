@@ -8,26 +8,29 @@ import JoinStream from './streamPages/joinStream';
 import { SocketProvider } from './context/socketContext';
 import AudienceView from './streamPages/view/audienceView';
 import HostView from './streamPages/view/hostView';
-import useDefaultPage from './hook/useDefaultPage';
+// import useDefaultPage from './hook/useDefaultPage';
+import Wallet from './wallet/wallet';
+import GoLivePage from './streamPages/goLive';
 
 
 
 const App: React.FC = () => {
-  const [, defaultPage] = useDefaultPage();
+  // const [, defaultPage] = useDefaultPage();
   return (
     <SocketProvider>
-        <Router>
-          <Routes>
-            <Route path='/' element={defaultPage} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/join" element={<JoinStream />} />
-            <Route path="/join-view" element={<AudienceView />} />
+      <Router>
+        <Routes>
+          {/* <Route path='/' element={defaultPage} /> */}
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/join" element={<JoinStream />} />
+          <Route path="/join-view" element={<AudienceView />} />
+          <Route path="/host" element={<GoLivePage />} />
           <Route path="/host-view" element={<HostView />} />
-            <Route path="/host-view" element={<HostView />} />
-          </Routes>
-        </Router>
+          <Route path='/wallet' element={<Wallet />} />
+        </Routes>
+      </Router>
     </SocketProvider>
   );
 };
