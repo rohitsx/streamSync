@@ -15,7 +15,7 @@ export default function JoinStream() {
     const navigate = useNavigate();
 
     console.log(notification);
-    
+
 
     const handleJoin = useCallback(() => {
         if (!socket) {
@@ -64,24 +64,27 @@ export default function JoinStream() {
         <div className="flex flex-col h-[600px] w-96 bg-gray-900 text-white">
             <Header />
             <main className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
-                <section className="bg-gray-800 rounded-lg p-6 shadow-lg border border-gray-700 hover:border-purple-500 transition-colors duration-300">
-                    <h2 className="text-2xl font-semibold mb-4 text-purple-300">Join Stream</h2>
-                    <div className="space-y-4">
+                <section className="bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700 hover:border-purple-500 transition-colors duration-300">
+                    <div className="flex items-center space-x-3 mb-4">
+                        <div>
+                            <h2 className="text-xl font-bold text-purple-300">Join Stream</h2>
+                            <p className="text-xs text-gray-400">Enter stream code to join</p>
+                        </div>
+                    </div>
+                    <div className="space-y-3">
                         <input
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             onKeyDown={handleKeyPress}
                             placeholder="Enter username"
-                            className="w-full bg-gray-700 text-white placeholder-gray-400 border border-gray-600 rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
+                            className="w-full bg-gray-700 text-white placeholder-gray-500 border border-gray-600 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300"
                         />
                         <button
-                            type="button"
                             onClick={handleJoin}
-                            className="w-full bg-gradient-to-br from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center transition duration-300 ease-in-out transform hover:-translate-y-1"
+                            className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-semibold py-2 px-4 rounded-md hover:from-purple-600 hover:to-indigo-600 transition-colors duration-300 flex items-center justify-center"
                         >
-                            <Send className="mr-2 h-5 w-5" />
-                            <span>Send Request</span>
+                            Join Stream
                         </button>
                     </div>
                 </section>
