@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSocketContext } from '../context/socketContext';
 import Header from '@/components/header';
 import NavBar from '@/components/navBar';
-import { Send } from 'lucide-react';
 import ActiveStreams from '@/components/activeStreams';
 
 
@@ -61,7 +60,7 @@ export default function JoinStream() {
     };
 
     return (
-        <div className="flex flex-col h-[600px] w-96 bg-gray-900 text-white">
+        <div className="flex flex-col h-[600px] w-[23rem] bg-gray-900 text-white">
             <Header />
             <main className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
                 <section className="bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700 hover:border-purple-500 transition-colors duration-300">
@@ -90,7 +89,7 @@ export default function JoinStream() {
                 </section>
                 <ActiveStreams />
             </main>
-            <NavBar />
+                <NavBar />
         </div>
 
     );

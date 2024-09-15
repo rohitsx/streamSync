@@ -1,12 +1,12 @@
 import { AlertCircle, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
 
 export default function RecentTransaction() {
-    const transactions = [
-        { type: 'Received', amount: '+2.5 SOL', from: 'Alice', date: '2024-09-10' },
-        { type: 'Sent', amount: '-1.0 SOL', to: 'Bob', date: '2024-09-09' },
-        { type: 'Received', amount: '+5.0 SOL', from: 'Charlie', date: '2024-09-08' },
-        { type: 'Sent', amount: '-0.5 SOL', to: 'David', date: '2024-09-07' },
-        { type: 'Received', amount: '+1.5 SOL', from: 'Eve', date: '2024-09-06' },
+    const transactions: any[] = [
+        // { type: 'Received', amount: '+2.5 SOL', from: 'Alice', date: '2024-09-10' },
+        // { type: 'Sent', amount: '-1.0 SOL', to: 'Bob', date: '2024-09-09' },
+        // { type: 'Received', amount: '+5.0 SOL', from: 'Charlie', date: '2024-09-08' },
+        // { type: 'Sent', amount: '-0.5 SOL', to: 'David', date: '2024-09-07' },
+        // { type: 'Received', amount: '+1.5 SOL', from: 'Eve', date: '2024-09-06' },
     ];
 
     return (
@@ -42,11 +42,11 @@ export default function RecentTransaction() {
                     ))}
                 </ul>
             ) : (
-                <div className="bg-gray-700 rounded-lg p-3 text-center">
-                    <div className="inline-block bg-gray-600 rounded-full p-3 ">
+                <div className="bg-gray-700 rounded-lg p-3 text-center ">
+                    <div className="inline-block bg-gray-600 rounded-full p-3 mb-1 ">
                         <AlertCircle className="text-purple-400" size={24} />
                     </div>
-                    <h3 className="text-purple-300 font-bold text-lg mb-2">No Recent Transactions</h3>
+                    <h3 className="text-purple-300 font-bold text-lg mb-3">No Recent Transactions</h3>
                     <p className="text-gray-400 text-sm mb-4">Your transaction history will appear here once you start using your wallet.</p>
                 </div>
             )}
