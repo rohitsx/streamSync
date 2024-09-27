@@ -5,7 +5,7 @@
 
 Live Demo: [https://stream-sync.devrohit.tech/](https://stream-sync.devrohit.tech/)  
 New UI (incomplete): [https://stream-sync-ui-sample.vercel.app](https://stream-sync-ui-sample.vercel.app/)
-Latest Release: [https://github.com/rohitsx/streamSync/releases/latest](https://github.com/rohitsx/streamSync/releases/latest)
+
 
 ## Table of Contents
 - [Introduction](#introduction)
