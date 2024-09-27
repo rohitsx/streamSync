@@ -4,7 +4,7 @@
 #### StreamSync integrates voice with super chats for a more interactive streaming experience.
 
 Live Demo: [https://stream-sync.devrohit.tech/](https://stream-sync.devrohit.tech/)  
-New UI (incomplete): [https://stream-sync-ui-sample.vercel.app](https://stream-sync-ui-sample.vercel.app/)
+New Ui (incomplete): [https://stream-sync-ui-sample.vercel.app](https://stream-sync-ui-sample.vercel.app/)
 
 
 ## Table of Contents
