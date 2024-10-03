@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../assets/logo/logo';
 import axios from 'axios';
-import isLoggedIn from '../utils/isLoggedIn';
 import NotifcationBox from '../assets/notification/notification';
 
 const SignupPage = () => {
@@ -12,7 +11,6 @@ const SignupPage = () => {
   const [notification, setNotification] = useState<string | null>(null);
   const [notificationColor, setNotificationColur] = useState<'blue' | 'red'>('red');
   const navigate = useNavigate();
-  isLoggedIn();
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -39,7 +37,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-w-96 max-h-[700px] min-h-[600px] bg-gradient-to-br from-purple-900 to-black text-white flex items-center justify-center p-3">
+    <div className="min-w-96 max-h-[700px] min-h-[600px] bg-gradient-to-br from-purple-900 to-black text-white flex items-center justify-center p-3"  >
       <div className="max-w-md w-full h-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 space-y-4">
         <div className="flex flex-col items-center">
           <Logo />

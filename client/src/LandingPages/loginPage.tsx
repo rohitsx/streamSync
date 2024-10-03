@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import NotifcationBox from '../assets/notification/notification';
-import isLoggedIn from '../utils/isLoggedIn';
 import Logo from '../assets/logo/logo';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [notification, setNotification] = useState<string | null>(null)
-  isLoggedIn()
-
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +30,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-w-96 max-h-[580px] bg-gradient-to-br from-purple-900 to-black text-white flex items-center justify-center p-4">
+    <div className="min-w-96 max-h-[700px] min-h-[600px] bg-gradient-to-br from-purple-900 to-black text-white flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 space-y-8">
         <div className="flex flex-col items-center">
           <Logo />

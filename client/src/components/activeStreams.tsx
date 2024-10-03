@@ -16,15 +16,15 @@ export default function ActiveStreams() {
     ];
 
     return (
-        <section className="bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700 hover:border-purple-500 transition-all duration-300 ease-in-out">
+        <section className="bg-gray-800 rounded-lg p-3 shadow-lg border border-gray-700 hover:border-purple-500 transition-all duration-300 ease-in-out">
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center space-x-3">
                     <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-full flex items-center justify-center shadow-lg">
                         <Tv size={20} className="text-white" />
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold text-purple-300">Active Streams</h2>
-                        <p className="text-xs text-gray-400">Join live streams now</p>
+                        <h2 className="text-lg font-bold text-purple-300">Active Streams</h2>
+                        {/* <p className="text-xs text-gray-400">Join live streams now</p> */}
                     </div>
                 </div>
                 {(streams.length > 0 && location.pathname === '/') && (

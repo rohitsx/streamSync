@@ -42,12 +42,12 @@ export default function RecentTransaction() {
                     ))}
                 </ul>
             ) : (
-                <div className="bg-gray-700 rounded-lg p-3 text-center ">
+                <div className="bg-gray-700 rounded-lg p-4 text-center ">
                     <div className="inline-block bg-gray-600 rounded-full p-3 mb-1 ">
                         <AlertCircle className="text-purple-400" size={24} />
                     </div>
                     <h3 className="text-purple-300 font-bold text-lg mb-3">No Recent Transactions</h3>
-                    <p className="text-gray-400 text-sm mb-4">Your transaction history will appear here once you start using your wallet.</p>
+                    {/* <p className="text-gray-400 text-sm mb-4">Your transaction history will appear here once you start using your wallet.</p> */}
                 </div>
             )}
         </section>

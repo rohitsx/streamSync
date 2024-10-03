@@ -8,8 +8,17 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  max-width: 23rem;
-  max-height: 600px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  max-width: 380px;
   color: #333;
+  max-height: 600px;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
 }

@@ -8,5 +8,9 @@
   },
   "icons": {
     "128": "icon128.png"
+  },
+  "permissions": ["tabs"],
+  "background": {
+    "service_worker": "background.js"
   }
 }
