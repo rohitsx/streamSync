@@ -1,11 +1,11 @@
 # StreamSync
-
 ![Screenshot 2024-09-12 195708](https://github.com/user-attachments/assets/e66a7edc-446d-40e7-9690-dd66165b02ee)
 
 #### StreamSync integrates voice with super chats for a more interactive streaming experience.
 
 Live Demo: [https://stream-sync.devrohit.tech/](https://stream-sync.devrohit.tech/)  
-Latest Release: [https://github.com/rohitsx/streamSync/releases/latest](https://github.com/rohitsx/streamSync/releases/latest)
+New Ui (incomplete): [https://stream-sync-ui-sample.vercel.app](https://stream-sync-ui-sample.vercel.app/)
+
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -17,15 +17,15 @@ Latest Release: [https://github.com/rohitsx/streamSync/releases/latest](https://
 
 ## Introduction
 
-StreamSync is a tool designed for creators and their audience, offering a more interactive alternative to traditional super chats, which are limited to text messages. With StreamSync, users can send super chats, but with a unique twist: if the creator is interested, they can directly speak with the audience member through our extension.
+StreamSync is a tool designed for creators and their audience, offering a more interactive alternative to traditional super chats limited to text messages. With StreamSync, users can send super chats, but with a unique twist: if the creator is interested, they can directly speak with the audience member through our extension.
 
 Currently, we support Solana (with plans to integrate more currencies). Users can send Solana to creators, and similar to traditional super chats, messages from those who pay are prioritized—those who contribute more will have their messages featured higher. However, the payment will only be debited from the user’s account once they’ve had a conversation with the creator.
 
-This tool is especially useful for creators in finance, ed-tech, or consultancy, allowing them to have more direct interactions with their audience while maintaining the familiar experience of super chats.
+This tool is handy for creators in finance, ed-tech, or consultancy, allowing them to interact more directly with their audience while maintaining the familiar experience of superchats.
 
 ## Features
 
-- **Personal Wallet**: Create your personal wallet to receive Solana from your audience.
+- **Personal Wallet**: Create your wallet to receive Solana from your audience.
 - **Priority Interactions**: Prioritize interactions with top supporters.
 - **Seamless Integration**: Integrate StreamSync effortlessly into your existing streaming setup.
 
