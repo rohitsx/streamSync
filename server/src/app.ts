@@ -30,9 +30,9 @@ io.on("connection", (socket) => {
 });
 
 
-Redis.connect()
-  .then(() => console.log("redis connected"))
-  .catch(err => console.log("error connecting redis", err))
+//Redis.connect()
+ // .then(() => console.log("redis connected"))
+  //.catch(err => console.log("error connecting redis", err))
 
 connectToDatabase()
   .then(() => {

@@ -3,3 +3,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     chrome.tabs.create({ url: request.url });
   }
 });
+
+chrome.tabs.query({ currentWindow: true }, (tabs) => {
+  tabs.forEach((tab) => {
+      console.log(tab.url);
+  });
+});

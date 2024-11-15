@@ -1,20 +1,19 @@
-import { MongoClient, Db } from 'mongodb';
-import dotenv from 'dotenv';
+import { MongoClient, Db } from "mongodb";
+import dotenv from "dotenv";
 
 dotenv.config();
 
-const connectionString = process.env.db_connection_string || '';
+const url = "mongodb://myuser:dummyPass@mongodb:27017/streamSync?authSource=admin";
 
-const client = new MongoClient(connectionString);
+const client = new MongoClient(url);
 let db: Db;
 
 export const connectToDatabase = async () => {
   try {
     await client.connect();
-    console.log('DB connected');
-    db = client.db('streamSync');
+    db = client.db("streamSync");
   } catch (err) {
-    console.log('MongoDB connection error:', err);
+    console.log("MongoDB connection error:", err);
     throw err;
   }
 };
