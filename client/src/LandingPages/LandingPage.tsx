@@ -1,12 +1,16 @@
+import { useNavigate } from "react-router-dom";
 import Logo from "../assets/logo/logo";
 
 function LandingPage() {
+	const nav = useNavigate();
   const openNewTab = (route: string) => {
+
+	  nav('/login')
     if (chrome.tabs && chrome.runtime) {
       chrome.tabs.create({ url: chrome.runtime.getURL(route) });
     } else {
       // Fallback for when not in a Chrome extension context (e.g., development)
-      window.open(route, '/login');
+      window.open(route, '_blank');
     }
   };
 

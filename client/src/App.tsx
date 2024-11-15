@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemoryRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import SignupPage from './LandingPages/signupPage';
 import LoginPage from './LandingPages/loginPage';
 import Home from './LandingPages/home';
