@@ -9,5 +9,11 @@
   "icons": {
     "128": "icon128.png"
   },
-  "permissions": ["tabs"]
+  "permissions": ["tabs"],
+  "web_accessible_resources": [
+    {
+      "resources": ["index.html"],
+      "matches": ["*://*/*"]
+    }
+  ]
 }
