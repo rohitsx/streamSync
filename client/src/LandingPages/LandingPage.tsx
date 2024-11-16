@@ -1,11 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import Logo from "../assets/logo/logo";
 
 function LandingPage() {
-	const nav = useNavigate();
   const openNewTab = (route: string) => {
 
-	  nav('/login')
     if (chrome.tabs && chrome.runtime) {
       chrome.tabs.create({ url: chrome.runtime.getURL(route) });
     } else {
