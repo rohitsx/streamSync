@@ -1,84 +1,83 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import NotifcationBox from "@/assets/notification";
 import { AuthLayout, LayoutLogo } from "./Layout";
 
-const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+interface LoginResponse {
+  message: string;
+  token: string;
+  username: string;
+}
+
+const LoginPage: React.FC = () => {
   const [notification, setNotification] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    axios
-      .post(`${import.meta.env.VITE_API}login`, {
-        email: email,
-        password: password,
-      })
-      .then((res) => {
-        if (res.data.message === "success_login") {
-          localStorage.setItem("token", res.data.token);
-
-          localStorage.setItem("username", res.data.username);
-
-          window.location.reload();
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    try {
+      const response = await axios.post<LoginResponse>(
+        `${import.meta.env.VITE_API}google-login`,
+        {
+          credential: credentialResponse.credential,
         }
+      );
+      
+      if (response.data.message === "success_login") {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("username", response.data.username);
+        window.location.reload();
+      }
+    } catch (error) {
+      setNotification("Failed to login with Google. Please try again.");
+    }
+  };
 
-        if (res.data === "incorrect_email")
-          setNotification("This email is not registered");
-        if (res.data === "incorrect_pass")
-          setNotification("Incorrect password. Please try again.");
-      })
-      .catch(() => setNotification("server error please try again"));
+  const handleGoogleError = (): void => {
+    setNotification("Google login failed. Please try again.");
   };
 
   return (
     <AuthLayout>
-      <LayoutLogo text={"Welcome back"} />
-
+      <LayoutLogo text="Welcome back" />
       <NotifcationBox
         notificationMessage={notification}
         setNotification={setNotification}
       />
+      <div className="space-y-6">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-600"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 text-gray-400 bg-gradient-to-br from-slate-900 to-slate-950">
+              Continue with
+            </span>
+          </div>
+        </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            placeholder="Name"
-            className="text-base t-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
+        <div className="flex justify-center">
+          <div className="w-full max-w-xs">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="filled_black"
+              shape="pill"
+              size="large"
+              width="100%"
+              text="continue_with"
+              useOneTap
+            />
+          </div>
         </div>
-        <div>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="Password"
-            className="text-base mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full text-sm py-2 px-4 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold rounded-lg transition duration-300 transform text-center"
- 
-        >
-          Log In
-        </button>
-      </form>
-      <p className="text-center text-sm text-gray-400">
-        Don't have an account?{" "}
-        <Link to="/signup" className="text-purple-400 hover:text-purple-300">
-          Sign Up
-        </Link>
-      </p>
+
+        <p className="text-center text-sm text-gray-400">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-purple-400 hover:text-purple-300">
+            Sign Up
+          </Link>
+        </p>
+      </div>
     </AuthLayout>
   );
 };

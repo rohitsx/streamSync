@@ -19,7 +19,7 @@ function LandingPage() {
     <Layout>
       <LayoutLogo text={"Elevate Your Stream Experience"} />
       <div className="w-full flex flex-col max-w-xs p-6 space-y-4 ">
-        <Btn text="Sign Up" worker={() => openNewTab("/signup")} sBtn={true} />
+        <Btn text="Sign Up" worker={() => openNewTab} sBtn={true} />
         <Btn text="Login" worker={() => openNewTab("/login")} />
       </div>
     </Layout>

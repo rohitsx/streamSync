@@ -1,104 +1,115 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import NotifcationBox from "@/assets/notification";
 import { AuthLayout, LayoutLogo } from "./Layout";
 
-const SignupPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [username, setUsername] = useState("");
-  const [notification, setNotification] = useState<string | null>(null);
-  const [notificationColor, setNotificationColur] = useState<"blue" | "red">(
-    "red",
-  );
+interface SignupResponse {
+  status: number;
+  data:
+    | string
+    | {
+        message: string;
+      };
+}
+
+interface NotificationState {
+  message: string | null;
+  color: "blue" | "red";
+}
+
+const SignupPage: React.FC = () => {
+  const [notification, setNotification] = useState<NotificationState>({
+    message: null,
+    color: "red",
+  });
   const navigate = useNavigate();
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    axios
-      .post(`${import.meta.env.VITE_API}signup`, {
-        username: username,
-        email: email,
-        password: password,
-      })
-      .then((res) => {
-        if (res.status === 201) {
-          setNotification("Account registered, Please login");
-          setNotificationColur("blue");
-          setTimeout(() => {
-            navigate("/login");
-          }, 2000);
-        }
-        if (res.data === "email_exists") {
-          setNotification("This email is already registered.");
-          setNotificationColur("red");
-        }
-      })
-      .catch(() => {
-        setNotification("server error please try again");
-        setNotificationColur("red");
-      });
+  const handleGoogleSuccess = async (
+    credentialResponse: CredentialResponse,
+  ) => {
+    try {
+      const response = await axios.post<SignupResponse>(
+        `${import.meta.env.VITE_API}google-signup`,
+        {
+          credential: credentialResponse.credential,
+        },
+      );
+
+      if (response.status === 201) {
+        setNotification({
+          message: "Account registered successfully! Redirecting to login...",
+          color: "blue",
+        });
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      }
+    } catch (error: any) {
+      if (
+        axios.isAxiosError(error) &&
+        error.response?.data === "email_exists"
+      ) {
+        setNotification({
+          message: "This Google account is already registered.",
+          color: "red",
+        });
+      } else {
+        setNotification({
+          message: "Failed to register. Please try again.",
+          color: "red",
+        });
+      }
+    }
+  };
+
+  const handleGoogleError = (): void => {
+    setNotification({
+      message: "Google signup failed. Please try again.",
+      color: "red",
+    });
   };
 
   return (
     <AuthLayout>
-      <LayoutLogo text={"Create your account"} />
+      <LayoutLogo text="Create your account" />
 
-      <NotifcationBox
-        notificationMessage={notification}
-        setNotification={setNotification}
-        color={notificationColor}
-      />
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            placeholder="Email"
-            className="text-base mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-        </div>
-        <div>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="password"
-            className="text-base mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-        </div>
-        <div>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            placeholder="password"
-            className="text-base mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
+      <div className="space-y-6">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-600"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 text-gray-400 bg-gradient-to-br from-slate-900 to-slate-950">
+              Sign up with
+            </span>
+          </div>
         </div>
 
-        <button
-          type="submit"
-          className="w-full text-sm py-2 px-4 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold rounded-lg transition duration-300 transform text-center"
-        >
-          Sign Up
-        </button>
-      </form>
-      <p className="text-center text-sm text-gray-400">
-        Already have an account?{" "}
-        <Link to="/login" className="text-purple-400 hover:text-purple-300">
-          Log In
-        </Link>
-      </p>
+        <div className="flex justify-center">
+          <div className="w-full max-w-xs">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+              theme="filled_black"
+              shape="pill"
+              size="large"
+              width="100%"
+              text="signup_with"
+              useOneTap={false}
+            />
+          </div>
+        </div>
+
+        <p className="text-center text-sm text-gray-400">
+          Already have an account?{" "}
+          <Link to="/login" className="text-purple-400 hover:text-purple-300">
+            Log In
+          </Link>
+        </p>
+      </div>
     </AuthLayout>
   );
 };
