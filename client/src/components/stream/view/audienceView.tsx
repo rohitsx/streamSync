@@ -1,86 +1,96 @@
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSocketContext } from "@/context/socketContext"
+import { useSocketContext } from "@/context/socketContext";
 import HandelParticipant from "../streamUtlis/participants";
 import ConnectedUser from "../streamUtlis/connectedUser";
 import NotifcationBox from "@/assets/notification";
 import SendSoal from "../../wallet/crypto/soal/soal";
 import soalSend from "../../wallet/crypto/soal/sendSoal";
+import useDefaultPage from "@/hook/useDefaultPage";
 
 export default function AudienceView() {
-    const username = useMemo(() => localStorage.getItem('username') || '', []);
-    const roomId = useMemo(() => localStorage.getItem('roomId') || '', []);
-    const socket = useSocketContext();
-    const [updateDefaultPage] = useDefaultPage();
-    const navigate = useNavigate();
-    const [notification, setNotification] = useState<string | null>(null);
-    const [strangerData, setStrangerData] = useState<{
-        username: string | null,
-        socketId: string | null,
-    }>({ username: null, socketId: null })
-    const [amount, setAmount] = useState(0.00);
+  const username = useMemo(() => localStorage.getItem("username") || "", []);
+  const roomId = useMemo(() => localStorage.getItem("roomId") || "", []);
+  const socket = useSocketContext();
+  const [updateDefaultPage] = useDefaultPage();
+  const navigate = useNavigate();
+  const [notification, setNotification] = useState<string | null>(null);
+  const [strangerData, setStrangerData] = useState<{
+    username: string | null;
+    socketId: string | null;
+  }>({ username: null, socketId: null });
+  const [amount, setAmount] = useState(0.0);
 
-    useEffect(() => {
+  useEffect(() => {
+    socket?.emit("joinRoom", roomId);
+  }, [socket]);
 
-        socket?.emit('joinRoom', roomId);
-    }, [socket])
+  useEffect(() => {
+    localStorage.setItem("defaultPage", "audience");
+    if (!socket || !roomId) return;
 
-
-    useEffect(() => {
-        localStorage.setItem('defaultPage', 'audience');
-        if (!socket || !roomId) return;
-
-        const handleCloseRoom = () => {
-            setNotification('Host closed room. Redirecting home...');
-            localStorage.setItem('defaultPage', 'home');
-            setTimeout(() => navigate('/home'), 3000);
-        };
-
-        const handleGetSocketId = (data: { username: string, socketId: string, hostPublicKey: string }) => {
-            setStrangerData({
-                username: data.username,
-                socketId: data.socketId
-            });
-            soalSend(data.hostPublicKey, amount)
-
-        };
-        
-        socket.on('getSocketId', handleGetSocketId);
-        socket.on('invalidRoom', handleCloseRoom);
-
-        return () => {
-            socket.off('closeRoom', handleCloseRoom);
-            socket.off('getSocketId', handleGetSocketId);
-            socket.off('getUsers');
-        };
-    }, [socket, roomId, navigate, amount]);
     const handleCloseRoom = () => {
-        setNotification('Host closed room. Redirecting home...');
-        localStorage.setItem('defaultPage', 'home');
-        setTimeout(() => navigate('/home'), 3000);
+      setNotification("Host closed room. Redirecting home...");
+      localStorage.setItem("defaultPage", "home");
+      setTimeout(() => navigate("/home"), 3000);
     };
 
-    socket?.on('closeRoom', handleCloseRoom);
+    const handleGetSocketId = (data: {
+      username: string;
+      socketId: string;
+      hostPublicKey: string;
+    }) => {
+      setStrangerData({
+        username: data.username,
+        socketId: data.socketId,
+      });
+      soalSend(data.hostPublicKey, amount);
+    };
 
-    const changePage = useCallback(() => {
-        if (socket && roomId) {
-            socket.emit('leaveRoom', roomId);
-        }
-        updateDefaultPage('home');
-        navigate('/home');
-    }, [socket, roomId, updateDefaultPage, navigate]);
+    socket.on("getSocketId", handleGetSocketId);
+    socket.on("invalidRoom", handleCloseRoom);
 
-    if (!roomId) {
-        return <div>Error: No room ID found. Please join a room first.</div>;
+    return () => {
+      socket.off("closeRoom", handleCloseRoom);
+      socket.off("getSocketId", handleGetSocketId);
+      socket.off("getUsers");
+    };
+  }, [socket, roomId, navigate, amount]);
+  const handleCloseRoom = () => {
+    setNotification("Host closed room. Redirecting home...");
+    localStorage.setItem("defaultPage", "home");
+    setTimeout(() => navigate("/home"), 3000);
+  };
+
+  socket?.on("closeRoom", handleCloseRoom);
+
+  const changePage = useCallback(() => {
+    if (socket && roomId) {
+      socket.emit("leaveRoom", roomId);
     }
+    updateDefaultPage("home");
+    navigate("/home");
+  }, [socket, roomId, updateDefaultPage, navigate]);
 
-    return (
-        <div className={styles.hostContainer}>
-            <NotifcationBox notificationMessage={notification} setNotification={setNotification} />
-            <ConnectedUser username={username} strangerData={strangerData} setStrangerData={setStrangerData} view="audience" />
-            <HandelParticipant />
-            <SendSoal setAmount={setAmount} amount={amount} />
-            <button onClick={changePage} className={styles.closeButton}>Leave Room</button>
-        </div>
-    );
+  if (!roomId) {
+    return <div>Error: No room ID found. Please join a room first.</div>;
+  }
+
+  return (
+    <div>
+      <NotifcationBox
+        notificationMessage={notification}
+        setNotification={setNotification}
+      />
+      <ConnectedUser
+        username={username}
+        strangerData={strangerData}
+        setStrangerData={setStrangerData}
+        view="audience"
+      />
+      <HandelParticipant />
+      <SendSoal setAmount={setAmount} amount={amount} />
+      <button onClick={changePage}>Leave Room</button>
+    </div>
+  );
 }

@@ -6,6 +6,7 @@ import NotifcationBox from "@/assets/notification";
 import HandelParticipant from "../streamUtlis/participants";
 import ConnectedUser from "../streamUtlis/connectedUser";
 import getKeyPair from "@/utils/getkeyPair";
+import useDefaultPage from "@/hook/useDefaultPage";
 
 export default function HostView() {
   const username = useMemo(() => localStorage.getItem("username") || "", []);
@@ -76,7 +77,7 @@ export default function HostView() {
   }
 
   return (
-    <div className={styles.hostContainer}>
+    <div>
       <NotifcationBox
         notificationMessage={notification}
         setNotification={setNotification}
@@ -88,9 +89,7 @@ export default function HostView() {
         view={"host"}
       />
       <HandelParticipant getUsername={true} />
-      <button className={styles.closeButton} onClick={changePage}>
-        Close Room
-      </button>
+      <button onClick={changePage}>Close Room</button>
     </div>
   );
 }

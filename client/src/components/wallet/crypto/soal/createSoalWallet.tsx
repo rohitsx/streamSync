@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Keypair } from '@solana/web3.js';
-import getSoalBalance from '../../../utils/getSoalBalance';
+import getSoalBalance from "@/utils/getSoalBalance"
 import styles from './styles/createWallet.module.css'
 
 export default function CreateSoalWallet() {
