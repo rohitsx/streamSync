@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import NotifcationBox from "@/assets/notification";
-import Logo from "@/assets/logo";
-import Layout, { AuthLayout } from "./Layout";
+import { AuthLayout, LayoutLogo } from "./Layout";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -36,12 +35,7 @@ const LoginPage = () => {
 
   return (
     <AuthLayout>
-      <div className="flex flex-col items-center">
-        <Logo />
-        <h2 className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
-          Welcome back
-        </h2>
-      </div>
+      <LayoutLogo text={"Welcome back"} />
 
       <NotifcationBox
         notificationMessage={notification}
@@ -73,7 +67,8 @@ const LoginPage = () => {
         </div>
         <button
           type="submit"
-          className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold rounded-lg transition duration-300"
+          className="w-full text-sm py-2 px-4 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold rounded-lg transition duration-300 transform text-center"
+ 
         >
           Log In
         </button>

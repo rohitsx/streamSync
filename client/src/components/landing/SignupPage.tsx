@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "@/assets/logo";
 import axios from "axios";
 import NotifcationBox from "@/assets/notification";
-import Layout, { AuthLayout } from "./Layout";
+import { AuthLayout, LayoutLogo } from "./Layout";
 
 const SignupPage = () => {
   const [email, setEmail] = useState("");
@@ -44,12 +43,7 @@ const SignupPage = () => {
 
   return (
     <AuthLayout>
-      <div className="flex flex-col items-center">
-        <Logo />
-        <h2 className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500">
-          Create your account
-        </h2>
-      </div>
+      <LayoutLogo text={"Create your account"} />
 
       <NotifcationBox
         notificationMessage={notification}
@@ -58,17 +52,6 @@ const SignupPage = () => {
       />
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            placeholder="Name"
-            className="text-base mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-        </div>
         <div>
           <input
             type="email"
@@ -88,12 +71,24 @@ const SignupPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
             placeholder="password"
-            className="text-base mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="text-base mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
+        <div>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            placeholder="password"
+            className="text-base mt-1 block w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+        </div>
+
         <button
           type="submit"
-          className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold rounded-lg transition duration-300"
+          className="w-full text-sm py-2 px-4 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold rounded-lg transition duration-300 transform text-center"
         >
           Sign Up
         </button>
