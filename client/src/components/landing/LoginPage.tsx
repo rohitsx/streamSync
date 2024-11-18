@@ -1,40 +1,24 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import NotifcationBox from "@/assets/notification";
 import { AuthLayout, LayoutLogo } from "./Layout";
-
-interface LoginResponse {
-  message: string;
-  token: string;
-  username: string;
-}
+import { Btn } from "./Layout";
 
 const LoginPage: React.FC = () => {
   const [notification, setNotification] = useState<string | null>(null);
 
-  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+  const handleGoogleLogin = async () => {
     try {
-      const response = await axios.post<LoginResponse>(
-        `${import.meta.env.VITE_API}google-login`,
-        {
-          credential: credentialResponse.credential,
+      chrome.identity.getAuthToken({ interactive: true }, function (token) {
+        if (chrome.runtime.lastError) {
+          console.error(chrome.runtime.lastError);
+          return;
         }
-      );
-      
-      if (response.data.message === "success_login") {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("username", response.data.username);
-        window.location.reload();
-      }
+        console.log("Got token:", token);
+      });
     } catch (error) {
-      setNotification("Failed to login with Google. Please try again.");
+      console.error("Auth error:", error);
     }
-  };
-
-  const handleGoogleError = (): void => {
-    setNotification("Google login failed. Please try again.");
   };
 
   return (
@@ -57,18 +41,11 @@ const LoginPage: React.FC = () => {
         </div>
 
         <div className="flex justify-center">
-          <div className="w-full max-w-xs">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              theme="filled_black"
-              shape="pill"
-              size="large"
-              width="100%"
-              text="continue_with"
-              useOneTap
-            />
-          </div>
+          <Btn
+            text="Continue with Google"
+            worker={handleGoogleLogin}
+            sBtn={true}
+          />
         </div>
 
         <p className="text-center text-sm text-gray-400">

@@ -1,18 +1,9 @@
+// signupPage.tsx
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import { Link } from "react-router-dom";
 import NotifcationBox from "@/assets/notification";
 import { AuthLayout, LayoutLogo } from "./Layout";
-
-interface SignupResponse {
-  status: number;
-  data:
-    | string
-    | {
-        message: string;
-      };
-}
+import { Btn } from "./Layout";
 
 interface NotificationState {
   message: string | null;
@@ -24,58 +15,31 @@ const SignupPage: React.FC = () => {
     message: null,
     color: "red",
   });
-  const navigate = useNavigate();
 
-  const handleGoogleSuccess = async (
-    credentialResponse: CredentialResponse,
-  ) => {
+  const handleGoogleSignup = async () => {
     try {
-      const response = await axios.post<SignupResponse>(
-        `${import.meta.env.VITE_API}google-signup`,
-        {
-          credential: credentialResponse.credential,
-        },
-      );
-
-      if (response.status === 201) {
-        setNotification({
-          message: "Account registered successfully! Redirecting to login...",
-          color: "blue",
-        });
-
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
-      }
-    } catch (error: any) {
-      if (
-        axios.isAxiosError(error) &&
-        error.response?.data === "email_exists"
-      ) {
-        setNotification({
-          message: "This Google account is already registered.",
-          color: "red",
-        });
-      } else {
-        setNotification({
-          message: "Failed to register. Please try again.",
-          color: "red",
-        });
-      }
+      chrome.identity.getAuthToken({ interactive: true }, function (token) {
+        if (chrome.runtime.lastError) {
+          console.error(chrome.runtime.lastError);
+          return;
+        }
+        console.log("Got token:", token);
+      });
+    } catch (error) {
+      console.error("Auth error:", error);
     }
-  };
-
-  const handleGoogleError = (): void => {
-    setNotification({
-      message: "Google signup failed. Please try again.",
-      color: "red",
-    });
   };
 
   return (
     <AuthLayout>
       <LayoutLogo text="Create your account" />
-
+      <NotifcationBox
+        notificationMessage={notification.message}
+        setNotification={(message) =>
+          setNotification((prev: any) => ({ ...prev, message }))
+        }
+        color={notification.color}
+      />
       <div className="space-y-6">
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
@@ -89,18 +53,11 @@ const SignupPage: React.FC = () => {
         </div>
 
         <div className="flex justify-center">
-          <div className="w-full max-w-xs">
-            <GoogleLogin
-              onSuccess={handleGoogleSuccess}
-              onError={handleGoogleError}
-              theme="filled_black"
-              shape="pill"
-              size="large"
-              width="100%"
-              text="signup_with"
-              useOneTap={false}
-            />
-          </div>
+          <Btn
+            text="Sign up with Google"
+            worker={handleGoogleSignup}
+            sBtn={true}
+          />
         </div>
 
         <p className="text-center text-sm text-gray-400">
