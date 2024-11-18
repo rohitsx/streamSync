@@ -8,17 +8,7 @@ const LoginPage: React.FC = () => {
   const [notification, setNotification] = useState<string | null>(null);
 
   const handleGoogleLogin = async () => {
-    try {
-      chrome.identity.getAuthToken({ interactive: true }, function (token) {
-        if (chrome.runtime.lastError) {
-          console.error(chrome.runtime.lastError);
-          return;
-        }
-        console.log("Got token:", token);
-      });
-    } catch (error) {
-      console.error("Auth error:", error);
-    }
+    chrome.runtime.sendMessage({ action: "googleLogin" });
   };
 
   return (

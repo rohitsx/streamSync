@@ -17,17 +17,32 @@ const SignupPage: React.FC = () => {
   });
 
   const handleGoogleSignup = async () => {
-    try {
-      chrome.identity.getAuthToken({ interactive: true }, function (token) {
-        if (chrome.runtime.lastError) {
-          console.error(chrome.runtime.lastError);
-          return;
-        }
-        console.log("Got token:", token);
-      });
-    } catch (error) {
-      console.error("Auth error:", error);
-    }
+    chrome.runtime.sendMessage({ action: "googleLogin" }, (response) => {
+      if (response.success) {
+        console.log("Token received:", response.token);
+        const token = response.token;
+        fetch(
+          "https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + token,
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.error) {
+              console.error("Error fetching user info:", data.error);
+            } else {
+              const userName = data.name; // User's name
+              const userEmail = data.email; // User's email
+              console.log("User Name:", userName);
+              console.log("User Email:", userEmail);
+            }
+          })
+          .catch((err) => {
+            console.error("Error fetching user info:", err);
+          });
+        // You can now use the token to make authenticated API requests
+      } else {
+        console.error("Login failed:", response.error);
+      }
+    });
   };
 
   return (
