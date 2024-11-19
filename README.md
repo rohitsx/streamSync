@@ -102,4 +102,5 @@ To test the project as a Chrome extension:
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.
+
