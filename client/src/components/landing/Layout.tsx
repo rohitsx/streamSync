@@ -1,5 +1,6 @@
 import Logo from "@/assets/logo";
 import { ReactNode, useMemo } from "react";
+import clsx from "clsx";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const isNewTab = useMemo(() => {
@@ -9,15 +10,15 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className={`${
-        isNewTab &&
-        "min-h-screen w-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-950"
-      }`}
+      className={clsx({
+        "min-h-screen w-screen flex items-center justify-center bg-gradient-to-r from-[#1a1a2e] via-[#16213e] to-[#1a1a2e] bg-[length:400%_400%] animate-gradient after:animate-pulse-slow":
+          isNewTab,
+      })}
     >
       <div
-        className={`bg-gradient-to-br from-slate-900 to-slate-950 text-white flex flex-col items-center justify-between p-6 ${
-          isNewTab ? "w-[480px] h-[600px]" : "w-[380px] h-[500px]"
-        }`}
+        className={
+          "bg-gradient-to-br from-slate-900/95 to-slate-950/95 text-white flex flex-col items-center justify-between p-6 w-[390px] h-[500px] backdrop-blur-xl shadow-2xl"
+        }
       >
         {children}
       </div>
@@ -28,7 +29,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 export function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <Layout>
-      <div className="max-w-md w-full bg-gradient-to-br from-indigo-500/10 to-blue-500/10 backdrop-filter backdrop-blur-xl rounded-xl shadow-2xl shadow-indigo-500/10 p-5 space-y-5 border border-indigo-500/20">
+      <div className="max-w-md w-full bg-gradient-to-br from-blue-600/5 to-violet-600/5 backdrop-blur-xl rounded-xl shadow-2xl shadow-violet-500/10 p-6 space-y-6 border border-white/10 hover:border-white/20 transition-all duration-300">
         {children}
       </div>
     </Layout>
@@ -37,9 +38,9 @@ export function AuthLayout({ children }: { children: ReactNode }) {
 
 export function LayoutLogo({ text }: { text: string }) {
   return (
-    <div className="w-full flex flex-col items-center space-y-2">
+    <div className="w-full flex flex-col items-center space-y-3">
       <Logo />
-      <h2 className="text-2xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">
+      <h2 className="text-2xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-violet-400 to-purple-400 tracking-tight">
         {text}
       </h2>
     </div>
@@ -55,28 +56,84 @@ export function Btn({
   worker: () => void;
   sBtn?: boolean;
 }) {
-  const handelClick = () => worker();
-  const primaryBtn = () => {
-    return (
-      <button
-        onClick={handelClick}
-        className="text-sm py-2 px-4 bg-transparent border border-purple-500 text-purple-500 hover:bg-purple-500 hover:text-white font-semibold rounded-lg transition duration-300 text-center"
-      >
-        {text}
-      </button>
-    );
-  };
+  const handleClick = () => worker();
 
-  const secondaryBtn = () => {
-    return (
-      <button
-        onClick={handelClick}
-        className="text-sm py-2 px-4 bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white font-semibold rounded-lg transition duration-300 transform hover:scale-105 text-center"
-      >
-        {text}
-      </button>
-    );
-  };
+  const primaryBtn = () => (
+    <button
+      onClick={handleClick}
+      className="w-full text-sm py-2.5 px-6 bg-transparent border-2 border-violet-500 text-violet-400 hover:bg-violet-500 hover:text-white font-semibold rounded-lg transition-all duration-300 text-center focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+    >
+      {text}
+    </button>
+  );
+
+  const secondaryBtn = () => (
+    <button
+      onClick={handleClick}
+      className="w-full text-sm py-2.5 px-6 bg-gradient-to-r from-blue-500 via-violet-500 to-purple-500 hover:from-blue-600 hover:via-violet-600 hover:to-purple-600 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-[1.02] text-center shadow-lg shadow-violet-500/20 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+    >
+      {text}
+    </button>
+  );
 
   return sBtn ? secondaryBtn() : primaryBtn();
 }
+
+interface GoogleButtonProps {
+  onClick: () => void;
+  isLoading?: boolean;
+}
+
+export const GoogleButton: React.FC<GoogleButtonProps> = ({
+  onClick,
+  isLoading = false,
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      disabled={isLoading}
+      type="button"
+      className={`
+        flex items-center justify-center w-full px-5 py-3
+        text-sm font-medium transition-all duration-300
+        bg-gradient-to-r from-slate-800/90 to-slate-900/90
+        border border-white/10 hover:border-white/20
+        rounded-lg shadow-xl
+        hover:shadow-violet-500/20 hover:from-slate-800 hover:to-slate-900
+        focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:ring-offset-2 focus:ring-offset-slate-900
+        ${isLoading ? "cursor-not-allowed opacity-70" : ""}
+      `}
+    >
+      {isLoading ? (
+        <>
+          <div className="w-5 h-5 border-2 border-slate-700 border-t-violet-400 rounded-full animate-spin mr-3" />
+          <span className="text-gray-200">Loading...</span>
+        </>
+      ) : (
+        <>
+          <div className="bg-white p-1.5 rounded-lg mr-3 shadow-sm">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4"
+              />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335"
+              />
+            </svg>
+          </div>
+          <span className="text-gray-200">Continue with Google</span>
+        </>
+      )}
+    </button>
+  );
+};
