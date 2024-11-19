@@ -1,16 +1,6 @@
 import React, { useState } from "react";
 import Layout, { LayoutLogo, GoogleButton } from "./Layout";
 
-interface userProp {
-  email: string;
-  family_name: string;
-  given_name: string;
-  id: string;
-  name: string;
-  picture: string;
-  verified_email: boolean;
-}
-
 function LandingPage(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
