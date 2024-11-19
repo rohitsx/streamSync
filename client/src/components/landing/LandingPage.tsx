@@ -1,16 +1,14 @@
 import React, { useState } from "react";
 import Layout, { LayoutLogo, GoogleButton } from "./Layout";
 
-interface GoogleUserInfo {
-  name: string;
+interface userProp {
   email: string;
-  error?: string;
-}
-
-interface GoogleAuthResponse {
-  success: boolean;
-  token?: string;
-  error?: string;
+  family_name: string;
+  given_name: string;
+  id: string;
+  name: string;
+  picture: string;
+  verified_email: boolean;
 }
 
 function LandingPage(): React.JSX.Element {
@@ -18,37 +16,9 @@ function LandingPage(): React.JSX.Element {
 
   const handleGoogleSignup = async (): Promise<void> => {
     setIsLoading(true);
-
-    chrome.runtime.sendMessage(
-      { action: "googleLogin" },
-      (response: GoogleAuthResponse) => {
-        if (response.success && response.token) {
-          fetch(
-            `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${response.token}`,
-          )
-            .then((response) => response.json())
-            .then((data: GoogleUserInfo) => {
-              if (data.error) {
-                console.error("Error fetching user info:", data.error);
-              } else {
-                const userName = data.name;
-                const userEmail = data.email;
-                console.log("User Name:", userName);
-                console.log("User Email:", userEmail);
-              }
-            })
-            .catch((err: Error) => {
-              console.error("Error fetching user info:", err);
-            })
-            .finally(() => {
-              setIsLoading(false);
-            });
-        } else {
-          console.error("Login failed:", response.error);
-          setIsLoading(false);
-        }
-      },
-    );
+    chrome.runtime.sendMessage({ action: "googleLogin" }, ({ user }) => {
+      console.log(user);
+    });
   };
 
   return (

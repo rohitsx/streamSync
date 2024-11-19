@@ -33,9 +33,5 @@
       "resources": ["index.html"],
       "matches": ["*://*/*"]
     }
-  ],
-  "oauth2": {
-    "client_id": "48392764782-a4a3pcnm7qnbtba8f31o07q94blqbcj2.apps.googleusercontent.com",
-    "scopes": ["openid", "email", "profile"]
-  }
+  ]
 }

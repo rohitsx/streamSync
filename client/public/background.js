@@ -1,11 +1,7 @@
-// background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "googleLogin") {
     const clientID =
       "48392764782-f0jng7d1jj1pnmhhvuj8l04jeot5ihem.apps.googleusercontent.com";
-
-    // Use your development extension ID
-    const extensionId = "djdemkjkeanachbbjehacplfagbhacfb";
     const scopes = [
       "https://www.googleapis.com/auth/userinfo.profile",
       "https://www.googleapis.com/auth/userinfo.email",
@@ -18,17 +14,28 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     url.searchParams.append("prompt", "consent select_account");
     url.searchParams.append("redirect_uri", callbackUrl);
     url.searchParams.append("scope", scopes.join(" "));
-    console.log(url);
-
     chrome.identity.launchWebAuthFlow(
       {
         url: url.toString(),
         interactive: true,
       },
       (responseUrl) => {
-		  console.log(responseUrl)
-	  },
-
+        const urlParams = new URLSearchParams(
+          new URL(responseUrl).hash.substring(1),
+        );
+        const accessToken = urlParams.get("access_token");
+        fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            sendResponse({ user: data });
+          })
+          .catch((err) => sendResponse({ error: err }));
+      },
     );
+    return true;
   }
 });
