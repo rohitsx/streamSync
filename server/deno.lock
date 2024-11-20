@@ -2,24 +2,16 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "jsr:@std/assert@1": "jsr:@std/assert@1.0.6",
       "jsr:@std/cli@^1.0.6": "jsr:@std/cli@1.0.6",
       "jsr:@std/encoding@^1.0.5": "jsr:@std/encoding@1.0.5",
       "jsr:@std/fmt@^1.0.3": "jsr:@std/fmt@1.0.3",
       "jsr:@std/http@1": "jsr:@std/http@1.0.10",
-      "jsr:@std/internal@^1.0.4": "jsr:@std/internal@1.0.4",
       "jsr:@std/media-types@^1.1.0": "jsr:@std/media-types@1.1.0",
       "jsr:@std/net@^1.0.4": "jsr:@std/net@1.0.4",
       "jsr:@std/path@^1.0.8": "jsr:@std/path@1.0.8",
       "jsr:@std/streams@^1.0.8": "jsr:@std/streams@1.0.8"
     },
     "jsr": {
-      "@std/assert@1.0.6": {
-        "integrity": "1904c05806a25d94fe791d6d883b685c9e2dcd60e4f9fc30f4fc5cf010c72207",
-        "dependencies": [
-          "jsr:@std/internal@^1.0.4"
-        ]
-      },
       "@std/cli@1.0.6": {
         "integrity": "d22d8b38c66c666d7ad1f2a66c5b122da1704f985d3c47f01129f05abb6c5d3d"
       },
@@ -40,9 +32,6 @@
           "jsr:@std/path@^1.0.8",
           "jsr:@std/streams@^1.0.8"
         ]
-      },
-      "@std/internal@1.0.4": {
-        "integrity": "62e8e4911527e5e4f307741a795c0b0a9e6958d0b3790716ae71ce085f755422"
       },
       "@std/media-types@1.1.0": {
         "integrity": "c9d093f0c05c3512932b330e3cc1fe1d627b301db33a4c2c2185c02471d6eaa4"

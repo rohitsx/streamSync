@@ -1,5 +1,3 @@
-
-
 # Use the official Node.js image from the Docker Hub
 FROM node:18
 
@@ -10,7 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install the app dependencies
-RUN npm install
+RUN npm i
 
 # Copy the rest of the application files
 COPY . .

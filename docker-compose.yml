@@ -21,14 +21,15 @@ services:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "8000:8000"
     env_file:
       - ./server/.env
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     volumes:
       - ./server:/usr/src/app
-      - /usr/src/app/node_modules
+      - deno-cache:/deno-dir/deps
     environment:
       - NODE_ENV=development
 
@@ -42,8 +43,8 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=dummyPass
       - MONGO_INITDB_DATABASE=streamSync
     volumes:
-      - mongodata:/data/db 
-    healthcheck: 
+      - mongodata:/data/db
+    healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       interval: 10s
       timeout: 10s
@@ -52,3 +53,4 @@ services:
 
 volumes:
   mongodata:
+  deno-cache:
