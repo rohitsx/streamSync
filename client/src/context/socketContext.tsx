@@ -15,7 +15,7 @@ export const SocketProvider = ({ children }: { children: ReactNode }) => {
     const [socket, setSocket] = useState<Socket | null>(null);
 
     useEffect(() => {        
-        const newSocket = io(import.meta.env.VITE_APP_WEBSOCKET_URL, {
+        const newSocket = io(import.meta.env.VITE_API, {
             transports: ['websocket'],
             auth: { username: localStorage.getItem('username') }
         });

@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import Layout, { LayoutLogo, GoogleButton } from "./Layout";
+import axios from "axios";
 
 function LandingPage(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleGoogleSignup = async (): Promise<void> => {
     setIsLoading(true);
-    chrome.runtime.sendMessage({ action: "googleLogin" }, ({ user }) => {
-      console.log(user);
+    chrome.runtime.sendMessage({ action: "googleLogin" }, async ({ user }) => {
+		console.log(user)
+      const res = await axios.post(
+        `${import.meta.env.VITE_API}google-auth`,
+        user,
+      );
+      console.log(res.data);
     });
   };
 

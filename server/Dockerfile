@@ -1,5 +1,5 @@
 # server/Dockerfile
-FROM denoland/deno:alpine-1.39.4
+FROM denoland/deno:2.0.6
 
 WORKDIR /usr/src/app
 
