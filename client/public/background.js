@@ -20,20 +20,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         interactive: true,
       },
       (responseUrl) => {
-        const urlParams = new URLSearchParams(
-          new URL(responseUrl).hash.substring(1),
-        );
-        const accessToken = urlParams.get("access_token");
-        fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            sendResponse({ user: data, token: accessToken });
-          })
-          .catch((err) => sendResponse({ error: err }));
+        try {
+          const urlParams = new URLSearchParams(
+            new URL(responseUrl).hash.substring(1),
+          );
+          const accessToken = urlParams.get("access_token");
+          sendResponse({ "accessToken" : accessToken });
+        } catch (e) {
+          console.log(e);
+        }
       },
     );
     return true;
