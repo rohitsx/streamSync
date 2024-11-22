@@ -4,7 +4,6 @@ import SignupPage from "./landing/SignupPage";
 import LoginPage from "./landing/LoginPage";
 import Home from "./landing/Home";
 import JoinStream from "./stream/JoinStream";
-import { SocketProvider } from "@/context/socketContext";
 import AudienceView from "./stream/view/audienceView";
 import HostView from "./stream/view/hostView";
 import Wallet from "./wallet/Wallet";
@@ -17,7 +16,6 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 const App: React.FC = () => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <SocketProvider>
         <Wallet_provider>
           <Router>
             <Routes>
@@ -33,7 +31,6 @@ const App: React.FC = () => {
             </Routes>
           </Router>
         </Wallet_provider>
-      </SocketProvider>
     </GoogleOAuthProvider>
   );
 };

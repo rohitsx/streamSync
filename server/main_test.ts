@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import server from "./main.ts";
+import server from "./src/main.ts"
 
 Deno.test(async function serverFetch() {
   const req = new Request("https://deno.land");

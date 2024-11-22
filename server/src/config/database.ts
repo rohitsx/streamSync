@@ -1,18 +1,19 @@
-import { MongoClient, Database } from "jsr:@db/mongo";
-import { DB_CONNECTION_STRING } from "./environment.ts";
+import { MongoClient, Db } from "mongo";
+import { MONGO_URL } from "./environment.ts";
 
-const client = new MongoClient();
-let db: Database;
-
-export const connectToDatabase = async () => {
-  if (!DB_CONNECTION_STRING) return;
+let db: Db;
+async function connectToDatabase() {
   try {
-    await client.connect(DB_CONNECTION_STRING);
-    db = client.database("streamSync");
+    if (!MONGO_URL) throw new Error("MONGO_URL is not defined");
+
+    const client = new MongoClient(MONGO_URL);
+    await client.connect();
+    db = client.db("streamSync");
   } catch (err) {
     console.log("MongoDB connection error:", err);
-    throw err;
   }
-};
+}
 
-export const getDb = () => db;
+const getDb = () => db;
+
+export { connectToDatabase, getDb };

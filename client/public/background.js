@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         })
           .then((response) => response.json())
           .then((data) => {
-            sendResponse({ user: data });
+            sendResponse({ user: data, token: accessToken });
           })
           .catch((err) => sendResponse({ error: err }));
       },

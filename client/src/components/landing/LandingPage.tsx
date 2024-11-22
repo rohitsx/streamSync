@@ -8,12 +8,12 @@ function LandingPage(): React.JSX.Element {
   const handleGoogleSignup = async (): Promise<void> => {
     setIsLoading(true);
     chrome.runtime.sendMessage({ action: "googleLogin" }, async ({ user }) => {
-		console.log(user)
-      const res = await axios.post(
-        `${import.meta.env.VITE_API}google-auth`,
-        user,
-      );
-      console.log(res.data);
+      console.log(user);
+      await axios
+        .post(`${import.meta.env.VITE_API}google-auth`, user)
+        .then((res) => {
+          console.log(res);
+        });
     });
   };
 

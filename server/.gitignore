@@ -25,4 +25,4 @@ dist-ssr
 
 
 *.env
-*deno.env
+*deno.lock
