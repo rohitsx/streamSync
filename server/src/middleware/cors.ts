@@ -11,9 +11,11 @@ export default async function addCorsHeaders(
   );
   headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
+  // Handle pre-flight OPTIONS request
   if (req.method === "OPTIONS") {
     return new Response(null, { headers, status: 204 });
   }
 
-  return new Response(response.body, { ...response, headers });
+  // Ensure the status code is explicitly passed along with headers
+  return new Response(response.body, { status: response.status, headers });
 }

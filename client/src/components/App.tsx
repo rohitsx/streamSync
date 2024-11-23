@@ -1,7 +1,6 @@
 import React from "react";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
-import SignupPage from "./landing/SignupPage";
-import LoginPage from "./landing/LoginPage";
+import Username from "./landing/Username";
 import Home from "./landing/Home";
 import JoinStream from "./stream/JoinStream";
 import AudienceView from "./stream/view/audienceView";
@@ -16,21 +15,20 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 const App: React.FC = () => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-        <Wallet_provider>
-          <Router>
-            <Routes>
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/landing" element={<LandingPage />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/join" element={<JoinStream />} />
-              <Route path="/host" element={<GoLivePage />} />
-              <Route path="/wallet" element={<Wallet />} />
-              <Route path="/join-view" element={<AudienceView />} />
-              <Route path="/host-view" element={<HostView />} />
-            </Routes>
-          </Router>
-        </Wallet_provider>
+      <Wallet_provider>
+        <Router>
+          <Routes>
+            <Route path="/username" element={<Username />} />
+            <Route path="/landing" element={<LandingPage />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/join" element={<JoinStream />} />
+            <Route path="/host" element={<GoLivePage />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/join-view" element={<AudienceView />} />
+            <Route path="/host-view" element={<HostView />} />
+          </Routes>
+        </Router>
+      </Wallet_provider>
     </GoogleOAuthProvider>
   );
 };

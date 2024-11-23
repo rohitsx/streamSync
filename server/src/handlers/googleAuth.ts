@@ -1,7 +1,6 @@
 import { JWT_SECRET } from "../config/environment.ts";
 import { DbUser, User } from "../types/user.ts";
-import { invalidRequest } from "./defaultResponse.ts";
-import { userNameNotFound } from "./defaultResponse.ts";
+import sendResponse, { invalidRequest } from "./defaultResponse.ts";
 import UserHandler from "./userHandler.ts";
 import jwt from "jsonwebtoken";
 
@@ -26,22 +25,24 @@ export default class googleAuthhandler {
 
     const user: User = await fetchUserData.json();
 
-    const getUser: DbUser | null = await this.db.getUser(user.email);
-
-    return getUser ? this.sendSessionToken(getUser) : this.addUser(user);
+    return this.sendSessionToken(user);
   }
 
-  sendSessionToken(user: DbUser) {
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+  async sendSessionToken(user: User): Promise<Response> {
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
       expiresIn: "30d",
     });
-    return user.username
-      ? new Response(token, { status: 200 })
-      : userNameNotFound();
-  }
+    const getUser: DbUser | null = await this.db.getUser(user.email);
+    const username_Require = () =>
+      sendResponse(
+        { message: "username_Require", token: token, user: getUser },
+        200,
+      );
 
-  addUser(user: User) {
-    this.db.addUser(user);
-    return userNameNotFound();
+    return getUser
+      ? getUser.username
+        ? sendResponse({ message: "success", token: token, user: getUser }, 200)
+        : username_Require()
+      : (await this.db.addUser(user)) && username_Require();
   }
 }

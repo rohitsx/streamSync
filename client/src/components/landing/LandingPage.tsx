@@ -1,20 +1,41 @@
 import React, { useState } from "react";
 import Layout, { LayoutLogo, GoogleButton } from "./Layout";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { User } from "@/types/api";
+import { useCookies } from "react-cookie";
 
 function LandingPage(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [, setCookie] = useCookies(["session"], {
+    doNotParse: true,
+  });
+  const nav = useNavigate();
+
+  const createCookie = ({ token, user }: { token: string; user: User }) => {
+    setCookie("session", JSON.stringify({ token, user }), {
+      path: "/",
+      secure: true,
+      httpOnly: true,
+    });
+  };
 
   const handleGoogleSignup = async (): Promise<void> => {
     setIsLoading(true);
-    chrome.runtime.sendMessage({ action: "googleLogin" }, async ({ accessToken }) => {
-      console.log("adsda",accessToken);
-      await axios
-        .post(`${import.meta.env.VITE_API}google-auth`, accessToken)
-        .then((res) => {
-          console.log(res);
-        });
-    });
+    chrome.runtime.sendMessage(
+      { action: "googleLogin" },
+      async ({ accessToken }) => {
+        await axios
+          .post(`${import.meta.env.VITE_API}google-auth`, accessToken)
+          .then((res) => {
+            createCookie(res.data);
+            res.data.username ? nav("/") : nav("/username");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      },
+    );
   };
 
   return (

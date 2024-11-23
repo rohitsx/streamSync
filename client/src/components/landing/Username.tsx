@@ -4,7 +4,7 @@ import NotifcationBox from "@/assets/notification";
 import { AuthLayout, LayoutLogo } from "./Layout";
 import { Btn } from "./Layout";
 
-const LoginPage: React.FC = () => {
+const Username: React.FC = () => {
   const [notification, setNotification] = useState<string | null>(null);
 
   const handleGoogleLogin = async () => {
@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <AuthLayout>
-      <LayoutLogo text="Welcome back" />
+      <LayoutLogo text="Welcome" />
       <NotifcationBox
         notificationMessage={notification}
         setNotification={setNotification}
@@ -49,4 +49,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default Username;
