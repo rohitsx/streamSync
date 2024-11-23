@@ -1,5 +1,3 @@
-import { ObjectId } from "mongo";
-
 export interface User {
   id: string;
   email: string;
@@ -11,8 +9,10 @@ export interface User {
 }
 
 export interface DbUser {
-  _id?: ObjectId;
-  name: string;
+  _id: string;
+  id: string;
   email: string;
+  name: string;
+  username: null | string;
   picture: string;
 }

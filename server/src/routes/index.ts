@@ -1,5 +1,5 @@
+import { invalidRequest } from "../handlers/defaultResponse.ts";
 import googleAuthhandler from "../handlers/googleAuth.ts";
-import invalidRequest from "../handlers/invalidRequest.ts";
 import addCorsHeaders from "../middleware/cors.ts";
 
 export default function router(_req: Request) {

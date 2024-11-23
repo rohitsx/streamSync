@@ -1,6 +1,7 @@
 import { JWT_SECRET } from "../config/environment.ts";
 import { DbUser, User } from "../types/user.ts";
-import invalidRequest from "./invalidRequest.ts";
+import { invalidRequest } from "./defaultResponse.ts";
+import { userNameNotFound } from "./defaultResponse.ts";
 import UserHandler from "./userHandler.ts";
 import jwt from "jsonwebtoken";
 
@@ -14,7 +15,7 @@ export default class googleAuthhandler {
     if (_req.method !== "POST") return invalidRequest();
 
     const accessToken = await _req.text();
-    const response = await fetch(
+    const fetchUserData = await fetch(
       "https://www.googleapis.com/oauth2/v2/userinfo",
       {
         headers: {
@@ -23,21 +24,24 @@ export default class googleAuthhandler {
       },
     );
 
-    const user: User = await response.json();
-    await this.db.addUser(user);
-    this.SessionToken(user);
+    const user: User = await fetchUserData.json();
 
-    return new Response("working", { status: 200 });
+    const getUser: DbUser | null = await this.db.getUser(user.email);
+
+    return getUser ? this.sendSessionToken(getUser) : this.addUser(user);
   }
 
-  async SessionToken(user: User) {
-    const response: DbUser | null = await this.db.getUser(user.email);
-    if (response) {
-      console.log(response.email);
-      const token = jwt.sign({ userId: response._id }, JWT_SECRET, {
-        expiresIn: "30d",
-      });
-    }
-    return new Response("working", { status: 200 });
+  sendSessionToken(user: DbUser) {
+    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+      expiresIn: "30d",
+    });
+    return user.username
+      ? new Response(token, { status: 200 })
+      : userNameNotFound();
+  }
+
+  addUser(user: User) {
+    this.db.addUser(user);
+    return userNameNotFound();
   }
 }
