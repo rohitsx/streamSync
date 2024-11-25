@@ -1,12 +1,7 @@
 import Logo from "@/assets/logo";
 import { ReactNode, useMemo } from "react";
 import clsx from "clsx";
-import {
-  AuthButtonProps,
-  AuthHeadingProps,
-  AuthInputProps,
-  AuthLayoutProps,
-} from "@/types/landing";
+import { GoogleButtonProps } from "@/types/landing";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const isNewTab = useMemo(() => {
@@ -43,9 +38,31 @@ export function LayoutLogo({ text }: { text: string }) {
   );
 }
 
-interface GoogleButtonProps {
-  onClick: () => void;
-  isLoading?: boolean;
+export function LandingLayout({
+  children,
+  text,
+}: {
+  children: ReactNode;
+  text: string;
+}) {
+  return (
+    <Layout>
+      <LayoutLogo text="Elevate Your Stream Experience" />
+      <div className="w-full flex flex-col max-w-xs p-6 space-y-4">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-600"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 text-gray-400 bg-gradient-to-br from-slate-900 to-slate-950">
+              {text}{" "}
+            </span>
+          </div>
+        </div>
+        {children}
+      </div>
+    </Layout>
+  );
 }
 
 export const GoogleButton: React.FC<GoogleButtonProps> = ({
@@ -58,7 +75,7 @@ export const GoogleButton: React.FC<GoogleButtonProps> = ({
       disabled={isLoading}
       type="button"
       className={`
-        flex items-center justify-center w-full px-5 py-3
+        h-[3.25rem] flex items-center justify-center w-full px-5 py-3
         text-sm font-medium transition-all duration-300
         bg-gradient-to-r from-slate-800/90 to-slate-900/90
         border border-white/10 hover:border-white/20
@@ -98,78 +115,6 @@ export const GoogleButton: React.FC<GoogleButtonProps> = ({
           <span className="text-gray-200">Continue with Google</span>
         </>
       )}
-    </button>
-  );
-};
-
-export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
-  return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-8">
-        <div className="flex justify-center">
-          <LayoutLogo text="Elevate Your Stream Experience" />
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-};
-
-export const AuthHeading: React.FC<AuthHeadingProps> = ({ children }) => {
-  return (
-    <div className="text-center space-y-2">
-      <h2 className="text-2xl font-semibold text-white">{children}</h2>
-    </div>
-  );
-};
-
-export const AuthInput: React.FC<AuthInputProps> = ({
-  value,
-  onChange,
-  onFocus,
-  onBlur,
-  onKeyPress,
-  placeholder,
-  type = "text",
-}) => {
-  return (
-    <input
-      type={type}
-      value={value}
-      onChange={onChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      onKeyPress={onKeyPress}
-      className="relative w-full px-4 py-3 bg-slate-900 rounded-lg
-                text-white placeholder-gray-400 text-sm
-                border border-white/10
-                focus:border-violet-500/50
-                focus:outline-none focus:ring-2 focus:ring-violet-500/20
-                transition-all duration-300
-                pr-12"
-      placeholder={placeholder}
-    />
-  );
-};
-
-export const AuthButton: React.FC<AuthButtonProps> = ({
-  onClick,
-  isLoading = false,
-  children,
-  className = "",
-}) => {
-  return (
-    <button
-      onClick={onClick}
-      disabled={isLoading}
-      className={`w-full flex items-center justify-center px-4 py-3 
-                 border border-transparent text-sm font-medium rounded-lg
-                 text-white bg-violet-600 hover:bg-violet-700
-                 focus:outline-none focus:ring-2 focus:ring-offset-2 
-                 focus:ring-violet-500 ${className}
-                 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
-    >
-      {isLoading ? "Loading..." : children}
     </button>
   );
 };
