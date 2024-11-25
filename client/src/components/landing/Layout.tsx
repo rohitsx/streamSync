@@ -1,6 +1,12 @@
 import Logo from "@/assets/logo";
 import { ReactNode, useMemo } from "react";
 import clsx from "clsx";
+import {
+  AuthButtonProps,
+  AuthHeadingProps,
+  AuthInputProps,
+  AuthLayoutProps,
+} from "@/types/landing";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const isNewTab = useMemo(() => {
@@ -26,16 +32,6 @@ export default function Layout({ children }: { children: ReactNode }) {
   );
 }
 
-export function AuthLayout({ children }: { children: ReactNode }) {
-  return (
-    <Layout>
-      <div className="max-w-md w-full bg-gradient-to-br from-blue-600/5 to-violet-600/5 backdrop-blur-xl rounded-xl shadow-2xl shadow-violet-500/10 p-6 space-y-6 border border-white/10 hover:border-white/20 transition-all duration-300">
-        {children}
-      </div>
-    </Layout>
-  );
-}
-
 export function LayoutLogo({ text }: { text: string }) {
   return (
     <div className="w-full flex flex-col items-center space-y-3">
@@ -45,38 +41,6 @@ export function LayoutLogo({ text }: { text: string }) {
       </h2>
     </div>
   );
-}
-
-export function Btn({
-  text,
-  worker,
-  sBtn,
-}: {
-  text: string;
-  worker: () => void;
-  sBtn?: boolean;
-}) {
-  const handleClick = () => worker();
-
-  const primaryBtn = () => (
-    <button
-      onClick={handleClick}
-      className="w-full text-sm py-2.5 px-6 bg-transparent border-2 border-violet-500 text-violet-400 hover:bg-violet-500 hover:text-white font-semibold rounded-lg transition-all duration-300 text-center focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
-    >
-      {text}
-    </button>
-  );
-
-  const secondaryBtn = () => (
-    <button
-      onClick={handleClick}
-      className="w-full text-sm py-2.5 px-6 bg-gradient-to-r from-blue-500 via-violet-500 to-purple-500 hover:from-blue-600 hover:via-violet-600 hover:to-purple-600 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-[1.02] text-center shadow-lg shadow-violet-500/20 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:ring-offset-2 focus:ring-offset-slate-900"
-    >
-      {text}
-    </button>
-  );
-
-  return sBtn ? secondaryBtn() : primaryBtn();
 }
 
 interface GoogleButtonProps {
@@ -134,6 +98,78 @@ export const GoogleButton: React.FC<GoogleButtonProps> = ({
           <span className="text-gray-200">Continue with Google</span>
         </>
       )}
+    </button>
+  );
+};
+
+export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
+  return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-8">
+        <div className="flex justify-center">
+          <LayoutLogo text="Elevate Your Stream Experience" />
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+export const AuthHeading: React.FC<AuthHeadingProps> = ({ children }) => {
+  return (
+    <div className="text-center space-y-2">
+      <h2 className="text-2xl font-semibold text-white">{children}</h2>
+    </div>
+  );
+};
+
+export const AuthInput: React.FC<AuthInputProps> = ({
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  onKeyPress,
+  placeholder,
+  type = "text",
+}) => {
+  return (
+    <input
+      type={type}
+      value={value}
+      onChange={onChange}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      onKeyPress={onKeyPress}
+      className="relative w-full px-4 py-3 bg-slate-900 rounded-lg
+                text-white placeholder-gray-400 text-sm
+                border border-white/10
+                focus:border-violet-500/50
+                focus:outline-none focus:ring-2 focus:ring-violet-500/20
+                transition-all duration-300
+                pr-12"
+      placeholder={placeholder}
+    />
+  );
+};
+
+export const AuthButton: React.FC<AuthButtonProps> = ({
+  onClick,
+  isLoading = false,
+  children,
+  className = "",
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      disabled={isLoading}
+      className={`w-full flex items-center justify-center px-4 py-3 
+                 border border-transparent text-sm font-medium rounded-lg
+                 text-white bg-violet-600 hover:bg-violet-700
+                 focus:outline-none focus:ring-2 focus:ring-offset-2 
+                 focus:ring-violet-500 ${className}
+                 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+    >
+      {isLoading ? "Loading..." : children}
     </button>
   );
 };
