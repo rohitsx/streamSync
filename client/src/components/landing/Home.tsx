@@ -6,9 +6,8 @@ import { ChevronRight, Settings, Play, LogIn } from "lucide-react";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
-
   const ButtonStyle =
-    "w-full flex items-center justify-between px-4 py-3 rounded-xl backdrop-blur-md transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] group";
+    "w-full flex items-center justify-between px-4 py-3 rounded-xl backdrop-blur-md transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] group border border-white/10 hover:border-white/20";
 
   const NavButton: React.FC<{
     icon: React.ReactNode;
@@ -33,11 +32,8 @@ const HomePage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center h-full w-full space-y-6 p-6">
+      <div className="flex flex-col items-center justify-center h-full w-full space-y-4 ">
         <Logo />
-        <h1 className="text-3xl font-bold text-white mb-4 tracking-tight">
-          StreamSync
-        </h1>
 
         <div className="w-full space-y-4">
           <NavButton
@@ -46,12 +42,11 @@ const HomePage: React.FC = () => {
             onClick={() => navigate("/host")}
             bgColor="bg-slate-800/60"
           />
-
           <NavButton
             icon={<LogIn className="text-purple-400" size={24} />}
             label="Join Stream"
             onClick={() => navigate("/join")}
-            bgColor="bg-purple-900/60 "
+            bgColor="bg-purple-900/60"
           />
           <NavButton
             icon={<Settings className="text-blue-400" size={24} />}

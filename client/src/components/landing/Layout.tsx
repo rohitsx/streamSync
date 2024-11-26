@@ -23,7 +23,7 @@ export function Background({ children }: { children: ReactNode }) {
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
-	const loc = useLocation();
+  const loc = useLocation();
   const isNewTab = useMemo(() => {
     const popup = window.innerWidth <= 380 && window.innerHeight <= 600;
     return !popup;
@@ -33,11 +33,12 @@ export default function Layout({ children }: { children: ReactNode }) {
     <Background>
       <div
         className={clsx(
-          "bg-gradient-to-br from-slate-900/95 to-slate-950/95 text-white flex flex-col items-center justify-between  w-[390px] h-[500px] backdrop-blur-xl shadow-2xl",
+          "bg-gradient-to-br from-slate-900/95 to-slate-950/95 text-white flex flex-col items-center justify-between p-6 backdrop-blur-xl shadow-2xl",
           {
             "rounded-2xl": isNewTab,
             "rounded-md": !isNewTab,
-			"p-6": loc.pathname !== "/"
+            "w-[390px] h-[500px]": loc.pathname !== "/",
+            "w-[350px] h-[450px] ": loc.pathname === "/",
           },
         )}
       >
