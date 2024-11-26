@@ -2,24 +2,42 @@ import React, { useState } from "react";
 import { LandingLayout } from "./Layout";
 import { ArrowRight } from "lucide-react";
 import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
+
+// Define an interface for your user object
+interface User {
+  username?: string;
+  // Add other user properties as needed
+}
 
 const UsernameSelection = () => {
   const [username, setUsername] = useState("");
-  const [cookies, setCookies] = useCookies();
-  const nav = useNavigate();
+
+  // Explicitly type the cookies hook
+  const [cookies, setCookie] = useCookies<string, { user?: User }>(["user"]);
 
   const handleSubmit = () => {
     if (username.trim()) {
-      const currentUser = cookies.user ? cookies.user : null;
+      // Safely handle user object
+      const currentUser: User = cookies.user || {};
       currentUser.username = username;
-      setCookies("user", currentUser);
+
+      // Use setCookie with explicit typing
+      setCookie("user", currentUser, { path: "/" });
+
       setUsername("");
-      nav("/");
+
+      // Close tab logic
+      if (chrome?.tabs) {
+        chrome.tabs.getCurrent((tab) => {
+          if (tab && tab.id) {
+            chrome.tabs.remove(tab.id);
+          }
+        });
+      }
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && username.trim()) {
       handleSubmit();
     }
@@ -27,7 +45,7 @@ const UsernameSelection = () => {
 
   return (
     <LandingLayout text="Choose Username">
-      <div className="relative  flex items-center">
+      <div className="relative flex items-center">
         <input
           type="text"
           value={username}

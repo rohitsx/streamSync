@@ -1,23 +1,19 @@
-import NavBar from "@/components/layout/NavBar";
 import Header from "@/components/layout/Header";
 import QuickAction from "@/components/layout/QuickAction";
 import ActiveStreams from "@/components/stream/ActiveStreams";
-import SolanaWallet from "@/components/wallet/crypto/soal/solanaWallet";
 import Layout from "./Layout";
 import useAuthRedirect from "@/hook/useAuthRedirect";
 
 const HomePage = () => {
-	useAuthRedirect();
+  useAuthRedirect();
 
   return (
     <Layout>
-      <Header />
-      <main className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
+      <main className="flex-1 overflow-y-auto w-full p-2 space-y-3 scrollbar-hide">
+        <Header />
         <QuickAction />
-        <SolanaWallet />
         <ActiveStreams />
       </main>
-      <NavBar />
     </Layout>
   );
 };

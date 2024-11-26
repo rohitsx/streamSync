@@ -23,6 +23,7 @@
     "@solana/wallet-adapter-react-ui": "^0.9.35",
     "@solana/wallet-adapter-wallets": "^0.19.32",
     "@solana/web3.js": "^1.95.3",
+    "@types/react-cookies": "^0.1.4",
     "axios": "^1.7.4",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",

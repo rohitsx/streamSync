@@ -1,9 +1,9 @@
-import { Menu } from 'lucide-react';
+import { Settings2 } from 'lucide-react';
 
 export default function Header() {
 
     return (
-        <header className="bg-gray-800 p-1 flex justify-between items-center border-b border-gray-700">
+        <header className="bg-gray-800 p-2 flex justify-between items-center border-b border-gray-700 ">
             <div className="flex items-center space-x-[4px]">
                 <svg className="w-6 h-6" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -30,7 +30,7 @@ export default function Header() {
                 <h1 className=" text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-400">StreamSync</h1>
             </div>
             <button className="text-purple-400 hover:text-purple-300 transition-colors">
-                <Menu size={20} />
+                <Settings2 size={20} />
             </button>
         </header>
     );

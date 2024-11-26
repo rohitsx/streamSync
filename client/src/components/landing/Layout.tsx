@@ -2,8 +2,9 @@ import Logo from "@/assets/logo";
 import { ReactNode, useMemo } from "react";
 import clsx from "clsx";
 import { GoogleButtonProps } from "@/types/landing";
+import { useLocation } from "react-router-dom";
 
-export default function Layout({ children }: { children: ReactNode }) {
+export function Background({ children }: { children: ReactNode }) {
   const isNewTab = useMemo(() => {
     const popup = window.innerWidth <= 380 && window.innerHeight <= 600;
     return !popup;
@@ -12,21 +13,39 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div
       className={clsx({
-        "min-h-screen w-screen flex items-center justify-center bg-gradient-to-r from-[#1a1a2e] via-[#16213e] to-[#1a1a2e] bg-[length:400%_400%] animate-gradient after:animate-pulse-slow":
+        "min-h-screen w-screen flex items-center justify-center bg-gradient-to-r from-[#d4d3e8] via-[#d4d3e8] to-[#d4d3e8] bg-[length:400%_400%] animate-gradient after:animate-pulse-slow":
           isNewTab,
       })}
     >
-      <div
-        className={
-          "bg-gradient-to-br from-slate-900/95 to-slate-950/95 text-white flex flex-col items-center justify-between p-6 w-[390px] h-[500px] backdrop-blur-xl shadow-2xl"
-        }
-      >
-        {children}
-      </div>
+      {children}
     </div>
   );
 }
 
+export default function Layout({ children }: { children: ReactNode }) {
+	const loc = useLocation();
+  const isNewTab = useMemo(() => {
+    const popup = window.innerWidth <= 380 && window.innerHeight <= 600;
+    return !popup;
+  }, []);
+
+  return (
+    <Background>
+      <div
+        className={clsx(
+          "bg-gradient-to-br from-slate-900/95 to-slate-950/95 text-white flex flex-col items-center justify-between  w-[390px] h-[500px] backdrop-blur-xl shadow-2xl",
+          {
+            "rounded-2xl": isNewTab,
+            "rounded-md": !isNewTab,
+			"p-6": loc.pathname !== "/"
+          },
+        )}
+      >
+        {children}
+      </div>
+    </Background>
+  );
+}
 export function LayoutLogo({ text }: { text: string }) {
   return (
     <div className="w-full flex flex-col items-center space-y-3">
