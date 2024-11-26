@@ -2,10 +2,8 @@ import Header from "@/components/layout/Header";
 import NavBar from "@/components/layout/NavBar";
 import SolanaWallet from "./crypto/soal/solanaWallet";
 import RecentTransaction from "./RecentTransaction";
-import isLoggedIn from "@/utils/isLoggedIn";
 
 export default function Wallet() {
-    isLoggedIn();
 
     return (<>
         <div className="bg-gray-900 text-gray-100 h-[600px] w-[380px] flex flex-col">

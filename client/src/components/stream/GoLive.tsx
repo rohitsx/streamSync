@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { Link as LinkIcon, Mic, DollarSign } from "lucide-react";
-// import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import NavBar from "@/components/layout/NavBar";
 import Header from "@/components/layout/Header";
-import isLoggedIn from "@/utils/isLoggedIn";
 
-const GoLivePage = () => {
+const GoLive = () => {
   const [videoLink, setVideoLink] = useState("");
   const [selectedMic, setSelectedMic] = useState("");
   const [allowDonations, setAllowDonations] = useState(false);
-  isLoggedIn()
 
   const handleGoLive = () => {
     if (videoLink && selectedMic) {
@@ -135,4 +132,4 @@ const GoLivePage = () => {
   );
 };
 
-export default GoLivePage;
+export default GoLive;

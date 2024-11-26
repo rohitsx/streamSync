@@ -4,7 +4,6 @@ import { useSocketContext } from '@/context/socketContext';
 import Header from '@/components/layout/Header';
 import NavBar from '@/components/layout/NavBar';
 import ActiveStreams from '@/components/stream/ActiveStreams';
-import isLoggedIn from '@/utils/isLoggedIn';
 
 
 export default function JoinStream() {
@@ -14,7 +13,6 @@ export default function JoinStream() {
     const navigate = useNavigate();
 
     console.log(notification);
-    isLoggedIn();
 
 
     const handleJoin = useCallback(() => {
