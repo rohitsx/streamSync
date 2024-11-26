@@ -13,6 +13,9 @@ export default function router(_req: Request) {
       case "/api/google-auth":
         res = await googleAuth.auth(_req);
         break;
+      case "/api/validate-token":
+        res = await googleAuth.validateToken(_req);
+        break;
       default:
         res = invalidRequest();
     }

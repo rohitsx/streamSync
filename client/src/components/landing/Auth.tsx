@@ -3,14 +3,18 @@ import { GoogleButton, LandingLayout } from "./Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { User } from "@/types/api";
+import { useCookies } from "react-cookie";
 
-function LandingPage(): React.JSX.Element {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
+function Auth(): React.JSX.Element {
   const nav = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [, setCookies] = useCookies(["token", "user"], {
+    doNotParse: true,
+  });
 
-  const createCookie = ({ token }: { token: string; user: User }) => {
-    console.log("koki", token);
+  const createCookie = ({ token, user }: { token: string; user: User }) => {
+    setCookies("token", token);
+    setCookies("user", user);
   };
 
   const handleGoogleSignup = async (): Promise<void> => {
@@ -33,9 +37,9 @@ function LandingPage(): React.JSX.Element {
 
   return (
     <LandingLayout text="Continue With">
-        <GoogleButton onClick={handleGoogleSignup} isLoading={isLoading} />
+      <GoogleButton onClick={handleGoogleSignup} isLoading={isLoading} />
     </LandingLayout>
   );
 }
 
-export default LandingPage;
+export default Auth;

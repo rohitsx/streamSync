@@ -9,7 +9,7 @@ import Wallet from "./wallet/Wallet";
 import GoLivePage from "./stream/GoLive";
 import Wallet_provider from "@/context/walletContext";
 import "./App.css";
-import LandingPage from "./landing/LandingPage";
+import Auth from "./landing/Auth";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const App: React.FC = () => {
@@ -19,7 +19,7 @@ const App: React.FC = () => {
         <Router>
           <Routes>
             <Route path="/username" element={<Username />} />
-            <Route path="/landing" element={<LandingPage />} />
+            <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<Home />} />
             <Route path="/join" element={<JoinStream />} />
             <Route path="/host" element={<GoLivePage />} />

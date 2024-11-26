@@ -3,11 +3,11 @@ import Header from "@/components/layout/Header";
 import QuickAction from "@/components/layout/QuickAction";
 import ActiveStreams from "@/components/stream/ActiveStreams";
 import SolanaWallet from "@/components/wallet/crypto/soal/solanaWallet";
-import isLoggedIn from "@/utils/isLoggedIn";
 import Layout from "./Layout";
+import useAuthRedirect from "@/hook/useAuthRedirect";
 
 const HomePage = () => {
-  isLoggedIn();
+	useAuthRedirect();
 
   return (
     <Layout>

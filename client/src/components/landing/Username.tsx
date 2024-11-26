@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import { LandingLayout } from "./Layout";
 import { ArrowRight } from "lucide-react";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 const UsernameSelection = () => {
   const [username, setUsername] = useState("");
+  const [cookies, setCookies] = useCookies();
+  const nav = useNavigate();
 
   const handleSubmit = () => {
     if (username.trim()) {
+      const currentUser = cookies.user ? cookies.user : null;
+      currentUser.username = username;
+      setCookies("user", currentUser);
       setUsername("");
-      console.log("Username submitted:", username);
+      nav("/");
     }
   };
 

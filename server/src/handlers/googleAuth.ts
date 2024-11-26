@@ -45,4 +45,21 @@ export default class googleAuthhandler {
         : username_Require()
       : (await this.db.addUser(user)) && username_Require();
   }
+
+  async validateToken(_req: Request): Promise<Response> {
+    if (_req.method !== "POST") return invalidRequest();
+
+    const token = await _req.text();
+    console.log(token);
+    if (!token) return sendResponse("Invalid_Token", 400);
+
+    try {
+      jwt.verify(token, JWT_SECRET);
+      console.log("succes token");
+      return sendResponse("validateToken", 200);
+    } catch {
+      console.log("error token");
+      return sendResponse("Invalid_Token", 400);
+    }
+  }
 }
