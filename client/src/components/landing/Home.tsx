@@ -32,7 +32,7 @@ const HomePage: React.FC = () => {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center h-full w-full space-y-4 ">
+      <div className="flex flex-col items-center justify-center h-full w-full space-y-2 ">
         <Logo />
 
         <div className="w-full space-y-4">
