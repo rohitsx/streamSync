@@ -1,10 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/assets/logo";
-import Layout from "./Layout";
+import Layout from "../layout/Layout";
 import { ChevronRight, Settings, Play, LogIn } from "lucide-react";
+import useAuthRedirect from "@/hook/useAuthRedirect";
 
 const HomePage: React.FC = () => {
+  useAuthRedirect();
   const navigate = useNavigate();
   const ButtonStyle =
     "w-full flex items-center justify-between px-4 py-3 rounded-xl backdrop-blur-md transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] group border border-white/10 hover:border-white/20";

@@ -1,9 +1,12 @@
 import { invalidRequest } from "../handlers/defaultResponse.ts";
 import googleAuthhandler from "../handlers/googleAuth.ts";
+import youtubeAuthhandler from "../handlers/youtubeAuth.ts";
 import addCorsHeaders from "../middleware/cors.ts";
 
 export default function router(_req: Request) {
   const googleAuth = new googleAuthhandler();
+  const youtubeAuth = new youtubeAuthhandler();
+
   return addCorsHeaders(_req, async () => {
     const url = new URL(_req.url);
 
@@ -15,6 +18,9 @@ export default function router(_req: Request) {
         break;
       case "/api/validate-token":
         res = await googleAuth.validateToken(_req);
+        break;
+      case "/api/youtube-auth":
+        res = youtubeAuth.auth(_req);
         break;
       default:
         res = invalidRequest();

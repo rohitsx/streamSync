@@ -22,11 +22,13 @@
     "default_popup": "./index.html"
   },
   "icons": {
-    "128": "icon128.png"
+    "128": "./images/icon128.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "script/bg.js",
+    "type": "module"
   },
+  "minimum_chrome_version": "92",
   "permissions": ["tabs", "identity"],
   "web_accessible_resources": [
     {

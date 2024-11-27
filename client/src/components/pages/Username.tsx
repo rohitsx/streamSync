@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LandingLayout } from "./Layout";
+import { LandingLayout } from "../layout/Layout";
 import { ArrowRight } from "lucide-react";
 import { useCookies } from "react-cookie";
 

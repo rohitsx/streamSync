@@ -2,7 +2,6 @@ import Logo from "@/assets/logo";
 import { ReactNode, useMemo } from "react";
 import clsx from "clsx";
 import { GoogleButtonProps } from "@/types/landing";
-import { useLocation } from "react-router-dom";
 
 export function Background({ children }: { children: ReactNode }) {
   const isNewTab = useMemo(() => {
@@ -23,7 +22,6 @@ export function Background({ children }: { children: ReactNode }) {
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const loc = useLocation();
   const isNewTab = useMemo(() => {
     const popup = window.innerWidth <= 380 && window.innerHeight <= 600;
     return !popup;
@@ -35,10 +33,9 @@ export default function Layout({ children }: { children: ReactNode }) {
         className={clsx(
           "bg-gradient-to-br from-slate-900/95 to-slate-950/95 text-white flex flex-col items-center justify-between p-6 backdrop-blur-xl shadow-2xl",
           {
-            "rounded-2xl": isNewTab,
-            "rounded-md": !isNewTab,
-            "w-[390px] h-[500px]": loc.pathname !== "/",
-            "w-[350px] h-[420px] ": loc.pathname === "/",
+            // "rounded-2xl w-[390px] h-[500px]": isNewTab,
+            "rounded-md w-[350px] h-[420px]": !isNewTab,
+            "rounded-2xl w-[350px] h-[420px]": isNewTab,
           },
         )}
       >
@@ -133,6 +130,48 @@ export const GoogleButton: React.FC<GoogleButtonProps> = ({
             </svg>
           </div>
           <span className="text-gray-200">Continue with Google</span>
+        </>
+      )}
+    </button>
+  );
+};
+
+export const YouTubeButton: React.FC<GoogleButtonProps> = ({
+  onClick,
+  isLoading = false,
+}) => {
+  return (
+    <button
+      onClick={onClick}
+      disabled={isLoading}
+      type="button"
+      className={`
+        h-[3.25rem] flex items-center justify-center w-full px-5 py-3
+        text-sm font-medium transition-all duration-300
+        bg-gradient-to-r from-slate-800/90 to-slate-900/90
+        border border-white/10 hover:border-white/20
+        rounded-lg shadow-xl
+        hover:shadow-violet-500/20 hover:from-slate-800 hover:to-slate-900
+        focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:ring-offset-2 focus:ring-offset-slate-900
+        ${isLoading ? "cursor-not-allowed opacity-70" : ""}
+      `}
+    >
+      {isLoading ? (
+        <>
+          <div className="w-5 h-5 border-2 border-slate-700 border-t-violet-400 rounded-full animate-spin mr-3" />
+          <span className="text-gray-200">Loading...</span>
+        </>
+      ) : (
+        <>
+          <div className="bg-white p-1.5 rounded-lg mr-3 shadow-sm">
+            <svg className="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
+              <path 
+                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.488 8.549 4.385 8.816 3.6.246 11.626.245 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.488-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" 
+                fill="#FF0000"
+              />
+            </svg>
+          </div>
+          <span className="text-gray-200">Connect to YouTube</span>
         </>
       )}
     </button>

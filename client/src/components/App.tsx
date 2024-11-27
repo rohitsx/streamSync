@@ -1,16 +1,16 @@
 import React from "react";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
-import Username from "./landing/Username";
-import Home from "./landing/Home";
+import Username from "./pages/Username";
+import Home from "./pages/Home";
 import JoinStream from "./stream/JoinStream";
 import AudienceView from "./stream/view/audienceView";
 import HostView from "./stream/view/hostView";
 import Wallet from "./wallet/Wallet";
-import GoLive from "./stream/GoLive";
 import Wallet_provider from "@/context/walletContext";
 import "./App.css";
-import Auth from "./landing/Auth";
+import Auth from "./pages/Auth";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import StartStream from "./pages/stream/StartStream";
 
 const App: React.FC = () => {
   return (
@@ -22,7 +22,7 @@ const App: React.FC = () => {
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<Home />} />
             <Route path="/join" element={<JoinStream />} />
-            <Route path="/host" element={<GoLive />} />
+            <Route path="/host" element={<StartStream />} />
             <Route path="/wallet" element={<Wallet />} />
             <Route path="/join-view" element={<AudienceView />} />
             <Route path="/host-view" element={<HostView />} />
