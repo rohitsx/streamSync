@@ -5,28 +5,23 @@ import { useState } from "react";
 
 export default function StartStream() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const handleGoogleSignup = async (): Promise<void> => {
+
+  const handleGoogleAuth = async (): Promise<void> => {
+    const authUrl = await axios.post(`${import.meta.env.VITE_API}youtube-auth`);
+
+    chrome.tabs.create({ url: authUrl.data });
+  };
+
+  const handelClick = async (): Promise<void> => {
     setIsLoading(true);
-    chrome.runtime.sendMessage(
-      { action: "youtube-auth" },
-      async ({ accessToken }) => {
-        await axios
-          .post(`${import.meta.env.VITE_API}youtube-auth`, accessToken)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => {
-            console.log("StartStream", err);
-          });
-      },
-    );
+    handleGoogleAuth().catch((err) => console.log(err));
   };
 
   return (
     <Layout>
       <div className="flex flex-col items-center justify-center h-full w-full space-y-2 ">
         <Logo />
-        <YouTubeButton onClick={handleGoogleSignup} isLoading={isLoading} />
+        <YouTubeButton onClick={handelClick} isLoading={isLoading} />
       </div>
     </Layout>
   );

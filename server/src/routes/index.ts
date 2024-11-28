@@ -22,6 +22,9 @@ export default function router(_req: Request) {
       case "/api/youtube-auth":
         res = youtubeAuth.auth(_req);
         break;
+      case "/oauth2callback":
+        res = youtubeAuth.callBack(_req);
+        break;
       default:
         res = invalidRequest();
     }
