@@ -9,10 +9,11 @@ export default class youtubeAuthhandler {
   }
 
   getToken() {
-	  console.log("working")
+    console.log("working");
     const clientId =
       "48392764782-f0jng7d1jj1pnmhhvuj8l04jeot5ihem.apps.googleusercontent.com";
-    const redirect_uri = "http://localhost:5173";
+    const redirect_uri =
+      "https://rohitsx.github.io/landingPage/auth/streamSync/index.html";
     const clientSecret = "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";
 
     const oauth2Client = new google.auth.OAuth2(
@@ -26,7 +27,7 @@ export default class youtubeAuthhandler {
       redirect_uri: redirect_uri,
       scope: scopes,
     });
-	console.log(url)
+    console.log(url);
     return url;
   }
 
