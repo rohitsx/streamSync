@@ -3,13 +3,23 @@ import Layout, { YouTubeButton } from "@/components/layout/Layout";
 import axios from "axios";
 import { useState } from "react";
 
-export default function StartStream() {
+export default function YoutubeAuth() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleGoogleAuth = async (): Promise<void> => {
-    const authUrl = await axios.post(`${import.meta.env.VITE_API}youtube-auth`);
-
-    chrome.tabs.create({ url: authUrl.data });
+    chrome.runtime.sendMessage(
+      { action: "youtubeAuth", clientId: import.meta.env.VITE_CLIENT_ID },
+      async ({ accessToken }) => {
+        await axios
+          .post(`${import.meta.env.VITE_API}youtube-auth`, accessToken)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log("LandingPage", err);
+          });
+      },
+    );
   };
 
   const handelClick = async (): Promise<void> => {

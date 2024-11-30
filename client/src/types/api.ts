@@ -5,4 +5,5 @@ export interface User {
   name: string;
   username: null | string;
   picture: string;
+  ytAuth: boolean;
 }

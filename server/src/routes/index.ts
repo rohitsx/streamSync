@@ -16,15 +16,23 @@ export default function router(_req: Request) {
       case "/api/google-auth":
         res = await googleAuth.auth(_req);
         break;
+
       case "/api/validate-token":
         res = await googleAuth.validateToken(_req);
         break;
+
+      case "/api/set-username":
+        res = await googleAuth.setUsername(_req);
+        break;
+
       case "/api/youtube-auth":
         res = youtubeAuth.auth(_req);
         break;
-      case "/oauth2callback":
-        res = youtubeAuth.callBack(_req);
+
+      case "/api/youtube-callback":
+        res = await youtubeAuth.callBack(_req);
         break;
+
       default:
         res = invalidRequest();
     }

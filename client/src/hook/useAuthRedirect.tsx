@@ -2,18 +2,17 @@ import axios from "axios";
 import { useEffect, useMemo } from "react";
 import { useCookies } from "react-cookie";
 import useCreateTab from "./useCreateTab";
+import useDeleteToken from "./useDeleteToken";
 
 export default function useAuthRedirect() {
-  const [cookies, , removeCookie] = useCookies();
-  const token = useMemo(() => cookies.token, [cookies.token]);
+  const [cookies] = useCookies();
+  const token = useMemo(() => cookies.sessionToken, [cookies.sessionToken]);
   const createTab = useCreateTab();
-  const deleteToken = () => {
-    removeCookie("user");
-    removeCookie("token");
-  };
+  const deleteToken = useDeleteToken();
 
   async function checkAuth() {
     if (!token) {
+      console.log("working");
       deleteToken();
       return false;
     }
@@ -38,7 +37,6 @@ export default function useAuthRedirect() {
     else if (user && !user.username) createTab("username");
     else {
       checkAuth().then((res) => {
-        console.log(res);
         !res && createTab("auth");
         return;
       });

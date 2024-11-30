@@ -2,41 +2,38 @@ import React, { useState } from "react";
 import { LandingLayout } from "../layout/Layout";
 import { ArrowRight } from "lucide-react";
 import { useCookies } from "react-cookie";
-
-// Define an interface for your user object
-interface User {
-  username?: string;
-  // Add other user properties as needed
-}
+import axios from "axios";
+import { User } from "@/types/api";
+import { useNavigate } from "react-router-dom";
 
 const UsernameSelection = () => {
   const [username, setUsername] = useState("");
+  const [cookies, setCookies] = useCookies();
+  const nav = useNavigate();
 
-  // Explicitly type the cookies hook
-  const [cookies, setCookie] = useCookies<string, { user?: User }>(["user"]);
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (username.trim()) {
-      // Safely handle user object
-      const currentUser: User = cookies.user || {};
+      const currentUser: User = cookies.user;
       currentUser.username = username;
 
-      // Use setCookie with explicit typing
-      setCookie("user", currentUser, { path: "/" });
+      setCookies("user", currentUser, { path: "/" });
 
-      setUsername("");
+      console.log("user", cookies.user);
+      console.log("sessiontoken", cookies.sessionToken);
 
-      // Close tab logic
-      if (chrome?.tabs) {
-        chrome.tabs.getCurrent((tab) => {
-          if (tab && tab.id) {
-            chrome.tabs.remove(tab.id);
-          }
+      try {
+        await axios.post(`${import.meta.env.VITE_API}set-username`, {
+          username: username,
+          email: "rohitbindsr@gmail.com",
+          sessiontoken: cookies.sessionToken,
         });
+        nav("/");
+      } catch (err) {
+        console.log(err);
       }
+      setUsername("");
     }
   };
-
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && username.trim()) {
       handleSubmit();

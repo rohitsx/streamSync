@@ -8,29 +8,26 @@ import { useCookies } from "react-cookie";
 function Auth(): React.JSX.Element {
   const nav = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [, setCookies] = useCookies(["token", "user"], {
-    doNotParse: true,
-  });
+  const [, setCookies] = useCookies(["sessionToken", "user"]);
 
-  const createCookie = ({ token, user }: { token: string; user: User }) => {
-    setCookies("token", token);
-    setCookies("user", user);
+  const handleResponse = ({ token, user }: { token: string; user: User }) => {
+    setCookies("sessionToken", token, { path: "/" });
+    setCookies("user", user, { path: "/" });
+    user.username ? nav("/") : nav("/username");
   };
 
   const handleGoogleSignup = async (): Promise<void> => {
     setIsLoading(true);
     chrome.runtime.sendMessage(
-      { action: "googleLogin" },
+      {
+        action: "googleLogin",
+        clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      },
       async ({ accessToken }) => {
         await axios
           .post(`${import.meta.env.VITE_API}google-auth`, accessToken)
-          .then((res) => {
-            createCookie(res.data);
-            res.data.username ? nav("/") : nav("/username");
-          })
-          .catch((err) => {
-            console.log("LandingPage", err);
-          });
+          .then((res) => handleResponse(res.data))
+          .catch((err) => console.log("LandingPage", err));
       },
     );
   };

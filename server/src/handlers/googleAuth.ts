@@ -1,3 +1,4 @@
+import { load } from "jsr:@std/dotenv";
 import { JWT_SECRET } from "../config/environment.ts";
 import { DbUser, User } from "../types/user.ts";
 import sendResponse, { invalidRequest } from "./defaultResponse.ts";
@@ -24,7 +25,7 @@ export default class googleAuthhandler {
     );
 
     const user: User = await fetchUserData.json();
-
+    console.log(user);
     return this.sendSessionToken(user);
   }
 
@@ -32,25 +33,32 @@ export default class googleAuthhandler {
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
       expiresIn: "30d",
     });
-    const getUser: DbUser | null = await this.db.getUser(user.email);
-    const username_Require = () =>
-      sendResponse(
-        { message: "username_Require", token: token, user: getUser },
+    const getUser: DbUser | null = await this.db.getUser(user.id);
+    const username_Require = (user: DbUser) => {
+     return sendResponse(
+        { message: "username_Require", token: token, user: user },
         200,
       );
+    };
 
-    return getUser
-      ? getUser.username
+    console.log("sending user", getUser);
+
+    if (getUser) {
+     return getUser.username
         ? sendResponse({ message: "success", token: token, user: getUser }, 200)
-        : username_Require()
-      : (await this.db.addUser(user)) && username_Require();
+        : username_Require(getUser);
+    } else {
+      const userInstance = await this.db.addUser(user);
+     return userInstance
+        ? username_Require(userInstance)
+        : sendResponse("error", 400);
+    }
   }
 
   async validateToken(_req: Request): Promise<Response> {
     if (_req.method !== "POST") return invalidRequest();
 
     const token = await _req.text();
-    console.log(token);
     if (!token) return sendResponse("Invalid_Token", 400);
 
     try {
@@ -59,6 +67,20 @@ export default class googleAuthhandler {
       return sendResponse("validateToken", 200);
     } catch {
       console.log("error token");
+      return sendResponse("Invalid_Token", 400);
+    }
+  }
+
+  async setUsername(_req: Request): Promise<Response> {
+    if (_req.method !== "POST") return invalidRequest();
+    const { username, sessiontoken, email } = await _req.json();
+    try {
+      jwt.verify(sessiontoken, JWT_SECRET);
+      await this.db.setUsername(email, username);
+      console.log("updated username");
+      return sendResponse("success", 200);
+    } catch (err) {
+      console.log("username update failed", err);
       return sendResponse("Invalid_Token", 400);
     }
   }

@@ -1,38 +1,56 @@
 import sendResponse, { invalidRequest } from "./defaultResponse.ts";
 import { google } from "googleapis";
+import {
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  GOOGLE_REDIRECT_URI,
+} from "../config/environment.ts";
 
-export default class youtubeAuthhandler {
+export default class YoutubeAuthHandler {
+  getOauth2Client() {
+    return new google.auth.OAuth2(
+      GOOGLE_CLIENT_ID,
+      GOOGLE_CLIENT_SECRET,
+      GOOGLE_REDIRECT_URI,
+    );
+  }
+
   auth(_req: Request) {
     if (_req.method !== "POST") return invalidRequest();
+
     const googleAuthUrl = this.getToken();
     return sendResponse(googleAuthUrl, 200);
   }
 
   getToken() {
-    console.log("working");
-    const clientId =
-      "48392764782-f0jng7d1jj1pnmhhvuj8l04jeot5ihem.apps.googleusercontent.com";
-    const redirect_uri =
-      "https://rohitsx.github.io/landingPage/auth/streamSync/index.html";
-    const clientSecret = "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";
-
-    const oauth2Client = new google.auth.OAuth2(
-      clientId,
-      clientSecret,
-      redirect_uri,
-    );
-    const scopes = ["https://www.googleapis.com/auth/youtube.readonly"];
+    const oauth2Client = this.getOauth2Client();
+    const scopes = [
+      "https://www.googleapis.com/auth/youtube.readonly",
+      "https://www.googleapis.com/auth/userinfo.profile",
+    ];
     const url = oauth2Client.generateAuthUrl({
       access_type: "offline",
-      redirect_uri: redirect_uri,
+      redirect_uri: GOOGLE_REDIRECT_URI,
       scope: scopes,
     });
-    console.log(url);
     return url;
   }
 
-  callBack() {
-    console.log("hori hai");
-    return sendResponse("hori hai", 200);
+  async callBack(_req: Request) {
+    if (_req.method !== "POST") return invalidRequest();
+
+    try {
+      const authCode = await _req.json();
+      const oauth2Client = this.getOauth2Client();
+
+      const { tokens } = await oauth2Client.getToken(authCode.code);
+      console.log(tokens);
+      oauth2Client.setCredentials(tokens);
+
+      return sendResponse("Authorization successful", 200);
+    } catch (error) {
+      console.error("Error during callback:", error);
+      return sendResponse("Authorization failed", 500);
+    }
   }
 }

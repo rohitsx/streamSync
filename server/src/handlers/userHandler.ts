@@ -8,8 +8,8 @@ export default class UserHandler {
     this.collection = getDb().collection("user");
   }
 
-  async getUser(email: string) {
-    return await this.collection.findOne<DbUser>({ email });
+  async getUser(id: string) {
+    return await this.collection.findOne<DbUser>({ id });
   }
 
   async addUser(user: User) {
@@ -19,7 +19,17 @@ export default class UserHandler {
       name: user.name,
       username: null,
       picture: user.picture,
+	  ytRefreshToken: null
     };
-    return await this.collection.insertOne(addUser);
+    const koki = await this.collection.insertOne(addUser);
+    console.log("koki", koki);
+    return await this.getUser(user.id);
+  }
+
+  async setUsername(email: string, username: string) {
+    return await this.collection.updateOne(
+      { email },
+      { $set: { username: username } },
+    );
   }
 }

@@ -10,7 +10,8 @@ import Wallet_provider from "@/context/walletContext";
 import "./App.css";
 import Auth from "./pages/Auth";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import StartStream from "./pages/stream/StartStream";
+import YoutubeAuth from "./pages/stream/youtubeAuth";
+import Setting from "./pages/Setting";
 
 const App: React.FC = () => {
   return (
@@ -22,7 +23,8 @@ const App: React.FC = () => {
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<Home />} />
             <Route path="/join" element={<JoinStream />} />
-            <Route path="/host" element={<StartStream />} />
+            <Route path="/ytAuth" element={<YoutubeAuth />} />
+            <Route path="setting" element={<Setting />} />
             <Route path="/wallet" element={<Wallet />} />
             <Route path="/join-view" element={<AudienceView />} />
             <Route path="/host-view" element={<HostView />} />

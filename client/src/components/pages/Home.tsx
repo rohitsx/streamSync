@@ -4,8 +4,12 @@ import Logo from "@/assets/logo";
 import Layout from "../layout/Layout";
 import { ChevronRight, Settings, Play, LogIn } from "lucide-react";
 import useAuthRedirect from "@/hook/useAuthRedirect";
+import { useCookies } from "react-cookie";
 
 const HomePage: React.FC = () => {
+  const [cookies] = useCookies();
+  console.log(cookies);
+
   useAuthRedirect();
   const navigate = useNavigate();
   const ButtonStyle =
@@ -41,7 +45,7 @@ const HomePage: React.FC = () => {
           <NavButton
             icon={<Play className="text-green-400" size={24} />}
             label="Host Stream"
-            onClick={() => navigate("/host")}
+            onClick={() => cookies.user.ytRefreshToken ? navigate("/host") : navigate("/ytAuth")}
             bgColor="bg-slate-800/60"
           />
           <NavButton
@@ -53,7 +57,7 @@ const HomePage: React.FC = () => {
           <NavButton
             icon={<Settings className="text-blue-400" size={24} />}
             label="Settings"
-            onClick={() => navigate("/settings")}
+            onClick={() => navigate("/setting")}
             bgColor="bg-blue-900/60"
           />
         </div>
