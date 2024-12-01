@@ -1,9 +1,8 @@
-import { load } from "jsr:@std/dotenv";
-import { JWT_SECRET } from "../config/environment.ts";
-import { DbUser, User } from "../types/user.ts";
-import sendResponse, { invalidRequest } from "./defaultResponse.ts";
-import UserHandler from "./userHandler.ts";
+import sendResponse, { invalidRequest } from "../defaultResponse.ts";
+import UserHandler from "../database/userHandler.ts";
 import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../../config/environment.ts";
+import { DbUser, User } from "../../types/user.ts";
 
 export default class googleAuthhandler {
   db: UserHandler;
@@ -35,21 +34,19 @@ export default class googleAuthhandler {
     });
     const getUser: DbUser | null = await this.db.getUser(user.id);
     const username_Require = (user: DbUser) => {
-     return sendResponse(
+      return sendResponse(
         { message: "username_Require", token: token, user: user },
         200,
       );
     };
 
-    console.log("sending user", getUser);
-
     if (getUser) {
-     return getUser.username
+      return getUser.username
         ? sendResponse({ message: "success", token: token, user: getUser }, 200)
         : username_Require(getUser);
     } else {
       const userInstance = await this.db.addUser(user);
-     return userInstance
+      return userInstance
         ? username_Require(userInstance)
         : sendResponse("error", 400);
     }

@@ -1,6 +1,6 @@
 import { invalidRequest } from "../handlers/defaultResponse.ts";
-import googleAuthhandler from "../handlers/googleAuth.ts";
-import youtubeAuthhandler from "../handlers/youtubeAuth.ts";
+import googleAuthhandler from "../handlers/auth/googleAuth.ts";
+import youtubeAuthhandler from "../handlers/auth/youtubeAuth.ts";
 import addCorsHeaders from "../middleware/cors.ts";
 
 export default function router(_req: Request) {
@@ -26,11 +26,7 @@ export default function router(_req: Request) {
         break;
 
       case "/api/youtube-auth":
-        res = youtubeAuth.auth(_req);
-        break;
-
-      case "/api/youtube-callback":
-        res = await youtubeAuth.callBack(_req);
+        res = await youtubeAuth.auth(_req);
         break;
 
       default:

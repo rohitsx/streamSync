@@ -13,7 +13,6 @@ function makeUrl(clientId, response_type, scopes, access_type) {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const clientId = request.clientId;
-  const redirectUri = chrome.identity.getRedirectURL("google");
 
   if (request.action === "googleLogin") {
     const scopes = [
@@ -41,10 +40,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     );
     return true;
   }
+
   if (request.action === "youtubeAuth") {
     const scope = "https://www.googleapis.com/auth/youtube.readonly";
-
+    const redirectUri = chrome.identity.getRedirectURL("google");
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&access_type=offline`;
+
     chrome.identity.launchWebAuthFlow(
       {
         url: authUrl,
@@ -52,10 +53,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       },
       (responseUrl) => {
         try {
-          console.log("responseUrl:", responseUrl);
+          console.log(responseUrl);
           const urlObj = new URL(responseUrl);
-          const authToken = urlObj.searchParams.get("code");
-          sendResponse({ authToken: authToken });
+          const authCode = urlObj.searchParams.get("code");
+          console.log("responseUrl:", authCode);
+          sendResponse({ authCode: authCode });
         } catch (e) {
           console.log(e);
         }

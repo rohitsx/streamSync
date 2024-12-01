@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Link as LinkIcon, Mic, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import NavBar from "@/components/layout/NavBar";
-import Header from "@/components/layout/Header";
 
 const GoLive = () => {
   const [videoLink, setVideoLink] = useState("");
@@ -20,7 +18,6 @@ const GoLive = () => {
 
   return (
     <div className="flex flex-col h-[600px] w-[380px] bg-gray-900 text-white">
-      <Header />
 
       <main className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
         <section className="bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700 hover:border-purple-500 transition-all duration-300 ease-in-out">
@@ -127,7 +124,6 @@ const GoLive = () => {
         </Button>
       </main>
 
-      <NavBar />
     </div>
   );
 };

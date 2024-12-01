@@ -1,4 +1,4 @@
-import { User } from "../types/user.ts";
+import { User } from "../types/user.ts"
 
 export default function sendResponse(m: string | object, s: number) {
   return new Response(JSON.stringify(m), {

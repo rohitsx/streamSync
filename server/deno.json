@@ -8,7 +8,8 @@
     "mongo": "npm:mongodb@6.10.0",
     "bcrypt": "npm:bcrypt@5.1.1",
     "jsonwebtoken": "npm:jsonwebtoken@9.0.2",
-    "googleapi": "npm:googleapis@144.0.0"
+    "googleapi": "npm:googleapis@144.0.0",
+    "redis": "npm:redis@^4.7.0"
   },
   "nodeModulesDir": "auto"
 }

@@ -1,6 +1,6 @@
 import { Collection } from "mongo";
-import { getDb } from "../config/database.ts";
-import { DbUser, User } from "../types/user.ts";
+import { getDb } from "../../config/database.ts";
+import { DbUser, User } from "../../types/user.ts";
 
 export default class UserHandler {
   private collection: Collection;
@@ -9,7 +9,14 @@ export default class UserHandler {
   }
 
   async getUser(id: string) {
-    return await this.collection.findOne<DbUser>({ id });
+    const user = await this.collection.findOne<DbUser>({ id });
+
+    if (!user) return null;
+
+    return {
+      ...user,
+      ytRefreshToken: user.ytRefreshToken === "true",
+    };
   }
 
   async addUser(user: User) {
@@ -19,10 +26,9 @@ export default class UserHandler {
       name: user.name,
       username: null,
       picture: user.picture,
-	  ytRefreshToken: null
+      ytAuth: null,
     };
-    const koki = await this.collection.insertOne(addUser);
-    console.log("koki", koki);
+    await this.collection.insertOne(addUser);
     return await this.getUser(user.id);
   }
 
@@ -30,6 +36,13 @@ export default class UserHandler {
     return await this.collection.updateOne(
       { email },
       { $set: { username: username } },
+    );
+  }
+
+  async setYtRefreshToken(email: string, ytRefreshToken: string) {
+    return await this.collection.updateOne(
+      { email },
+      { $set: { ytRefreshToken: ytRefreshToken } },
     );
   }
 }

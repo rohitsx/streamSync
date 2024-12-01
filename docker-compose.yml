@@ -51,6 +51,16 @@ services:
       retries: 5
       start_period: 40s
 
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    command: ["redis-server", "--requirepass", "dummyPass", "--save", "60", "1", "--loglevel", "warning"]
+
 volumes:
   mongodata:
   deno-cache:
+  redisdata:

@@ -15,5 +15,5 @@ export interface DbUser {
   name: string;
   username: null | string;
   picture: string;
-  ytAuth: null | string;
+  ytRefreshToken: null | string | boolean;
 }

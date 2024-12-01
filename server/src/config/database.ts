@@ -9,6 +9,7 @@ async function connectToDatabase() {
     const client = new MongoClient(MONGO_URL);
     await client.connect();
     db = client.db("streamSync");
+	console.log("MongoDB connected");
   } catch (err) {
     console.log("MongoDB connection error:", err);
   }

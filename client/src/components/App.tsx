@@ -1,17 +1,14 @@
 import React from "react";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
-import Username from "./pages/Username";
+import Username from "./pages/auth/Username";
 import Home from "./pages/Home";
-import JoinStream from "./stream/JoinStream";
-import AudienceView from "./stream/view/audienceView";
-import HostView from "./stream/view/hostView";
-import Wallet from "./wallet/Wallet";
 import Wallet_provider from "@/context/walletContext";
 import "./App.css";
-import Auth from "./pages/Auth";
+import Auth from "./pages/auth/Auth";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import YoutubeAuth from "./pages/stream/youtubeAuth";
+import YoutubeAuth from "./pages/auth/YoutubeAuth";
 import Setting from "./pages/Setting";
+import Host from "./pages/stream/Host";
 
 const App: React.FC = () => {
   return (
@@ -22,12 +19,9 @@ const App: React.FC = () => {
             <Route path="/username" element={<Username />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<Home />} />
-            <Route path="/join" element={<JoinStream />} />
             <Route path="/ytAuth" element={<YoutubeAuth />} />
+            <Route path="/host" element={<Host />} />
             <Route path="setting" element={<Setting />} />
-            <Route path="/wallet" element={<Wallet />} />
-            <Route path="/join-view" element={<AudienceView />} />
-            <Route path="/host-view" element={<HostView />} />
           </Routes>
         </Router>
       </Wallet_provider>

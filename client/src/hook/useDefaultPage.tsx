@@ -1,4 +1,4 @@
-import LandingPage from '@/components/pages/Auth';
+import LandingPage from '@/components/pages/auth/Auth';
 import AudienceView from '@/components/stream/view/audienceView';
 import HostView from '@/components/stream/view/hostView';
 import { Home } from 'lucide-react';

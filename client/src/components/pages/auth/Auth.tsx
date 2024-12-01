@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GoogleButton, LandingLayout } from "../layout/Layout";
+import { GoogleButton, LandingLayout } from "@/components/layout/Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { User } from "@/types/api";
