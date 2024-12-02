@@ -9,6 +9,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import YoutubeAuth from "./pages/auth/YoutubeAuth";
 import Setting from "./pages/Setting";
 import Host from "./pages/stream/Host";
+import CloseTab from "./pages/closeTab";
 
 const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ const App: React.FC = () => {
             <Route path="/ytAuth" element={<YoutubeAuth />} />
             <Route path="/host" element={<Host />} />
             <Route path="setting" element={<Setting />} />
+            <Route path="completed" element={<CloseTab />} />
           </Routes>
         </Router>
       </Wallet_provider>

@@ -13,7 +13,7 @@ function Auth(): React.JSX.Element {
   const handleResponse = ({ token, user }: { token: string; user: User }) => {
     setCookies("sessionToken", token, { path: "/" });
     setCookies("user", user, { path: "/" });
-    user.username ? nav("/") : nav("/username");
+    user.username ? nav("/completed") : nav("/username");
   };
 
   const handleGoogleSignup = async (): Promise<void> => {
