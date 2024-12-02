@@ -7,3 +7,12 @@ export interface User {
   picture: string;
   ytRefreshToken: boolean;
 }
+
+export interface ytThumbnail {
+  thumbnail: {
+    url: string;
+    height: number;
+    width: number;
+  };
+  title: string;
+}

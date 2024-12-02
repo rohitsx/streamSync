@@ -1,5 +1,5 @@
 export interface AddedAccessTokenProps {
-	email: string;
-	token: string;
-	ms: number;
+  id: string;
+  token: string;
+  ms: number;
 }

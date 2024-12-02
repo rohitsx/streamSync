@@ -9,6 +9,7 @@
     "jsr:@std/internal@^1.0.5": "1.0.5",
     "jsr:@std/io@0.224.5": "0.224.5",
     "npm:bcrypt@5.1.1": "5.1.1",
+    "npm:google-auth-library@^9.15.0": "9.15.0",
     "npm:googleapis@144.0.0": "144.0.0",
     "npm:jsonwebtoken@9.0.2": "9.0.2",
     "npm:mongodb@6.10.0": "6.10.0",

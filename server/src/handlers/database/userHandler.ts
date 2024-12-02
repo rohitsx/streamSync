@@ -8,11 +8,12 @@ export default class UserHandler {
     this.collection = getDb().collection("user");
   }
 
-  async getUser(id: string) {
+  async getUser(id: string): Promise<DbUser | null> {
     const user = await this.collection.findOne<DbUser>({ id });
 
     if (!user) return null;
 
+    console.log(user.ytRefreshToken);
     return {
       ...user,
       ytRefreshToken: user.ytRefreshToken === "true",
@@ -26,7 +27,7 @@ export default class UserHandler {
       name: user.name,
       username: null,
       picture: user.picture,
-      ytAuth: null,
+      ytRefreshToken: null,
     };
     await this.collection.insertOne(addUser);
     return await this.getUser(user.id);
@@ -39,10 +40,16 @@ export default class UserHandler {
     );
   }
 
-  async setYtRefreshToken(email: string, ytRefreshToken: string) {
+  async setYtRefreshToken(id: string, ytRefreshToken: string) {
     return await this.collection.updateOne(
-      { email },
+      { id },
       { $set: { ytRefreshToken: ytRefreshToken } },
     );
+  }
+
+  async getRefreshToken(id: string): Promise<string | null> {
+    const user = await this.collection.findOne({ id });
+    console.log("found user",user);
+    return user?.ytRefreshToken;
   }
 }

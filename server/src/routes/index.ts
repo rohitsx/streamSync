@@ -29,6 +29,10 @@ export default function router(_req: Request) {
         res = await youtubeAuth.auth(_req);
         break;
 
+      case "/api/get-yt-stream":
+        res = await youtubeAuth.getYtStream(_req);
+        break;
+
       default:
         res = invalidRequest();
     }

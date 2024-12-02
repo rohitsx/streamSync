@@ -8,10 +8,18 @@ export default class RedisChase {
     this.client = getRedis();
   }
 
-  async addedAccessToken({ email, token, ms }: AddedAccessTokenProps) {
-    const ex = ms - Date.now();
-    return await this.client.set(email, token, {
-      PX: ex,
-    });
+  async addedAccessToken({ id, token, ms }: AddedAccessTokenProps) {
+    try {
+      const ex = ms - Date.now();
+      return await this.client.set(id, token, {
+        PX: ex,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getAccessToken(id: string) {
+    return await this.client.get(id);
   }
 }

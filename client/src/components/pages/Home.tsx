@@ -8,7 +8,6 @@ import { useCookies } from "react-cookie";
 
 const HomePage: React.FC = () => {
   const [cookies] = useCookies();
-  console.log(cookies);
 
   useAuthRedirect();
   const navigate = useNavigate();
@@ -45,7 +44,11 @@ const HomePage: React.FC = () => {
           <NavButton
             icon={<Play className="text-green-400" size={24} />}
             label="Host Stream"
-            onClick={() => cookies.user.ytRefreshToken ? navigate("/host") : navigate("/ytAuth")}
+            onClick={() =>
+              cookies.user.ytRefreshToken
+                ? navigate("/host")
+                : navigate("/ytAuth")
+            }
             bgColor="bg-slate-800/60"
           />
           <NavButton

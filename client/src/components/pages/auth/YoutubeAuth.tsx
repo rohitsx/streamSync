@@ -18,17 +18,16 @@ export default function YoutubeAuth() {
         clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
       },
       async ({ authCode }) => {
-        console.log(authCode);
         await axios
           .post(`${import.meta.env.VITE_API}youtube-auth`, {
-            email: cookies.user.email,
+            id: cookies.user.id,
             authCode,
           })
           .then(() => {
             const currentUser: User = cookies.user;
             currentUser.ytRefreshToken = true;
             setCookies("user", currentUser, { path: "/" });
-			nav("/host");
+            nav("/host");
           })
           .catch((err) => {
             console.log("LandingPage", err);
