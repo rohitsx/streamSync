@@ -39,7 +39,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             //"rounded-md w-[350px] h-[420px]": !isNewTab,
             "rounded-2xl": isNewTab,
             "rounded-md": !isNewTab,
-            "w-[350px] h-[420px]":
+            "w-[315px] h-[350px]":
               loc.pathname === "/" || loc.pathname === "/host",
             "w-[390px] h-[500px]":
               loc.pathname !== "/" && loc.pathname !== "/host",

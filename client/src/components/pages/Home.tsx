@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/assets/logo";
 import Layout from "../layout/Layout";
-import { ChevronRight, Settings, Play, LogIn } from "lucide-react";
+import { ChevronRight, Settings, Play } from "lucide-react";
 import useAuthRedirect from "@/hook/useAuthRedirect";
 import { useCookies } from "react-cookie";
 
@@ -51,12 +51,12 @@ const HomePage: React.FC = () => {
             }
             bgColor="bg-slate-800/60"
           />
-          <NavButton
+          {/*   <NavButton
             icon={<LogIn className="text-purple-400" size={24} />}
             label="Join Stream"
             onClick={() => navigate("/join")}
             bgColor="bg-purple-900/60"
-          />
+          />*/}
           <NavButton
             icon={<Settings className="text-blue-400" size={24} />}
             label="Settings"

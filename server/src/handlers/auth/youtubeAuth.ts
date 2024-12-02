@@ -36,13 +36,13 @@ export default class YoutubeAuthHandler {
       tokens.refresh_token &&
         this.db.setYtRefreshToken(id, tokens.refresh_token);
 
-      tokens.access_token &&
-        tokens.expiry_date &&
+      if (tokens.access_token && tokens.expiry_date) {
         this.redisClient.addedAccessToken({
           id,
           token: tokens.access_token,
           ms: tokens.expiry_date,
         });
+      }
 
       return sendResponse("Authorization successful", 200);
     } catch (error) {
@@ -92,8 +92,17 @@ export default class YoutubeAuthHandler {
         });
 
       const _accessToken = await oauth2Client.getAccessToken();
-      console.log("new accessToken", _accessToken);
-      return _accessToken;
+
+      console.log("new accessToken", _accessToken.res?.data.expiry_date);
+      if (_accessToken.token && _accessToken.res?.data.expiry_date) {
+        this.redisClient.addedAccessToken({
+          id,
+          token: _accessToken.token,
+          ms: _accessToken.res?.data.expiry_date,
+        });
+      }
+
+      return _accessToken.token;
     } catch (error) {
       console.error("Error generating access token:", error);
     }
