@@ -1,7 +1,6 @@
 import sendResponse, { invalidRequest } from "../defaultResponse.ts";
 import { google } from "googleapis";
 import {
-  GOOGLE_API_KEY,
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
   GOOGLE_REDIRECT_URI,
@@ -34,9 +33,8 @@ export default class YoutubeAuthHandler {
       const { tokens } = await oauth2Client.getToken(authCode);
       if (!tokens) return sendResponse("Authorization failed", 500);
 
-      console.log(id);
-      console.log(tokens);
-      tokens.refresh_token && this.db.setYtRefreshToken(id, authCode);
+      tokens.refresh_token &&
+        this.db.setYtRefreshToken(id, tokens.refresh_token);
 
       tokens.access_token &&
         tokens.expiry_date &&
@@ -58,9 +56,12 @@ export default class YoutubeAuthHandler {
 
     const url = new URL(_req.url);
     const id = url.searchParams.get("id");
-    console.log("recived id", id);
     if (!id) return sendResponse("Authorization failed", 500);
     const _accessToken = await this.getAccessToken(id);
+    if (!_accessToken) {
+      console.error("Error getting access token");
+      return;
+    }
     const response = await fetch(
       "https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2CcontentDetails%2Cstatus&broadcastStatus=active&broadcastType=all",
       {
@@ -71,7 +72,6 @@ export default class YoutubeAuthHandler {
       },
     );
     const liveStreamData = await response.json();
-    console.log(liveStreamData);
 
     return sendResponse(liveStreamData, 200);
   }
@@ -84,7 +84,7 @@ export default class YoutubeAuthHandler {
       const oauth2Client = this.getOauth2Client();
 
       const refreshToken = await this.db.getRefreshToken(id);
-      console.log("refreshToken: ", refreshToken);
+      console.log("recived refreshToken:", refreshToken);
 
       refreshToken &&
         oauth2Client.setCredentials({
@@ -92,7 +92,7 @@ export default class YoutubeAuthHandler {
         });
 
       const _accessToken = await oauth2Client.getAccessToken();
-      console.log(accessToken);
+      console.log("new accessToken", _accessToken);
       return _accessToken;
     } catch (error) {
       console.error("Error generating access token:", error);

@@ -49,7 +49,6 @@ export default class UserHandler {
 
   async getRefreshToken(id: string): Promise<string | null> {
     const user = await this.collection.findOne({ id });
-    console.log("found user",user);
     return user?.ytRefreshToken;
   }
 }
