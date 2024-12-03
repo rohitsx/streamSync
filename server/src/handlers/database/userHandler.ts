@@ -16,7 +16,7 @@ export default class UserHandler {
     console.log(user.ytRefreshToken);
     return {
       ...user,
-      ytRefreshToken: user.ytRefreshToken === "true",
+      ytRefreshToken: !!user.ytRefreshToken,
     };
   }
 

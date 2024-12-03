@@ -8,6 +8,7 @@ import { useCookies } from "react-cookie";
 
 const HomePage: React.FC = () => {
   const [cookies] = useCookies();
+  console.log(cookies);
 
   useAuthRedirect();
   const navigate = useNavigate();

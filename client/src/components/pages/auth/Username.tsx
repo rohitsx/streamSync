@@ -27,7 +27,7 @@ const UsernameSelection = () => {
           email: "rohitbindsr@gmail.com",
           sessiontoken: cookies.sessionToken,
         });
-        nav("/");
+        nav("/close");
       } catch (err) {
         console.log(err);
       }

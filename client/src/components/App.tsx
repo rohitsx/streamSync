@@ -22,8 +22,8 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/ytAuth" element={<YoutubeAuth />} />
             <Route path="/host" element={<Host />} />
-            <Route path="setting" element={<Setting />} />
-            <Route path="completed" element={<CloseTab />} />
+            <Route path="/setting" element={<Setting />} />
+            <Route path="/close" element={<CloseTab />} />
           </Routes>
         </Router>
       </Wallet_provider>
