@@ -36,13 +36,17 @@ export default function Layout({ children }: { children: ReactNode }) {
           "bg-gradient-to-br from-slate-900/95 to-slate-950/95 text-white flex flex-col items-center justify-between p-6 backdrop-blur-xl shadow-2xl",
           {
             //"rounded-2xl w-[390px] h-[500px]": isNewTab,
-            //"rounded-md w-[350px] h-[420px]": !isNewTab,
+            //"rounded-md w-[330px] h-[350px]": !isNewTab,
             "rounded-2xl": isNewTab,
             "rounded-md": !isNewTab,
             "w-[330px] h-[350px]":
-              loc.pathname === "/" || loc.pathname === "/host",
+              loc.pathname !== "/auth" &&
+              loc.pathname !== "/username" &&
+              loc.pathname !== "/close",
             "w-[390px] h-[500px]":
-              loc.pathname !== "/" && loc.pathname !== "/host",
+              loc.pathname === "/auth" ||
+              loc.pathname === "/username" ||
+              loc.pathname === "/close",
           },
         )}
       >

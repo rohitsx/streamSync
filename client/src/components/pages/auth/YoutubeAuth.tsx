@@ -1,10 +1,11 @@
-import Logo from "@/assets/logo";
 import Layout, { YouTubeButton } from "@/components/layout/Layout";
 import { User } from "@/types/api";
 import axios from "axios";
 import { useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import FAQSection from "./YoutubeAuthFAQ";
+import { ArrowLeft } from "lucide-react";
 
 export default function YoutubeAuth() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -43,9 +44,23 @@ export default function YoutubeAuth() {
 
   return (
     <Layout>
-      <div className="flex flex-col items-center justify-center h-full w-full space-y-2 ">
-        <Logo />
-        <YouTubeButton onClick={handelClick} isLoading={isLoading} />
+      <div className="w-full space-y-6">
+        <button
+          onClick={() => nav(-1)}
+          className="group flex items-center text-white/60 hover:text-white transition-colors text-xs mb-2"
+        >
+          <ArrowLeft
+            size={16}
+            className="mr-2 group-hover:translate-x-[-2px] transition-transform"
+          />
+          Back
+        </button>
+
+        <div className="space-y-6">
+          <YouTubeButton onClick={handelClick} isLoading={isLoading} />
+
+          <FAQSection />
+        </div>
       </div>
     </Layout>
   );
