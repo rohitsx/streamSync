@@ -29,7 +29,8 @@
     "type": "module"
   },
   "minimum_chrome_version": "92",
-  "permissions": ["tabs", "identity"],
+  "permissions": ["tabs", "identity", "cookies"],
+  "host_permissions": ["https://localhost:8000/api/*"],
   "web_accessible_resources": [
     {
       "resources": ["index.html"],

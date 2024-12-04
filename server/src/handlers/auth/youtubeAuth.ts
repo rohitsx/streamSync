@@ -58,6 +58,7 @@ export default class YoutubeAuthHandler {
     const id = url.searchParams.get("id");
     if (!id) return sendResponse("Authorization failed", 500);
     const _accessToken = await this.getAccessToken(id);
+    console.log(_accessToken);
     if (!_accessToken) {
       console.error("Error getting access token");
       return;

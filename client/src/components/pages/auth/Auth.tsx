@@ -1,20 +1,10 @@
 import React, { useState } from "react";
 import { GoogleButton, LandingLayout } from "@/components/layout/Layout";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { User } from "@/types/api";
-import { useCookies } from "react-cookie";
 
 function Auth(): React.JSX.Element {
-  const nav = useNavigate();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [, setCookies] = useCookies(["sessionToken", "user"]);
-
-  const handleResponse = ({ token, user }: { token: string; user: User }) => {
-    setCookies("sessionToken", token, { path: "/" });
-    setCookies("user", user, { path: "/" });
-    user.username ? nav("/close") : nav("/username");
-  };
+  const nav = useNavigate();
 
   const handleGoogleSignup = async (): Promise<void> => {
     setIsLoading(true);
@@ -22,12 +12,20 @@ function Auth(): React.JSX.Element {
       {
         action: "googleLogin",
         clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+        host: import.meta.env.VITE_HOST,
+        api: import.meta.env.VITE_API + "google-auth",
       },
-      async ({ accessToken }) => {
-        await axios
-          .post(`${import.meta.env.VITE_API}google-auth`, accessToken)
-          .then((res) => handleResponse(res.data))
-          .catch((err) => console.log("LandingPage", err));
+      async ({ status }: { status: string }) => {
+        setIsLoading(false);
+        if (status === "success") {
+          const user = await chrome.cookies.get({
+            url: import.meta.env.VITE_HOST,
+            name: "user",
+          });
+          user && JSON.parse(user.value).username
+            ? nav("/close")
+            : nav("/username");
+        } else console.log("error loging up");
       },
     );
   };

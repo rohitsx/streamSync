@@ -1,40 +1,25 @@
 import Layout, { YouTubeButton } from "@/components/layout/Layout";
-import { User } from "@/types/api";
-import axios from "axios";
 import { useState } from "react";
-import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import FAQSection from "./YoutubeAuthFAQ";
 import { ArrowLeft } from "lucide-react";
 
 export default function YoutubeAuth() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [cookies, setCookies] = useCookies();
   const nav = useNavigate();
 
   const handleGoogleAuth = async (): Promise<void> => {
-    chrome.runtime.sendMessage(
-      {
+    const user = await chrome.cookies.get({
+      url: import.meta.env.VITE_HOST,
+      name: "user",
+    });
+    user &&
+      chrome.runtime.sendMessage({
         action: "youtubeAuth",
         clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-      },
-      async ({ authCode }) => {
-        await axios
-          .post(`${import.meta.env.VITE_API}youtube-auth`, {
-            id: cookies.user.id,
-            authCode,
-          })
-          .then(() => {
-            const currentUser: User = cookies.user;
-            currentUser.ytRefreshToken = true;
-            setCookies("user", currentUser, { path: "/" });
-            nav("/host");
-          })
-          .catch((err) => {
-            console.log("LandingPage", err);
-          });
-      },
-    );
+        api: import.meta.env.VITE_API + "youtube-auth",
+        id: JSON.parse(user.value).id,
+      });
   };
 
   const handelClick = async (): Promise<void> => {

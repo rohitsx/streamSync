@@ -1,45 +1,54 @@
-import axios from "axios";
-import { useEffect, useMemo } from "react";
-import { useCookies } from "react-cookie";
-import useCreateTab from "./useCreateTab";
+import { useCallback, useEffect } from "react";
 import useDeleteToken from "./useDeleteToken";
+import useCreateTab from "./useCreateTab";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function useAuthRedirect() {
-  const [cookies] = useCookies();
-  const token = useMemo(() => cookies.sessionToken, [cookies.sessionToken]);
   const createTab = useCreateTab();
+  const nav = useNavigate();
   const deleteToken = useDeleteToken();
 
-  async function checkAuth() {
-    if (!token) {
-      console.log("working");
+  useEffect(() => {
+    chrome.cookies.get(
+      { url: import.meta.env.VITE_HOST, name: "sessionToken" },
+      (cookie) => {
+        console.log("recvied cookies", cookie);
+        cookie?.value ? handleToken(cookie.value) : createTab("auth");
+      },
+    );
+  }, []);
+
+  const handleToken = useCallback(async (token: string) => {
+    console.log(token);
+    const handleInvalidToken = () => {
       deleteToken();
-      return false;
-    }
+      createTab("auth");
+    };
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_API}validate-token`,
-        token,
+        JSON.parse(token),
       );
-      return response.data;
     } catch (error) {
-      console.error("Token validation error:", error);
-      deleteToken();
-      return false;
+      handleInvalidToken();
+      console.log("token auth failed");
+      return;
     }
-  }
 
-  useEffect(() => {
-    const user = cookies.user;
+    chrome.cookies.get(
+      { url: import.meta.env.VITE_HOST, name: "user" },
+      (cookie) => {
+        const user = cookie?.value;
+        if (!user) {
+          handleInvalidToken();
+          return;
+        }
 
-    if (!token && !user) createTab("auth");
-    else if (user && !user.username) createTab("username");
-    else {
-      checkAuth().then((res) => {
-        !res && createTab("auth");
-        return;
-      });
-    }
+        if (!JSON.parse(user).username) nav("/username");
+        else return;
+      },
+    );
   }, []);
 }

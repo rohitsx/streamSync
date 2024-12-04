@@ -1,31 +1,45 @@
 import React, { useState } from "react";
-import { LandingLayout } from "@/components/layout/Layout"
+import { LandingLayout } from "@/components/layout/Layout";
 import { ArrowRight } from "lucide-react";
-import { useCookies } from "react-cookie";
 import axios from "axios";
 import { User } from "@/types/api";
 import { useNavigate } from "react-router-dom";
 
 const UsernameSelection = () => {
   const [username, setUsername] = useState("");
-  const [cookies, setCookies] = useCookies();
   const nav = useNavigate();
 
   const handleSubmit = async () => {
     if (username.trim()) {
-      const currentUser: User = cookies.user;
-      currentUser.username = username;
+      let currentUser: User;
+      chrome.cookies.get(
+        { url: import.meta.env.VITE_HOST, name: "user" },
+        (cookie) => {
+          if (!cookie?.value) {
+            nav("/");
+            return;
+          }
+          currentUser = JSON.parse(cookie.value);
+          currentUser.username = username;
+          chrome.cookies.set({
+            url: import.meta.env.VITE_HOST,
+            name: "user",
+            value: JSON.stringify(currentUser),
+          });
+        },
+      );
 
-      setCookies("user", currentUser, { path: "/" });
-
-      console.log("user", cookies.user);
-      console.log("sessiontoken", cookies.sessionToken);
+	  const cookies = await chrome.cookies.get({
+		url: import.meta.env.VITE_HOST,
+		name: "sessionToken",
+	  });
+	  if(!cookies) return
 
       try {
         await axios.post(`${import.meta.env.VITE_API}set-username`, {
           username: username,
           email: "rohitbindsr@gmail.com",
-          sessiontoken: cookies.sessionToken,
+          sessiontoken: JSON.parse(cookies.value),
         });
         nav("/close");
       } catch (err) {
