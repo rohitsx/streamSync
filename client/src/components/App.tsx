@@ -8,8 +8,9 @@ import Auth from "./pages/auth/Auth";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import YoutubeAuth from "./pages/auth/YoutubeAuth";
 import Setting from "./pages/Setting";
-import Host from "./pages/stream/Host";
 import CloseTab from "./pages/closeTab";
+import LiveStream from "./pages/stream/LiveStream";
+import ChatPopUp from "./pages/stream/ChatPopUp";
 
 const App: React.FC = () => {
   return (
@@ -21,7 +22,8 @@ const App: React.FC = () => {
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={<Home />} />
             <Route path="/ytAuth" element={<YoutubeAuth />} />
-            <Route path="/host" element={<Host />} />
+            <Route path="/livestream" element={<LiveStream />} />
+            <Route path="/chat/:streamId" element={<ChatPopUp />} />
             <Route path="/setting" element={<Setting />} />
             <Route path="/close" element={<CloseTab />} />
           </Routes>

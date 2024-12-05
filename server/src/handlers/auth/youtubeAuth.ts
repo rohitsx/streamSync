@@ -74,6 +74,7 @@ export default class YoutubeAuthHandler {
       },
     );
     const liveStreamData = await response.json();
+    console.log(liveStreamData);
 
     return sendResponse(liveStreamData, 200);
   }

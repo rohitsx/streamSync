@@ -39,7 +39,7 @@ const HomePage: React.FC = () => {
     const user = await getCookie({ name: "user" });
 
     user && JSON.parse(user.value).ytRefreshToken
-      ? navigate("/host")
+      ? navigate("/livestream")
       : navigate("/ytauth");
   }, []);
 

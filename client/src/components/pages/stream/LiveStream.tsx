@@ -1,22 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import Layout from "@/components/layout/Layout";
-import { Play, ArrowLeft } from "lucide-react";
 import { ytThumbnail } from "@/types/api";
-import { useNavigate } from "react-router-dom";
+import useChromeCookies from "@/hook/useChromeCookies";
+import {
+  GoBackBtn,
+  LoadingLayout,
+  UnActiveLive,
+} from "@/components/layout/LiveSteamLayout";
 
-export default function Host() {
+export default function LiveStream() {
   const [ytThumbnail, setYtThumbnail] = useState<ytThumbnail | "Not Live">();
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
+  const { getCookie } = useChromeCookies();
+  const [streamId, setStreamId] = useState(null);
+  console.log(streamId);
 
   const getYtStream = useCallback(async () => {
     try {
       setIsLoading(true);
-      const user = await chrome.cookies.get({
-        url: import.meta.env.VITE_HOST,
-        name: "user",
-      });
+      const user = await getCookie({ name: "user" });
       if (!user) return;
       const id = JSON.parse(user.value).id;
 
@@ -26,7 +29,9 @@ export default function Host() {
           params: { id },
         },
       );
+
       const data = response.data.items[0];
+      setStreamId(data.id);
       const thumbnail = data.snippet.thumbnails.high;
       const title = data.snippet.title;
       thumbnail
@@ -44,41 +49,19 @@ export default function Host() {
     getYtStream();
   }, [getYtStream]);
 
-  const handleStreamClick = () => {
-    if (ytThumbnail !== "Not Live" && ytThumbnail?.thumbnail) {
-      window.open(
-        `https://www.youtube.com/watch?v=${ytThumbnail.title.split(" ")[0]}`,
-        "_blank",
-      );
+  const handleStreamClick = useCallback(() => {
+    if (ytThumbnail !== "Not Live" && ytThumbnail?.thumbnail && streamId) {
+      window.open(`index.html#/chat/${streamId}`, "newwin", "width=200px");
     }
-  };
+  }, [ytThumbnail, streamId]);
 
   return (
     <Layout>
       <div className="w-full px-2 space-y-3">
-        <div className="flex items-center justify-between border-b border-slate-700 pb-1">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center text-white/60 hover:text-white transition-colors text-xs"
-          >
-            <ArrowLeft size={16} className="mr-1" />
-            Back
-          </button>
-          <h1 className="text-sm font-bold text-slate-100 tracking-tight">
-            Select Live Stream
-          </h1>
-        </div>
+        <GoBackBtn value={"Select Live Stream"} />
 
         {isLoading ? (
-          <div className="bg-slate-800/60 rounded-xl overflow-hidden">
-            <div className="animate-pulse">
-              <div className="h-28 bg-slate-700/50 w-full"></div>
-              <div className="p-2 space-y-2">
-                <div className="h-2 bg-slate-700/50 rounded w-3/4"></div>
-                <div className="h-2 bg-slate-700/50 rounded w-1/2"></div>
-              </div>
-            </div>
-          </div>
+          <LoadingLayout />
         ) : ytThumbnail !== "Not Live" && ytThumbnail?.thumbnail ? (
           <div
             onClick={handleStreamClick}
@@ -107,12 +90,7 @@ export default function Host() {
             </div>
           </div>
         ) : (
-          <div className="w-full bg-slate-800/60 h-40 rounded-xl backdrop-blur-md border border-white/10 hover:border-white/20 flex items-center justify-center text-slate-400">
-            <div className="flex flex-col items-center space-y-1 text-center">
-              <Play className="text-slate-500 mb-1" size={24} />
-              <p className="text-xs">No Active Stream</p>
-            </div>
-          </div>
+          <UnActiveLive />
         )}
       </div>
     </Layout>
