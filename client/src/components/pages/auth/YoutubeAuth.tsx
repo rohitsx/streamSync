@@ -3,23 +3,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FAQSection from "./YoutubeAuthFAQ";
 import { ArrowLeft } from "lucide-react";
+import useChromeCookies from "@/hook/useChromeCookies";
 
 export default function YoutubeAuth() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const nav = useNavigate();
+  const { getCookie } = useChromeCookies();
 
   const handleGoogleAuth = async (): Promise<void> => {
-    const user = await chrome.cookies.get({
-      url: import.meta.env.VITE_HOST,
-      name: "user",
-    });
+    const user = await getCookie({ name: "user" });
+
     user &&
-      chrome.runtime.sendMessage({
-        action: "youtubeAuth",
-        clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-        api: import.meta.env.VITE_API + "youtube-auth",
-        id: JSON.parse(user.value).id,
-      });
+      chrome.runtime.sendMessage(
+        {
+          action: "youtubeAuth",
+          clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+          api: import.meta.env.VITE_API + "youtube-auth",
+          host: import.meta.env.VITE_HOST,
+          id: JSON.parse(user.value).id,
+        },
+        ({ success }) => (success ? nav("/close") : console.error("error")),
+      );
   };
 
   const handelClick = async (): Promise<void> => {

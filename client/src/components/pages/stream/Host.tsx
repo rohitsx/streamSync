@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
 import axios from "axios";
 import Layout from "@/components/layout/Layout";
 import { Play, ArrowLeft } from "lucide-react";
@@ -7,7 +6,6 @@ import { ytThumbnail } from "@/types/api";
 import { useNavigate } from "react-router-dom";
 
 export default function Host() {
-  const [cookies] = useCookies();
   const [ytThumbnail, setYtThumbnail] = useState<ytThumbnail | "Not Live">();
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -15,7 +13,13 @@ export default function Host() {
   const getYtStream = useCallback(async () => {
     try {
       setIsLoading(true);
-      const id = cookies.user.id;
+      const user = await chrome.cookies.get({
+        url: import.meta.env.VITE_HOST,
+        name: "user",
+      });
+      if (!user) return;
+      const id = JSON.parse(user.value).id;
+
       const response = await axios.get(
         `${import.meta.env.VITE_API}get-yt-stream`,
         {
@@ -34,7 +38,7 @@ export default function Host() {
     } finally {
       setIsLoading(false);
     }
-  }, [cookies.user.id]);
+  }, []);
 
   useEffect(() => {
     getYtStream();

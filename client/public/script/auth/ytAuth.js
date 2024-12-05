@@ -11,12 +11,34 @@ export default function ytAuth(request, sendResponse) {
     async (responseUrl) => {
       try {
         console.log(responseUrl);
+
         const urlObj = new URL(responseUrl);
         const authCode = urlObj.searchParams.get("code");
-        const response = await sendYtAuthCode(authCode, request.api);
-        if (response.status === 200)
-          sendResponse({ authCode: await response.json() });
-        else sendResponse({ authCode: null });
+
+        const response = await sendYtAuthCode(
+          authCode,
+          request.id,
+          request.api,
+        );
+
+        if (response.status === 200) {
+          const currentUser = await chrome.cookies.get({
+            url: request.host,
+            name: "user",
+          });
+          const user = JSON.parse(currentUser.value);
+          user.ytRefreshToken = true;
+
+          chrome.cookies.set({
+            url: request.host,
+            name: "user",
+            value: JSON.stringify(user),
+          });
+
+          sendResponse({ success: true });
+        } else {
+          sendResponse({ success: false });
+        }
       } catch (e) {
         console.log(e);
       }
@@ -24,12 +46,12 @@ export default function ytAuth(request, sendResponse) {
   );
 }
 
-async function sendYtAuthCode(authCode, api) {
+async function sendYtAuthCode(authCode, id, api) {
   return await fetch(api, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ authCode }),
+    body: JSON.stringify({ authCode, id }),
   });
 }

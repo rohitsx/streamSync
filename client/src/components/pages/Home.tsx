@@ -4,10 +4,12 @@ import Logo from "@/assets/logo";
 import Layout from "../layout/Layout";
 import { ChevronRight, Settings, Play } from "lucide-react";
 import useAuthRedirect from "@/hook/useAuthRedirect";
+import useChromeCookies from "@/hook/useChromeCookies";
 
 const HomePage: React.FC = () => {
   useAuthRedirect();
   const navigate = useNavigate();
+  const { getCookie } = useChromeCookies();
 
   const ButtonStyle =
     "w-full flex items-center justify-between px-4 py-3 rounded-xl backdrop-blur-md transition-all duration-300 ease-in-out hover:scale-[1.02] active:scale-[0.98] group border border-white/10 hover:border-white/20";
@@ -34,10 +36,7 @@ const HomePage: React.FC = () => {
   );
 
   const handleHostStream = useCallback(async () => {
-    const user = await chrome.cookies.get({
-      url: import.meta.env.VITE_HOST,
-      name: "user",
-    });
+    const user = await getCookie({ name: "user" });
 
     user && JSON.parse(user.value).ytRefreshToken
       ? navigate("/host")

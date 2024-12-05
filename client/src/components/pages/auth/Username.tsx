@@ -2,46 +2,41 @@ import React, { useState } from "react";
 import { LandingLayout } from "@/components/layout/Layout";
 import { ArrowRight } from "lucide-react";
 import axios from "axios";
-import { User } from "@/types/api";
 import { useNavigate } from "react-router-dom";
+import useChromeCookies from "@/hook/useChromeCookies";
 
 const UsernameSelection = () => {
   const [username, setUsername] = useState("");
   const nav = useNavigate();
+  const { getCookie, setCookie } = useChromeCookies();
 
   const handleSubmit = async () => {
     if (username.trim()) {
-      let currentUser: User;
-      chrome.cookies.get(
-        { url: import.meta.env.VITE_HOST, name: "user" },
-        (cookie) => {
-          if (!cookie?.value) {
-            nav("/");
-            return;
-          }
-          currentUser = JSON.parse(cookie.value);
-          currentUser.username = username;
-          chrome.cookies.set({
-            url: import.meta.env.VITE_HOST,
-            name: "user",
-            value: JSON.stringify(currentUser),
-          });
-        },
-      );
+      const user = await getCookie({ name: "user" });
 
-	  const cookies = await chrome.cookies.get({
-		url: import.meta.env.VITE_HOST,
-		name: "sessionToken",
-	  });
-	  if(!cookies) return
+      if (!user) {
+        console.log("no user");
+        nav("/");
+        return;
+      } else {
+        const u = JSON.parse(user.value);
+        u.username = username;
+        await setCookie({ name: "user", value: JSON.stringify(u) });
+      }
+
+      const cookies = await getCookie({ name: "sessionToken" });
+      if (!cookies) return;
 
       try {
-        await axios.post(`${import.meta.env.VITE_API}set-username`, {
-          username: username,
-          email: "rohitbindsr@gmail.com",
-          sessiontoken: JSON.parse(cookies.value),
-        });
-        nav("/close");
+        const res = await axios.post(
+          `${import.meta.env.VITE_API}set-username`,
+          {
+            username: username,
+            email: "rohitbindsr@gmail.com",
+            sessiontoken: JSON.parse(cookies.value),
+          },
+        );
+        res.status === 200 && nav("/close");
       } catch (err) {
         console.log(err);
       }

@@ -27,12 +27,14 @@ export default class YoutubeAuthHandler {
     if (_req.method !== "POST") return invalidRequest();
 
     const { authCode, id } = await _req.json();
+    console.log(id);
     try {
       const oauth2Client = this.getOauth2Client();
 
       const { tokens } = await oauth2Client.getToken(authCode);
       if (!tokens) return sendResponse("Authorization failed", 500);
 
+      console.log(tokens);
       tokens.refresh_token &&
         this.db.setYtRefreshToken(id, tokens.refresh_token);
 
@@ -58,7 +60,6 @@ export default class YoutubeAuthHandler {
     const id = url.searchParams.get("id");
     if (!id) return sendResponse("Authorization failed", 500);
     const _accessToken = await this.getAccessToken(id);
-    console.log(_accessToken);
     if (!_accessToken) {
       console.error("Error getting access token");
       return;
@@ -80,6 +81,7 @@ export default class YoutubeAuthHandler {
   async getAccessToken(id: string) {
     try {
       const accessToken = await this.redisClient.getAccessToken(id);
+      console.log("recived accessToken from redis", accessToken);
       if (accessToken) return accessToken;
 
       const oauth2Client = this.getOauth2Client();
