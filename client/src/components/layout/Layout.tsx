@@ -104,23 +104,23 @@ export const GoogleButton: React.FC<GoogleButtonProps> = ({
       type="button"
       className={`
         h-[3.25rem] flex items-center justify-center w-full px-5 py-3
-        text-sm font-medium transition-all duration-300
+        text-sm font-medium transition-all duration-300 ease-in-out
         bg-gradient-to-r from-slate-800/90 to-slate-900/90
         border border-white/10 hover:border-white/20
-        rounded-lg shadow-xl
-        hover:shadow-violet-500/20 hover:from-slate-800 hover:to-slate-900
+        rounded-lg shadow-xl group
+        hover:shadow-violet-500/30 hover:from-slate-800 hover:to-slate-900
         focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:ring-offset-2 focus:ring-offset-slate-900
-        ${isLoading ? "cursor-not-allowed opacity-70" : ""}
+        ${isLoading ? "cursor-not-allowed opacity-70" : "hover:scale-[1.02] active:scale-[0.98]"}
       `}
     >
       {isLoading ? (
-        <>
-          <div className="w-5 h-5 border-2 border-slate-700 border-t-violet-400 rounded-full animate-spin mr-3" />
-          <span className="text-gray-200">Loading...</span>
-        </>
+        <div className="flex items-center">
+          <div className="w-5 h-5 border-2 border-slate-600 border-t-violet-500 rounded-full animate-spin mr-3 ease-linear" />
+          <span className="text-gray-300 font-semibold">Connecting...</span>
+        </div>
       ) : (
-        <>
-          <div className="bg-white p-1.5 rounded-lg mr-3 shadow-sm">
+        <div className="flex items-center">
+          <div className="mr-3 transition-transform group-hover:scale-110">
             <svg className="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -141,7 +141,7 @@ export const GoogleButton: React.FC<GoogleButtonProps> = ({
             </svg>
           </div>
           <span className="text-gray-200">Continue with Google</span>
-        </>
+        </div>
       )}
     </button>
   );
@@ -157,33 +157,36 @@ export const YouTubeButton: React.FC<GoogleButtonProps> = ({
       disabled={isLoading}
       type="button"
       className={`
-        h-[3.25rem] flex items-center justify-center w-full px-5 py-3
-        text-sm font-medium transition-all duration-300
+        relative h-[3.25rem] flex items-center justify-center w-full px-5 py-3
+        text-sm font-medium transition-all duration-300 ease-in-out
         bg-gradient-to-r from-slate-800/90 to-slate-900/90
         border border-white/10 hover:border-white/20
-        rounded-lg shadow-xl
-        hover:shadow-violet-500/20 hover:from-slate-800 hover:to-slate-900
-        focus:outline-none focus:ring-2 focus:ring-violet-500/30 focus:ring-offset-2 focus:ring-offset-slate-900
-        ${isLoading ? "cursor-not-allowed opacity-70" : ""}
+        rounded-lg shadow-xl group
+        hover:shadow-violet-500/30 hover:from-slate-800/95 hover:to-slate-900/95
+        focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:ring-offset-2 focus:ring-offset-slate-900
+        ${isLoading ? "cursor-not-allowed opacity-70" : "hover:scale-[1.02] active:scale-[0.98]"}
       `}
     >
       {isLoading ? (
-        <>
-          <div className="w-5 h-5 border-2 border-slate-700 border-t-violet-400 rounded-full animate-spin mr-3" />
-          <span className="text-gray-200">Loading...</span>
-        </>
+        <div className="flex items-center">
+          <div className="w-5 h-5 border-2 border-slate-600 border-t-violet-500 rounded-full animate-spin mr-3 ease-linear" />
+          <span className="text-gray-300 font-semibold">Connecting...</span>
+        </div>
       ) : (
-        <>
-          <div className="bg-white p-1.5 rounded-lg mr-3 shadow-sm">
-            <svg className="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
+        <div className="flex items-center">
+          <div className="mr-3 transition-transform group-hover:scale-110">
+            <svg className="w-5 h-5" viewBox="0 0 24 24" aria-hidden="true">
               <path
-                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.488 8.549 4.385 8.816 3.6.246 11.626.245 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.488-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"
+                d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.488 8.549 4.385 8.816 3.6.246 11.626.245 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.488-8.549-4.385-8.816z"
                 fill="#FF0000"
               />
+              <path d="M9 8l8 4-8 4z" fill="white" />
             </svg>
           </div>
-          <span className="text-gray-200">Connect to YouTube</span>
-        </>
+          <span className="text-gray-200 font-semibold group-hover:text-white transition-colors">
+            Connect to YouTube
+          </span>
+        </div>
       )}
     </button>
   );

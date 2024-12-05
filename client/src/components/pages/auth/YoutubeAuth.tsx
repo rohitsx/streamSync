@@ -45,7 +45,7 @@ export default function YoutubeAuth() {
           Back
         </button>
 
-        <div className="space-y-6">
+        <div className="space-y-3">
           <YouTubeButton onClick={handelClick} isLoading={isLoading} />
 
           <FAQSection />
