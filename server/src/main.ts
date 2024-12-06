@@ -11,6 +11,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
+
 connectToDatabase()
   .then(() => connectToRedis())
   .then(async () => {

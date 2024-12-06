@@ -5,8 +5,8 @@ import {
   GOOGLE_CLIENT_SECRET,
   GOOGLE_REDIRECT_URI,
 } from "../../config/environment.ts";
-import UserHandler from "../database/userHandler.ts";
-import RedisChase from "../database/redisChase.ts";
+import UserHandler from "../database/dbUser.ts";
+import RedisChase from "../database/redis.ts";
 
 export default class YoutubeAuthHandler {
   db: UserHandler;
@@ -27,14 +27,12 @@ export default class YoutubeAuthHandler {
     if (_req.method !== "POST") return invalidRequest();
 
     const { authCode, id } = await _req.json();
-    console.log(id);
     try {
       const oauth2Client = this.getOauth2Client();
 
       const { tokens } = await oauth2Client.getToken(authCode);
       if (!tokens) return sendResponse("Authorization failed", 500);
 
-      console.log(tokens);
       tokens.refresh_token &&
         this.db.setYtRefreshToken(id, tokens.refresh_token);
 
@@ -59,36 +57,23 @@ export default class YoutubeAuthHandler {
     const url = new URL(_req.url);
     const id = url.searchParams.get("id");
     if (!id) return sendResponse("Authorization failed", 500);
-    const _accessToken = await this.getAccessToken(id);
-    if (!_accessToken) {
-      console.error("Error getting access token");
-      return;
-    }
-    const response = await fetch(
-      "https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2CcontentDetails%2Cstatus&broadcastStatus=active&broadcastType=all",
-      {
-        headers: {
-          Authorization: `Bearer ${_accessToken}`,
-          Accept: "application/json",
-        },
-      },
-    );
-    const liveStreamData = await response.json();
-    console.log(liveStreamData);
 
-    return sendResponse(liveStreamData, 200);
+    const _accessToken = await this.getAccessToken(id);
+    if (!_accessToken) return sendResponse("Authorization failed", 500);
+
+    const liveStreamData = await this.getLiveStreamData(_accessToken);
+
+    return sendResponse({ liveStreamData, accessToken: _accessToken }, 200);
   }
 
   async getAccessToken(id: string) {
     try {
       const accessToken = await this.redisClient.getAccessToken(id);
-      console.log("recived accessToken from redis", accessToken);
       if (accessToken) return accessToken;
 
       const oauth2Client = this.getOauth2Client();
 
       const refreshToken = await this.db.getRefreshToken(id);
-      console.log("recived refreshToken:", refreshToken);
 
       refreshToken &&
         oauth2Client.setCredentials({
@@ -97,7 +82,6 @@ export default class YoutubeAuthHandler {
 
       const _accessToken = await oauth2Client.getAccessToken();
 
-      console.log("new accessToken", _accessToken.res?.data.expiry_date);
       if (_accessToken.token && _accessToken.res?.data.expiry_date) {
         this.redisClient.addedAccessToken({
           id,
@@ -110,5 +94,19 @@ export default class YoutubeAuthHandler {
     } catch (error) {
       console.error("Error generating access token:", error);
     }
+  }
+
+  async getLiveStreamData(_accessToken: string) {
+    const response = await fetch(
+      "https://youtube.googleapis.com/youtube/v3/liveBroadcasts?part=snippet%2CcontentDetails%2Cstatus&broadcastStatus=active&broadcastType=all",
+      {
+        headers: {
+          Authorization: `Bearer ${_accessToken}`,
+          Accept: "application/json",
+        },
+      },
+    );
+
+    return response.json();
   }
 }

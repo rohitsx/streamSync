@@ -7,8 +7,9 @@ export default function ChatPopUp() {
   const params = useParams();
 
   const stareStream = useCallback(() => {
-    axios.post(`${import.meta.env.VITE_API}stare-stream`, {
+    axios.post(`${import.meta.env.VITE_API}start-stream`, {
       streamId: params.streamId,
+      accessToken: params.token,
     });
   }, []);
 

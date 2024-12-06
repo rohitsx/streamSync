@@ -23,7 +23,7 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/ytAuth" element={<YoutubeAuth />} />
             <Route path="/livestream" element={<LiveStream />} />
-            <Route path="/chat/:streamId" element={<ChatPopUp />} />
+            <Route path="/chat/:streamId/:token" element={<ChatPopUp />} />
             <Route path="/setting" element={<Setting />} />
             <Route path="/close" element={<CloseTab />} />
           </Routes>

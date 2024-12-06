@@ -14,7 +14,7 @@ export default function LiveStream() {
   const [isLoading, setIsLoading] = useState(true);
   const { getCookie } = useChromeCookies();
   const [streamId, setStreamId] = useState(null);
-  console.log(streamId);
+  const [accessToken, setAccessToken] = useState(null);
 
   const getYtStream = useCallback(async () => {
     try {
@@ -30,8 +30,11 @@ export default function LiveStream() {
         },
       );
 
-      const data = response.data.items[0];
+      const { accessToken, liveStreamData } = response.data;
+      const data = liveStreamData.items[0];
       setStreamId(data.id);
+      setAccessToken(accessToken);
+
       const thumbnail = data.snippet.thumbnails.high;
       const title = data.snippet.title;
       thumbnail
@@ -51,9 +54,13 @@ export default function LiveStream() {
 
   const handleStreamClick = useCallback(() => {
     if (ytThumbnail !== "Not Live" && ytThumbnail?.thumbnail && streamId) {
-      window.open(`index.html#/chat/${streamId}`, "newwin", "width=200px");
+      window.open(
+        `index.html#/chat/${streamId}/${accessToken}`,
+        "newwin",
+        "width=200px",
+      );
     }
-  }, [ytThumbnail, streamId]);
+  }, [ytThumbnail, streamId, accessToken]);
 
   return (
     <Layout>

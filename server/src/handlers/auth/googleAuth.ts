@@ -1,5 +1,5 @@
 import sendResponse, { invalidRequest } from "../defaultResponse.ts";
-import UserHandler from "../database/userHandler.ts";
+import UserHandler from "../database/dbUser.ts";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../../config/environment.ts";
 import { DbUser, User } from "../../types/user.ts";
