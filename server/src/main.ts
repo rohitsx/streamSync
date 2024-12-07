@@ -4,9 +4,12 @@ import sendResponse from "./handlers/defaultResponse.ts";
 import router from "./routes/index.ts";
 
 const handler = async (req: Request): Promise<Response> => {
-  return await router(req).catch(() =>
-    sendResponse("Internal Server Error", 500),
-  );
+  try {
+    return await router(req);
+  } catch (err) {
+    console.error("Error handling request:", err);
+    return sendResponse("Internal Server Error", 500);
+  }
 };
 
 connectToDatabase()

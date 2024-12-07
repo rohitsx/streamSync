@@ -1,43 +1,12 @@
-import { invalidRequest } from "../handlers/defaultResponse.ts";
-import googleAuthhandler from "../handlers/auth/googleAuth.ts";
-import youtubeAuthhandler from "../handlers/auth/youtubeAuth.ts";
-import addCorsHeaders from "../middleware/cors.ts";
-import streamHandler from "../handlers/stream.ts";
+import sendResponse from "../handlers/defaultResponse.ts";
+import routerHandler from "./routes.ts";
 
 export default function router(_req: Request) {
-  const googleAuth = new googleAuthhandler();
-  const youtubeAuth = new youtubeAuthhandler();
-  const stream = new streamHandler();
-  const routes = [
-    {
-      path: "/api/google-auth",
-      handler: () => googleAuth.auth(_req),
-    },
-    {
-      path: "/api/validate-token",
-      handler: () => googleAuth.validateToken(_req),
-    },
-    {
-      path: "/api/set-username",
-      handler: () => googleAuth.setUsername(_req),
-    },
-    {
-      path: "/api/youtube-auth",
-      handler: () => youtubeAuth.auth(_req),
-    },
-    {
-      path: "/api/get-yt-stream",
-      handler: () => youtubeAuth.getYtStream(_req),
-    },
-    {
-      path: "/api/start-stream",
-      handler: () => stream.startStream(_req),
-    },
-  ];
+  const request = new routerHandler();
 
-  return addCorsHeaders(_req, async () => {
-    const url = new URL(_req.url);
-    const route = routes.find(({ path }) => url.pathname === path);
-    return route ? await route.handler() : invalidRequest();
-  });
+  if (_req.headers.get("upgrade") != "websocket") return request.routes(_req);
+  if (_req.headers.get("upgrade") === "websocket") {
+    console.log("koki");
+    return sendResponse("Internal Server Error", 500);
+  } else return sendResponse("Internal Server Error", 500);
 }
