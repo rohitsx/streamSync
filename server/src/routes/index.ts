@@ -8,40 +8,36 @@ export default function router(_req: Request) {
   const googleAuth = new googleAuthhandler();
   const youtubeAuth = new youtubeAuthhandler();
   const stream = new streamHandler();
+  const routes = [
+    {
+      path: "/api/google-auth",
+      handler: () => googleAuth.auth(_req),
+    },
+    {
+      path: "/api/validate-token",
+      handler: () => googleAuth.validateToken(_req),
+    },
+    {
+      path: "/api/set-username",
+      handler: () => googleAuth.setUsername(_req),
+    },
+    {
+      path: "/api/youtube-auth",
+      handler: () => youtubeAuth.auth(_req),
+    },
+    {
+      path: "/api/get-yt-stream",
+      handler: () => youtubeAuth.getYtStream(_req),
+    },
+    {
+      path: "/api/start-stream",
+      handler: () => stream.startStream(_req),
+    },
+  ];
 
   return addCorsHeaders(_req, async () => {
     const url = new URL(_req.url);
-
-    let res: Response;
-
-    switch (url.pathname) {
-      case "/api/google-auth":
-        res = await googleAuth.auth(_req);
-        break;
-
-      case "/api/validate-token":
-        res = await googleAuth.validateToken(_req);
-        break;
-
-      case "/api/set-username":
-        res = await googleAuth.setUsername(_req);
-        break;
-
-      case "/api/youtube-auth":
-        res = await youtubeAuth.auth(_req);
-        break;
-
-      case "/api/get-yt-stream":
-        res = await youtubeAuth.getYtStream(_req);
-        break;
-
-      case "/api/start-stream":
-        res = await stream.startStream(_req);
-        break;
-
-      default:
-        res = invalidRequest();
-    }
-    return res;
+    const route = routes.find(({ path }) => url.pathname === path);
+    return route ? await route.handler() : invalidRequest();
   });
 }

@@ -10,3 +10,7 @@ export interface CreateRoomProps {
   socketId: string;
 }
 
+export interface RoutesProps {
+  path: string;
+  handler: () => Promise<Response>;
+}

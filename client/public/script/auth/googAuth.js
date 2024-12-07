@@ -25,6 +25,7 @@ export default function googleAuth(request, sendResponse) {
           },
           body: accessToken,
         });
+        console.log(response);
         const { token, user } = await response.json();
         chrome.cookies.set({
           url: request.host,

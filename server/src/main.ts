@@ -1,16 +1,13 @@
 import { connectToDatabase } from "./config/database.ts";
 import { connectToRedis } from "./config/redis.ts";
+import sendResponse from "./handlers/defaultResponse.ts";
 import router from "./routes/index.ts";
 
 const handler = async (req: Request): Promise<Response> => {
-  try {
-    return await router(req);
-  } catch (error) {
-    console.error("Request failed:", error);
-    return new Response("Internal Server Error", { status: 500 });
-  }
+  return await router(req).catch(() =>
+    sendResponse("Internal Server Error", 500),
+  );
 };
-
 
 connectToDatabase()
   .then(() => connectToRedis())
