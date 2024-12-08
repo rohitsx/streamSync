@@ -9,7 +9,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import YoutubeAuth from "./pages/auth/YoutubeAuth";
 import Setting from "./pages/Setting";
 import CloseTab from "./pages/closeTab";
-import LiveStream from "./pages/stream/LiveStream";
+import LiveStream from "./pages/stream/LiveStreamList";
 import ChatPopUp from "./pages/stream/ChatPopUp";
 
 const App: React.FC = () => {

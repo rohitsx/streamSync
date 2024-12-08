@@ -1,12 +1,10 @@
-import sendResponse from "../handlers/defaultResponse.ts";
-import routerHandler from "./routes.ts";
+import routerHandler from "./api.ts";
+import webSocket from "./webSocket.ts";
 
 export default function router(_req: Request) {
-  const request = new routerHandler();
+  const api = new routerHandler(_req);
+  const websocket = new webSocket(_req);
+  const reqType = _req.url.split("/")[3];
 
-  if (_req.headers.get("upgrade") != "websocket") return request.routes(_req);
-  if (_req.headers.get("upgrade") === "websocket") {
-    console.log("koki");
-    return sendResponse("Internal Server Error", 500);
-  } else return sendResponse("Internal Server Error", 500);
+  return reqType === "api" ? api.routes() : websocket.doSomething();
 }

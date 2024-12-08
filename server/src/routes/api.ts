@@ -6,39 +6,43 @@ import addCorsHeaders from "../middleware/cors.ts";
 import { RoutesProps } from "../types/types.ts";
 
 export default class routerHandler {
-  constructor() {}
-  async routes(_req: Request) {
+  _req: Request;
+  constructor(_req: Request) {
+    this._req = _req;
+  }
+  async routes() {
     const googleAuth = new googleAuthhandler();
     const youtubeAuth = new YoutubeAuthHandler();
     const stream = new streamHandler();
+
     const routes = [
       {
         path: "/api/google-auth",
-        handler: () => googleAuth.auth(_req),
+        handler: () => googleAuth.auth(this._req),
       },
       {
         path: "/api/validate-token",
-        handler: () => googleAuth.validateToken(_req),
+        handler: () => googleAuth.validateToken(this._req),
       },
       {
         path: "/api/set-username",
-        handler: () => googleAuth.setUsername(_req),
+        handler: () => googleAuth.setUsername(this._req),
       },
       {
         path: "/api/youtube-auth",
-        handler: () => youtubeAuth.auth(_req),
+        handler: () => youtubeAuth.auth(this._req),
       },
       {
         path: "/api/get-yt-stream",
-        handler: () => youtubeAuth.getYtStream(_req),
+        handler: () => youtubeAuth.getYtStream(this._req),
       },
       {
         path: "/api/start-stream",
-        handler: () => stream.startStream(_req),
+        handler: () => stream.startStream(this._req),
       },
     ];
 
-    return await this.handlerRoute(_req, routes);
+    return await this.handlerRoute(this._req, routes);
   }
 
   async handlerRoute(_req: Request, routes: RoutesProps[]) {
