@@ -6,5 +6,5 @@ export default function router(_req: Request) {
   const websocket = new webSocket(_req);
   const reqType = _req.url.split("/")[3];
 
-  return reqType === "api" ? api.routes() : websocket.doSomething();
+  return reqType === "api" ? api.routes() : websocket.routes();
 }

@@ -21,6 +21,7 @@ export default function LiveStream() {
       setIsLoading(true);
       const user = await getCookie({ name: "user" });
       if (!user) return;
+
       const id = JSON.parse(user.value).id;
 
       const response = await axios.get(
@@ -52,10 +53,16 @@ export default function LiveStream() {
     getYtStream();
   }, [getYtStream]);
 
-  const handleStreamClick = useCallback(() => {
-    if (ytThumbnail !== "Not Live" && ytThumbnail?.thumbnail && streamId) {
+  const handleStreamClick = useCallback(async () => {
+    const user = await getCookie({ name: "user" });
+    if (
+      ytThumbnail !== "Not Live" &&
+      ytThumbnail?.thumbnail &&
+      streamId &&
+      user
+    ) {
       window.open(
-        `index.html#/chat/${streamId}/${accessToken}`,
+        `index.html#/chat/${streamId}/${accessToken}/${JSON.parse(user.value).username}`,
         "newwin",
         "width=200px",
       );

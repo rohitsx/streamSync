@@ -5,12 +5,22 @@ export interface AddedAccessTokenProps {
 }
 
 export interface CreateRoomProps {
-  streamId: string;
-  accessToken: string;
-  socketId: string;
+  _req: Request;
+  socket: WebSocket;
+  response: Response;
 }
 
-export interface RoutesProps {
-  path: string;
-  handler: () => Promise<Response>;
+export interface ApiRoutesProps {
+  routes: { path: string; handler: () => Promise<Response> }[];
+}
+
+export interface WsRoutesProps {
+  socket: WebSocket;
+  routes: { path: string; handler: () => Response }[];
+}
+
+export interface DbRoomCreateProp {
+  streamId: string;
+  socketId: string;
+  username: string;
 }

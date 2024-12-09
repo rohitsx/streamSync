@@ -6,11 +6,6 @@ function Auth(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const nav = useNavigate();
 
-  const url = new URL(`${import.meta.env.VITE_API}google-auth`, location.href);
-  url.protocol = url.protocol.replace("http", "ws");
-  url.protocol = url.protocol.replace("api", "ws");
-  console.log(url.href);
-
   const handleGoogleSignup = async (): Promise<void> => {
     setIsLoading(true);
     chrome.runtime.sendMessage(
