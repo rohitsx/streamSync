@@ -21,6 +21,10 @@ export interface WsRoutesProps {
 
 export interface DbRoomCreateProp {
   streamId: string;
-  socketId: string;
+  socket:string;
   username: string;
+}
+
+export interface WsWithId extends WebSocket {
+  id: string;
 }

@@ -8,7 +8,12 @@ export default class dbRoom {
     this.collection = getDb().collection("room");
   }
 
-  create({ streamId, socketId, username }: DbRoomCreateProp) {
-    return this.collection.insertOne({ streamId, socketId, username });
+  create({ streamId, socket, username }: DbRoomCreateProp) {
+    return this.collection.insertOne({
+      username,
+      streamId,
+      socket,
+      users: [null],
+    });
   }
 }

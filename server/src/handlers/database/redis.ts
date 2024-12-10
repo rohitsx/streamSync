@@ -22,4 +22,5 @@ export default class RedisChase {
   async getAccessToken(id: string) {
     return await this.client.get(id);
   }
+
 }

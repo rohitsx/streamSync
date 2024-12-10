@@ -16,3 +16,5 @@ export interface ytThumbnail {
   };
   title: string;
 }
+
+export type WebSocketWithId = WebSocket & { username: string };
