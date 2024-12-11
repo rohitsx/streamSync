@@ -16,12 +16,13 @@ export interface ApiRoutesProps {
 
 export interface WsRoutesProps {
   socket: WebSocket;
-  routes: { path: string; handler: () => Response }[];
+  routes: { path: string; handler: () => void }[];
+  response: Response;
 }
 
 export interface DbRoomCreateProp {
   streamId: string;
-  socket:string;
+  socketId: string;
   username: string;
 }
 

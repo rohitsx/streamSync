@@ -20,12 +20,20 @@ export default class webSocket {
       },
     ];
 
-    return this.handleRoutes({ socket, routes });
+    return this.handleRoutes({ socket, routes, response });
   }
 
-  handleRoutes({ socket, routes }: WsRoutesProps) {
+  handleRoutes({
+    socket,
+    routes,
+  }: WsRoutesProps): Response | Promise<Response> {
     const url = new URL(this._req.url);
     const route = routes.find(({ path }) => url.pathname === path);
-    return route ? route.handler() : invalidRequest() && socket.close();
+
+    if (route) return route.handler();
+    else {
+      socket.close();
+      return invalidRequest();
+    }
   }
 }

@@ -1,12 +1,9 @@
 import { RedisClientType } from "redis";
 import getRedis from "../../config/redis.ts";
-import { AddedAccessTokenProps } from "../../types/types.ts";
+import { AddedAccessTokenProps, WsWithId } from "../../types/types.ts";
 
 export default class RedisChase {
-  private client: RedisClientType;
-  constructor() {
-    this.client = getRedis();
-  }
+  private client: RedisClientType = getRedis();
 
   async addedAccessToken({ id, token, ms }: AddedAccessTokenProps) {
     try {
@@ -23,4 +20,7 @@ export default class RedisChase {
     return await this.client.get(id);
   }
 
+  async addSocket({ id, socket }: { id: string; socket: WsWithId }) {
+    return await this.client.set(id, socket);
+  }
 }
