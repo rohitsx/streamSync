@@ -11,21 +11,14 @@ export interface CreateRoomProps {
 }
 
 export interface ApiRoutesProps {
-  routes: { path: string; handler: () => Promise<Response> }[];
-}
-
-export interface WsRoutesProps {
-  socket: WebSocket;
-  routes: { path: string; handler: () => void }[];
-  response: Response;
+  routes: { path: string; handler: () => Promise<Response> | Response }[];
 }
 
 export interface DbRoomCreateProp {
   streamId: string;
-  socketId: string;
   username: string;
 }
 
-export interface WsWithId extends WebSocket {
-  id: string;
+export interface WsWithUsername extends WebSocket {
+  username: string;
 }

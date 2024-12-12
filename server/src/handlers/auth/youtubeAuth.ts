@@ -109,4 +109,9 @@ export default class YoutubeAuthHandler {
 
     return response.json();
   }
+
+  async validateAccessToken(_accessToken: string, streamId: string) {
+    const data = await this.getLiveStreamData(_accessToken);
+    if (data.items[0].id !== streamId) throw new Error("Invalid token");
+  }
 }

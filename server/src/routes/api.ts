@@ -1,6 +1,8 @@
+import path from "path";
 import googleAuthhandler from "../handlers/auth/googleAuth.ts";
 import YoutubeAuthHandler from "../handlers/auth/youtubeAuth.ts";
 import { invalidRequest } from "../handlers/defaultResponse.ts";
+import streamRoom from "../handlers/stream/room.ts";
 import addCorsHeaders from "../middleware/cors.ts";
 import { ApiRoutesProps } from "../types/types.ts";
 
@@ -9,9 +11,11 @@ export default class routerHandler {
   constructor(_req: Request) {
     this._req = _req;
   }
+
   async routes() {
     const googleAuth = new googleAuthhandler();
     const youtubeAuth = new YoutubeAuthHandler();
+    const room = new streamRoom({ _req: this._req });
 
     const routes = [
       {
@@ -33,6 +37,10 @@ export default class routerHandler {
       {
         path: "/api/get-yt-stream",
         handler: () => youtubeAuth.getYtStream(this._req),
+      },
+      {
+        path: "/api/delete-room",
+        hanler: () => room.delete(),
       },
     ];
 

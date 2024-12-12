@@ -1,6 +1,6 @@
 import { invalidRequest } from "../handlers/defaultResponse.ts";
 import streamRoom from "../handlers/stream/room.ts";
-import { WsRoutesProps } from "../types/types.ts";
+import { ApiRoutesProps } from "../types/types.ts";
 
 export default class webSocket {
   _req: Request;
@@ -9,9 +9,7 @@ export default class webSocket {
   }
 
   routes() {
-    const { socket, response } = Deno.upgradeWebSocket(this._req);
-
-    const room = new streamRoom({ _req: this._req, socket, response });
+    const room = new streamRoom({ _req: this._req });
 
     const routes = [
       {
@@ -20,19 +18,15 @@ export default class webSocket {
       },
     ];
 
-    return this.handleRoutes({ socket, routes, response });
+    return this.handleRoutes({ routes });
   }
 
-  handleRoutes({
-    socket,
-    routes,
-  }: WsRoutesProps): Response | Promise<Response> {
+  handleRoutes({ routes }: ApiRoutesProps): Response | Promise<Response> {
     const url = new URL(this._req.url);
     const route = routes.find(({ path }) => url.pathname === path);
 
     if (route) return route.handler();
     else {
-      socket.close();
       return invalidRequest();
     }
   }
