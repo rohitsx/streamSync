@@ -29,12 +29,25 @@
     "type": "module"
   },
   "minimum_chrome_version": "92",
-  "permissions": ["tabs", "identity", "cookies"],
+  "permissions": ["tabs", "identity", "cookies", "scripting"],
   "host_permissions": ["https://localhost:8000/api/*"],
   "web_accessible_resources": [
     {
       "resources": ["index.html"],
       "matches": ["*://*/*"]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://blank.org/"],
+      "js": ["jquery.js", "content-script.js"]
+    }
+  ],
+
+  "content_scripts": [
+    {
+      "matches": ["https://blank.org/"], // Match only blank.org
+      "js": ["content.js"] // Inject the content script
     }
   ]
 }

@@ -1,4 +1,3 @@
-import path from "path";
 import googleAuthhandler from "../handlers/auth/googleAuth.ts";
 import YoutubeAuthHandler from "../handlers/auth/youtubeAuth.ts";
 import { invalidRequest } from "../handlers/defaultResponse.ts";
@@ -40,7 +39,7 @@ export default class routerHandler {
       },
       {
         path: "/api/delete-room",
-        hanler: () => room.delete(),
+        handler: () => room.delete(),
       },
     ];
 

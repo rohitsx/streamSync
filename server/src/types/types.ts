@@ -22,3 +22,8 @@ export interface DbRoomCreateProp {
 export interface WsWithUsername extends WebSocket {
   username: string;
 }
+
+export interface WsMesageProps {
+  socket: WsWithUsername;
+  response: Response;
+}

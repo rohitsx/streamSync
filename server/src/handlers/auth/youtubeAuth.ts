@@ -43,6 +43,7 @@ export default class YoutubeAuthHandler {
           ms: tokens.expiry_date,
         });
       }
+      console.dir("ytauth successful");
 
       return sendResponse("Authorization successful", 200);
     } catch (error) {

@@ -41,7 +41,6 @@ export default class UserHandler {
   }
 
   async setYtRefreshToken(id: string, ytRefreshToken: string) {
-    console.log(ytRefreshToken);
     return await this.collection.updateOne(
       { id },
       { $set: { ytRefreshToken: ytRefreshToken } },

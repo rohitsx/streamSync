@@ -8,15 +8,15 @@ export default class dbRoom {
     this.collection = getDb().collection("room");
   }
 
-  create({ streamId, username }: DbRoomCreateProp) {
-    return this.collection.insertOne({
+  async create({ streamId, username }: DbRoomCreateProp) {
+    return await this.collection.insertOne({
       streamId,
       username,
       users: [null],
     });
   }
 
-  detete(streamId: string) {
-    return this.collection.deleteOne({ streamId });
+  async detete(streamId: string) {
+    return await this.collection.deleteOne({ streamId });
   }
 }

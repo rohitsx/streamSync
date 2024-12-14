@@ -10,8 +10,6 @@ export default function ytAuth(request, sendResponse) {
     },
     async (responseUrl) => {
       try {
-        console.log(responseUrl);
-
         const urlObj = new URL(responseUrl);
         const authCode = urlObj.searchParams.get("code");
 

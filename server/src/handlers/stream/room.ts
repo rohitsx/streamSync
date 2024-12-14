@@ -3,8 +3,7 @@ import YoutubeAuthHandler from "../auth/youtubeAuth.ts";
 import dbRoom from "../database/dbRoom.ts";
 import sendResponse from "../defaultResponse.ts";
 import { invalidRequest } from "../defaultResponse.ts";
-
-const userWsObject = new Map<string, WsWithUsername>();
+import handleWsMessage, { userWsObject } from "./wsMessage.ts";
 
 export default class streamRoom {
   private dbRoom: dbRoom = new dbRoom();
@@ -15,11 +14,7 @@ export default class streamRoom {
   }
 
   create(): Promise<Response> | Response {
-    const ytAuth = new YoutubeAuthHandler();
-    const { socket, response } = Deno.upgradeWebSocket(this._req);
-    const ws = socket as WsWithUsername;
     const url = new URL(this._req.url);
-
     const {
       streamid: streamId,
       username,
@@ -27,6 +22,8 @@ export default class streamRoom {
     } = Object.fromEntries(url.searchParams.entries());
 
     if (!streamId || !username || !accessToken) return invalidRequest();
+
+    const ytAuth = new YoutubeAuthHandler();
 
     return ytAuth
       .validateAccessToken(accessToken, streamId)
@@ -36,21 +33,29 @@ export default class streamRoom {
           username: username,
         });
 
+        const { socket, response } = Deno.upgradeWebSocket(this._req);
+        const ws = socket as WsWithUsername;
         ws.username = username;
         userWsObject.set(username, ws);
-        return response;
+        return handleWsMessage({ socket: ws, response });
       })
       .catch(() => sendResponse("Invalid token", 500));
   }
 
   async delete(): Promise<Response> {
     if (this._req.method !== "POST") return invalidRequest();
+    try {
+      const { username } = await this._req.json();
+      console.dir(username);
+      const socket = userWsObject.get(username);
+      socket?.close();
 
-    const { username } = await this._req.json();
-    const socket = userWsObject.get(username);
-    socket?.close();
+      await this.dbRoom.detete(username);
 
-    userWsObject.delete(username);
-    return sendResponse("Room deleted", 200);
+      userWsObject.delete(username);
+      return sendResponse("Room deleted", 200);
+    } catch {
+      return sendResponse("Room not found", 404);
+    }
   }
 }
