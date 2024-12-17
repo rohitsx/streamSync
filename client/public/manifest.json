@@ -1,18 +1,3 @@
-//--------------------------------guide----------------------------------
-
-// content_script: Handles Chrome web page DOM stuff, not directly related to the extension. Requires background_script to communicate with the extension.
-
-// background_script: Acts as an event listener and facilitates communication between content_script and the extension.
-
-// messaging: Use chrome.runtime.sendMessage, chrome.runtime.onMessage, and similar methods to communicate between background_script, content_script, and popup.js. Messaging reduces the complexity of directly adding script tags for content_script or background_script.
-
-// manifest.json: Describes the extension and defines permissions, scripts, and other metadata.
-
-// popup.html: UI related to the Chrome extension's popup.
-
-// popup.js: JavaScript for the popup.html page, with access to all Chrome extension APIs. Can communicate with background_script and content_script using messaging.
-//--------------------------------guide----------------------------------
-
 {
   "version": "1.0.0",
   "manifest_version": 3,
@@ -37,17 +22,12 @@
       "matches": ["*://*/*"]
     }
   ],
-  "content_scripts": [
-    {
-      "matches": ["https://blank.org/"],
-      "js": ["jquery.js", "content-script.js"]
-    }
-  ],
 
   "content_scripts": [
     {
-      "matches": ["https://blank.org/"], // Match only blank.org
-      "js": ["content.js"] // Inject the content script
+      "matches": ["https://blank.org/"],
+      "js": ["assets/content.js"],
+      "type": "module"
     }
   ]
 }
