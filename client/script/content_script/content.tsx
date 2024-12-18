@@ -1,12 +1,9 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from '@/components/App';
+import React from "react";
 
-// Create container for content script
-const container = document.createElement('div');
-container.id = 'my-extension-container';
-document.body.appendChild(container);
+import { createRoot } from "react-dom/client";
 
-// Render React app
-const root = createRoot(container);
-root.render(React.createElement(App));
+const root = document.createElement("div");
+root.id = "crx-root";
+document.body.append(root);
+
+createRoot(document.getElementById("crx-root")!).render(<h1>hellow</h1>);

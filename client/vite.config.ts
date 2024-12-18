@@ -20,6 +20,12 @@ const manifest = defineManifest({
   },
   permissions: ["tabs", "identity", "cookies", "scripting"],
   host_permissions: ["https://localhost:8000/api/*"],
+  content_scripts: [
+	  {
+		  matches: ["<all_urls>"],
+		  js: ["script/content_script/content.tsx"]
+	  }
+  ]
 });
 
 export default defineConfig({
