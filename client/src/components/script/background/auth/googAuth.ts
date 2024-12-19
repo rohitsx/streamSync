@@ -1,7 +1,16 @@
-import makeUrl from "./makeUrl.js";
+import makeUrl from "./makeUrl";
 
-export default function googleAuth(request, sendResponse) {
-  const scopes = [
+
+interface AuthResponse {
+  token: string;
+  user: any; // Replace 'any' with specific user type if available
+}
+
+export default function googleAuth(
+  request: any,
+  sendResponse: (response: { status: string }) => void
+): void {
+  const scopes: string[] = [
     "https://www.googleapis.com/auth/userinfo.profile",
     "https://www.googleapis.com/auth/userinfo.email",
   ];
@@ -12,12 +21,16 @@ export default function googleAuth(request, sendResponse) {
       url: url,
       interactive: true,
     },
-    async (responseUrl) => {
+    async (responseUrl?: string) => {
       try {
+        if (!responseUrl) throw new Error("No response URL");
+        
         const urlParams = new URLSearchParams(
-          new URL(responseUrl).hash.substring(1),
+          new URL(responseUrl).hash.substring(1)
         );
         const accessToken = urlParams.get("access_token");
+        if (!accessToken) throw new Error("No access token");
+
         const response = await fetch(request.api, {
           method: "POST",
           headers: {
@@ -25,7 +38,9 @@ export default function googleAuth(request, sendResponse) {
           },
           body: accessToken,
         });
-        const { token, user } = await response.json();
+
+        const { token, user }: AuthResponse = await response.json();
+
         chrome.cookies.set({
           url: request.host,
           name: "sessionToken",
@@ -40,9 +55,9 @@ export default function googleAuth(request, sendResponse) {
 
         sendResponse({ status: "success" });
       } catch (e) {
-        console.log(e);
+        console.error(e);
         sendResponse({ status: "error" });
       }
-    },
+    }
   );
 }

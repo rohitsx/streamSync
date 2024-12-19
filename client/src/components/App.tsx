@@ -2,7 +2,7 @@ import React from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Username from "./pages/auth/Username";
 import Home from "./pages/Home";
-import "./App.css";
+import "@shared/style.css";
 import Auth from "./pages/auth/Auth";
 import YoutubeAuth from "./pages/auth/YoutubeAuth";
 import Setting from "./pages/Setting";

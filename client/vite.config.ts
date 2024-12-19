@@ -15,17 +15,17 @@ const manifest = defineManifest({
     "128": "src/assets/icon128.png",
   },
   background: {
-    service_worker: "script/background/bg.ts",
+    service_worker: "src/components/script/background/bg.ts",
     type: "module",
   },
   permissions: ["tabs", "identity", "cookies", "scripting"],
   host_permissions: ["https://localhost:8000/api/*"],
   content_scripts: [
-	  {
-		  matches: ["<all_urls>"],
-		  js: ["script/content_script/content.tsx"]
-	  }
-  ]
+    {
+      matches: ["<all_urls>"],
+      js: ["src/components/script/content_script/Content.tsx"],
+    },
+  ],
 });
 
 export default defineConfig({
@@ -33,7 +33,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@shared": path.resolve(__dirname, "./script/shared"),
+      "@comp": path.resolve(__dirname, "./src/components"),
+      "@shared": path.resolve(__dirname, "./src/components/shared"),
     },
   },
   server: {
