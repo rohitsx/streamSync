@@ -1,5 +1,4 @@
 import { Background } from "@/layout/Layout";
-import axios from "axios";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 
@@ -16,20 +15,6 @@ export default function ChatPopUp() {
       ws.send("Hii");
     };
   }, [ws]);
-
-  useEffect(() => {
-    const deleteRoom = () => {
-      ws.close();
-      axios.post(`${import.meta.env.VITE_API}delete-room`, {
-        username: params.username,
-      });
-    };
-
-    onbeforeunload = deleteRoom;
-    return () => {
-      deleteRoom();
-    };
-  });
 
   return (
     <Background>

@@ -38,8 +38,8 @@ export default class routerHandler {
         handler: () => youtubeAuth.getYtStream(this._req),
       },
       {
-        path: "/api/delete-room",
-        handler: () => room.delete(),
+        path: "/ws/create-room",
+        handler: () => room.create(),
       },
     ];
 

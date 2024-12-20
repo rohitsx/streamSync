@@ -1,20 +1,28 @@
-import { WsMesageProps, WsWithUsername } from "../../types/types.ts";
+import { WsWithUsername } from "../../types/types.ts";
+import dbRoom from "../database/dbRoom.ts";
 
 export const userWsObject = new Map<string, WsWithUsername>();
 
-export default function handleWsMessage({ socket, response }: WsMesageProps) {
-  socket.onopen = () => {
-    console.log("CONNECTED");
-  };
+export default class handleWsMessage {
+  private Socket: WsWithUsername;
 
-  socket.onclose = () => {
-    console.log("WebSocket connection closed.");
-    userWsObject.delete(socket.username);
-  };
+  private room = new dbRoom();
+  constructor(socket: WsWithUsername) {
+    this.Socket = socket;
+  }
 
-  socket.onmessage = (event) => {
+  async deleteRoom() {
+    try {
+      const k = await this.room.detete(this.Socket.username);
+      console.log("WebSocket connection closed.", k);
+      userWsObject.delete(this.Socket.username);
+    } catch {
+      console.log("error");
+    }
+  }
+
+  onmessage(event: MessageEvent) {
     console.log(`RECEIVED: ${event.data}`);
-    socket.send("pong");
-  };
-  return response;
+    this.Socket.send("pong");
+  }
 }
