@@ -1,14 +1,14 @@
 import React from "react";
+import "@/style.css";
 import { HashRouter, Route, Routes } from "react-router-dom";
-import Username from "./pages/auth/Username";
+import Username from "./auth/Username";
 import Home from "./pages/Home";
-import "@shared/style.css";
-import Auth from "./pages/auth/Auth";
-import YoutubeAuth from "./pages/auth/YoutubeAuth";
+import Auth from "./auth/Auth";
+import YoutubeAuth from "./auth/YoutubeAuth";
 import Setting from "./pages/Setting";
 import CloseTab from "./pages/closeTab";
-import LiveStream from "./pages/stream/LiveStreamList";
-import ChatPopUp from "./pages/stream/ChatPopUp";
+import LiveStream from "./stream/LiveStreamList";
+import ChatPopUp from "./stream/ChatPopUp";
 
 const App: React.FC = () => {
   return (

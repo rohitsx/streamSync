@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import Layout from "@/components/layout/Layout";
-import { ytThumbnail } from "@/types/api";
+import Layout from "@/layout/Layout";
+import { ytThumbnail } from "@/types/api"
 import useChromeCookies from "@/hook/useChromeCookies";
 import {
   GoBackBtn,
   LoadingLayout,
   UnActiveLive,
-} from "@/components/layout/LiveSteamLayout";
+} from "@/layout/LiveSteamLayout";
 
 export default function LiveStream() {
   const [ytThumbnail, setYtThumbnail] = useState<ytThumbnail | "Not Live">();

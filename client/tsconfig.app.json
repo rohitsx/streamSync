@@ -22,9 +22,10 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/shared/*"],
+      "@background/*": ["./src/background/*"],
+      "@popup/*": ["./src/popup/*"],
+      "@/content*": ["./src/content/*"]
     }
   },
   "include": ["src"]

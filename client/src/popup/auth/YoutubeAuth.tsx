@@ -1,4 +1,4 @@
-import Layout, { YouTubeButton } from "@/components/layout/Layout";
+import Layout, { YouTubeButton } from "@/layout/Layout";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FAQSection from "./YoutubeAuthFAQ";

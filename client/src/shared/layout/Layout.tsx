@@ -1,4 +1,4 @@
-import Logo from "@/assets/logo";
+import Logo from "@/utils/logo";
 import { ReactNode, useMemo } from "react";
 import clsx from "clsx";
 import { GoogleButtonProps } from "@/types/landing";

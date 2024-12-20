@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "@/assets/logo";
-import Layout from "../layout/Layout";
+import Logo from "@/utils/logo";
+import Layout from "../../shared/layout/Layout";
 import { ChevronRight, Settings, Play } from "lucide-react";
 import useAuthRedirect from "@/hook/useAuthRedirect";
 import useChromeCookies from "@/hook/useChromeCookies";

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { LandingLayout } from "@/components/layout/Layout";
+import { LandingLayout } from "@/layout/Layout";
 import { ArrowRight } from "lucide-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import useChromeCookies from "@/hook/useChromeCookies";
+import useChromeCookies from "@/hook/useChromeCookies"
 
 const UsernameSelection = () => {
   const [username, setUsername] = useState("");

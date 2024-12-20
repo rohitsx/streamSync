@@ -1,4 +1,4 @@
-import Layout from "../layout/Layout";
+import Layout from "@/layout/Layout";
 import animeGif from "@/assets/anime.gif";
 
 export default function CloseTab() {

@@ -1,4 +1,4 @@
-import { Background } from "@/components/layout/Layout";
+import { Background } from "@/layout/Layout";
 import axios from "axios";
 import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
