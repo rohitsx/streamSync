@@ -1,10 +1,10 @@
-import wsRoutes from "../../routes/wsRoutes.ts";
 import { WsWithUsername } from "../../types/types.ts";
 import YoutubeAuthHandler from "../auth/youtubeAuth.ts";
 import dbRoom from "../database/dbRoom.ts";
 import sendResponse from "../defaultResponse.ts";
 import { invalidRequest } from "../defaultResponse.ts";
-import { userWsObject } from "./wsMessage.ts";
+import wsHandler from "./wshandler.ts";
+import { userWsObject } from "./wshelper.ts";
 
 export default class streamRoom {
   private dbRoom: dbRoom = new dbRoom();
@@ -38,8 +38,7 @@ export default class streamRoom {
         const ws = socket as WsWithUsername;
         ws.username = username;
         userWsObject.set(username, ws);
-		console.dir(response)
-        return wsRoutes({ socket: ws, response });
+        return wsHandler({ socket: ws, response });
       })
       .catch(() => sendResponse("Invalid token", 500));
   }

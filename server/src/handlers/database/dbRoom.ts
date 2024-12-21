@@ -16,8 +16,7 @@ export default class dbRoom {
     });
   }
 
-  async detete(streamId: string) {
-	  console.log(streamId)
-    return await this.collection.deleteOne({ streamId });
+  async detete(username: string) {
+    return await this.collection.deleteOne({ username });
   }
 }

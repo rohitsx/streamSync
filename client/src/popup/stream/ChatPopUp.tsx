@@ -11,9 +11,7 @@ export default function ChatPopUp() {
   }, []);
 
   useEffect(() => {
-    ws.onopen = () => {
-      ws.send("Hii");
-    };
+    ws.onopen = () => {};
   }, [ws]);
 
   return (

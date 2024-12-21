@@ -3,19 +3,19 @@ import dbRoom from "../database/dbRoom.ts";
 
 export const userWsObject = new Map<string, WsWithUsername>();
 
-export default class handleWsMessage {
-  private Socket: WsWithUsername;
+export default class wsHelper {
+  private _socket: WsWithUsername;
 
   private room = new dbRoom();
   constructor(socket: WsWithUsername) {
-    this.Socket = socket;
+    this._socket = socket;
   }
 
   async deleteRoom() {
     try {
-      const k = await this.room.detete(this.Socket.username);
+      const k = await this.room.detete(this._socket.username);
       console.log("WebSocket connection closed.", k);
-      userWsObject.delete(this.Socket.username);
+      userWsObject.delete(this._socket.username);
     } catch {
       console.log("error");
     }
@@ -23,6 +23,6 @@ export default class handleWsMessage {
 
   onmessage(event: MessageEvent) {
     console.log(`RECEIVED: ${event.data}`);
-    this.Socket.send("pong");
+    this._socket.send("pong");
   }
 }

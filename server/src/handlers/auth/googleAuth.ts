@@ -28,11 +28,9 @@ export default class googleAuthhandler {
   }
 
   async sendSessionToken(user: User): Promise<Response> {
-    console.log("this one is working");
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
       expiresIn: "30d",
     });
-    console.log("token:", token);
     const getUser: DbUser | null = await this.db.getUser(user.id);
     const username_Require = (user: DbUser) => {
       return sendResponse(
