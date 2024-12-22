@@ -19,6 +19,7 @@
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@types/react-cookies": "^0.1.4",
+    "@types/youtube": "^0.1.0",
     "axios": "^1.7.4",
     "buffer": "^6.0.3",
     "class-variance-authority": "^0.7.0",

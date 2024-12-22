@@ -1,23 +1,25 @@
+import { MessageRequest } from "@/types/bgType";
 import googAuth from "./auth/googAuth";
 import ytAuth from "./auth/ytAuth";
+import urlListener from "./urlListener/checkIfLiveStream.js";
 
-chrome.runtime.onMessage.addListener((
-  request: {
-    action: string;
-    clientId?: string;
-    api?: string;
-    host?: string;
-    id?: string;
+chrome.runtime.onMessage.addListener(
+  (
+    request: MessageRequest,
+    _sender: chrome.runtime.MessageSender,
+    sendResponse: (response: { status?: string; success?: boolean }) => void,
+  ) => {
+    if (request.action === "googleLogin") {
+      googAuth(request, sendResponse);
+      return true;
+    }
+    if (request.action === "youtubeAuth") {
+      ytAuth(request, sendResponse);
+      return true;
+    }
   },
-  _sender: chrome.runtime.MessageSender,
-  sendResponse: (response: { status?: string; success?: boolean }) => void
-) => {
-  if (request.action === "googleLogin") {
-    googAuth(request, sendResponse);
-    return true;
-  }
-  if (request.action === "youtubeAuth") {
-    ytAuth(request, sendResponse);
-    return true;
-  }
+);
+
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  urlListener({ tabId, changeInfo, tab });
 });

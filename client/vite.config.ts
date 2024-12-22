@@ -19,8 +19,15 @@ const manifest = defineManifest({
     service_worker: "src/background/bg.ts",
     type: "module",
   },
-  permissions: ["tabs", "identity", "cookies", "scripting"],
-  host_permissions: ["https://localhost:8000/api/*"],
+  permissions: [
+    "tabs",
+    "identity",
+    "cookies",
+    "scripting",
+    "activeTab",
+    "webRequest",
+  ],
+  host_permissions: ["https://localhost:8000/api/*", "https://*.youtube.com/*"],
   content_scripts: [
     {
       matches: ["https://blank.org/*"],
