@@ -1,5 +1,4 @@
 import React from "react";
-import "@/style.css";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Username from "./auth/Username";
 import Home from "./pages/Home";

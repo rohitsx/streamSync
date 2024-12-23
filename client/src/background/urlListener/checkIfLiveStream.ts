@@ -32,7 +32,7 @@ export default function urlListener({
       chrome.scripting
         .executeScript({
           target: { tabId },
-          files: [" ./assests/ContentMain.tsx-DmGU-Ckn.js"],
+          files: ["src/content_script/ContentMain.tsx-loader.js"],
         })
         .then(() => console.log("injected script file"));
     };

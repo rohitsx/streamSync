@@ -2,8 +2,17 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "@/style.css";
 
-const root = document.createElement("div");
-root.id = "crx-root";
-document.body.append(root);
+function Main() {
+  const chatContainer = document.querySelector("#chat-container");
+  if (!chatContainer) {
+    throw new Error("Chat container not found");
+  }
 
-createRoot(document.getElementById("crx-root")!).render(<App />);
+  const appContainer = document.createElement("div");
+  appContainer.id = "crx-root";
+  chatContainer.parentNode?.insertBefore(appContainer, chatContainer);
+
+  createRoot(appContainer).render(<App />);
+}
+
+setTimeout(Main, 800)

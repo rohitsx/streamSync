@@ -1,5 +1,5 @@
 export interface MessageRequest {
-  action: "googleLogin" | "youtubeAuth" | "isLive";
+  action: "googleLogin" | "youtubeAuth" | "addChatBox";
   clientId?: string;
   api?: string;
   host?: string;

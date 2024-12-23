@@ -30,6 +30,7 @@ const manifest = defineManifest({
   host_permissions: ["https://localhost:8000/api/*", "https://*.youtube.com/*"],
   content_scripts: [
     {
+      run_at: "document_end",
       matches: ["https://blank.org/*"],
       js: ["src/content_script/ContentMain.tsx"],
     },
