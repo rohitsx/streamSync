@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Send, Settings } from "lucide-react";
 
 export default function ChatBox() {
+	console.log("working")
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -33,30 +34,28 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center p-3 border-b border-gray-700">
-        <h1 className="text-gray-100 font-bold text-xl">Stream Chat</h1>
+        <h1 className="text-gray-100 font-bold text-4xl">Stream Chat</h1>
         <Settings className="w-6 h-6 text-gray-400 hover:text-gray-200 cursor-pointer" />
       </div>
-
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
         {messages.map((msg) => (
           <div key={msg.id} className="animate-fade-in">
             <div className="flex items-start space-x-2">
-              <span className="text-indigo-400 font-medium text-sm">
+              <span className="text-indigo-400 font-medium text-xl">
                 {msg.user}
               </span>
-              <span className="text-gray-400 text-xs mt-0.5">
+              <span className="text-gray-400 text-lg mt-0.5">
                 {msg.timestamp}
               </span>
             </div>
-            <p className="text-gray-200 text-base ml-1">{msg.message}</p>
+            <p className="text-gray-200 text-xl ml-1">{msg.message}</p>
           </div>
         ))}
       </div>
-
       {/* Input */}
       <form onSubmit={handleSubmit} className="p-3 border-t border-gray-700">
         <div className="flex space-x-2">
@@ -64,7 +63,7 @@ export default function ChatBox() {
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            className="flex-1 bg-gray-700 text-gray-100 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-base"
+            className="flex-1 bg-gray-700 text-gray-100 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xl"
             placeholder="Type a message..."
           />
           <button

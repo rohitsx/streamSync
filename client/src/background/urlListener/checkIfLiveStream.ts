@@ -1,5 +1,7 @@
 import { UrlListenerProp } from "@/types/bgType";
 
+let currectUrl: string | null = null;
+
 export default function urlListener({
   tabId,
   changeInfo,
@@ -23,18 +25,24 @@ export default function urlListener({
 
   if (
     changeInfo.status === "complete" &&
-    tab.url?.includes("youtube.com/watch")
+    tab.url?.includes("youtube.com/watch") && tabId
   ) {
     const fetchData = async () => {
+      if (currectUrl === tab.url) return;
       const isLive = await checkIfLiveStream();
+      tab.url && (currectUrl = tab.url);
 
-      if (!isLive || !tabId) return false;
-      chrome.scripting
-        .executeScript({
+      console.log(currectUrl, isLive);
+      isLive
+        ? chrome.scripting
+          .executeScript({
+            target: { tabId },
+            files: ["src/content_script/ContentMain.tsx-loader.js"],
+          })
+        : chrome.scripting.executeScript({
           target: { tabId },
-          files: ["src/content_script/ContentMain.tsx-loader.js"],
-        })
-        .then(() => console.log("injected script file"));
+          func: () => document.querySelector("#crx-root")?.remove(),
+        });
     };
     fetchData();
   }
