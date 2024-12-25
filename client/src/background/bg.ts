@@ -20,6 +20,6 @@ chrome.runtime.onMessage.addListener(
   },
 );
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  urlListener({ tabId, changeInfo, tab });
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  await urlListener({ tabId, changeInfo, tab });
 });
