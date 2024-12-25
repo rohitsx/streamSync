@@ -2,9 +2,20 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import styleSheet from "@/style.css?inline"; // Make sure your bundler supports this import
 
+chrome.runtime.onMessage.addListener(function (request) {
+  if (request && request.type === "page-rendered") {
+    const element = document.querySelector("#crx-root");
+    !element && Main();
+  }
+  if (request && request.type === "remove-render") {
+    console.log("remove render");
+    document.querySelector("#crx-root")?.remove();
+  }
+});
+
 function Main() {
   const chatContainer = document.querySelector("#secondary-inner");
-  if (!chatContainer) throw new Error("Chat container not found");
+  if (!chatContainer) throw new Error("secondary-inner not found");
 
   const appContainer = document.createElement("div");
   const shadowHost = document.createElement("div");
@@ -22,5 +33,3 @@ function Main() {
 
   createRoot(appContainer).render(<App />);
 }
-
-Main()

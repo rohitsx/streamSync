@@ -16,8 +16,7 @@ export type MessageHandler = (
   sendResponse: (response: MessageResponse) => void,
 ) => void;
 
-export interface UrlListenerProp {
+export interface handleContentScriptLoadingProp {
   tabId?: number;
-  changeInfo: chrome.tabs.TabChangeInfo;
   tab: chrome.tabs.Tab;
 }

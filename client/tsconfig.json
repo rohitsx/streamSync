@@ -8,7 +8,11 @@
     "types": ["chrome"],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["popup/*"]
+      "@/*": ["popup/*"],
+      "@popup/*": ["src/popup/*"],
+      "@background/*": ["src/background/*"],
+      "@content/*": ["src/content/*"],
+      "@shared/*": ["src/shared/*"]
     }
   }
 }

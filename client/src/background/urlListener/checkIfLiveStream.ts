@@ -1,27 +1,13 @@
-import { UrlListenerProp } from "@/types/bgType";
-import checkIfLiveStream from "./checkLiveHelper";
-
-export default async function urlListener({
-  tabId,
-  changeInfo,
-  tab,
-}: UrlListenerProp) {
-  if (
-    changeInfo.status === "complete" &&
-    tab.url?.includes("youtube.com/watch") && tabId
-  ) {
-    const url = tab.url?.toString();
-    const isLive = await checkIfLiveStream(url);
-    console.log("isLive", isLive, "url", url);
-    isLive
-      ? chrome.scripting
-        .executeScript({
-          target: { tabId },
-          files: ["src/content_script/ContentMain.tsx-loader.js"],
-        })
-      : chrome.scripting.executeScript({
-        target: { tabId },
-        func: () => document.querySelector("#crx-root")?.remove(),
-      });
+export default async function checkIfLiveStream(url: string) {
+  try {
+    const res = await fetch(url);
+    const html = await res.text();
+    const isLive = html.includes(
+      '<meta itemprop="isLiveBroadcast" content="True">',
+    );
+    return isLive;
+  } catch (error) {
+    console.error("Error fetching the URL:", error);
+    return false;
   }
 }

@@ -26,12 +26,13 @@ const manifest = defineManifest({
     "scripting",
     "activeTab",
     "webRequest",
+    "webNavigation",
   ],
   host_permissions: ["https://localhost:8000/api/*", "https://*.youtube.com/*"],
   content_scripts: [
     {
       run_at: "document_end",
-      matches: ["https://blank.org/*"],
+      matches: [ "https://www.youtube.com/watch?v=*"],
       js: ["src/content_script/ContentMain.tsx"],
     },
   ],

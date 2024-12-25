@@ -1,7 +1,7 @@
 import { MessageRequest } from "@/types/bgType";
 import googAuth from "./auth/googAuth";
 import ytAuth from "./auth/ytAuth";
-import urlListener from "./urlListener/checkIfLiveStream.js";
+import handleContentScriptLoading from "./urlListener/handleContentScriptLoading";
 
 chrome.runtime.onMessage.addListener(
   (
@@ -20,6 +20,8 @@ chrome.runtime.onMessage.addListener(
   },
 );
 
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-  await urlListener({ tabId, changeInfo, tab });
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === "complete") {
+    handleContentScriptLoading({ tab, tabId });
+  }
 });
