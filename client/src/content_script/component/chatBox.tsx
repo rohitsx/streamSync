@@ -31,8 +31,8 @@ export default function ChatBox() {
     <div className="h-101  ">
       <div className="max-w-4xl mx-auto h-100 rounded-xl bg-gradient-to-b from-gray-900 to-gray-800 border border-gray-700 bg-gray-850 shadow-xl overflow-hidden">
         <div className="w-full h-full flex flex-col">
-          <div className="bg-gray-900/50 p-6 border-b border-gray-700">
-            <h1 className="text-2xl  text-white">
+          <div className="bg-slate-800 p-6 border-b border-slate-700">
+            <h1 className="text-2xl font-semibold text-slate-100">
               StreamSync Chat
             </h1>
           </div>
@@ -60,7 +60,7 @@ export default function ChatBox() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type a message..."
-                className="w-full bg-gray-800 text-2xl text-white rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                className="w-full bg-gray-800 text-2xl text-white rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 "
               />
               <button
                 type="submit"
