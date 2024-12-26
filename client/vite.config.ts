@@ -32,7 +32,7 @@ const manifest = defineManifest({
   content_scripts: [
     {
       run_at: "document_end",
-      matches: [ "https://www.youtube.com/watch?v=*"],
+      matches: [ "https://www.youtube.com/*"],
       js: ["src/content_script/ContentMain.tsx"],
     },
   ],
