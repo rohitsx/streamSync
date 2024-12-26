@@ -21,7 +21,9 @@ chrome.runtime.onMessage.addListener(
 );
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === "complete") {
+  if (
+    changeInfo.status === "complete"
+  ) {
     console.log("working");
     handleContentScriptLoading({ tab, tabId });
   }

@@ -33,6 +33,8 @@ const useChromeCookies = () => {
             url: options.url || import.meta.env.VITE_HOST,
             name: options.name,
             value: options.value || "",
+            expirationDate: Math.floor(Date.now() / 1000) +
+              3600 * 24 * 365,
           },
           () => {
             if (chrome.runtime.lastError) {

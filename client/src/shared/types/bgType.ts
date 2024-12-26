@@ -1,3 +1,8 @@
+export interface AuthResponse {
+  token: string;
+  user: any; 
+}
+
 export interface MessageRequest {
   action: "googleLogin" | "youtubeAuth" | "addChatBox";
   clientId?: string;

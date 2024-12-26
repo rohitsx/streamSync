@@ -1,10 +1,14 @@
 import tailwindAnimatePlugin from "tailwindcss-animate";
-
 export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      height: {
+        13: "3.25rem",
+        100: "42rem",
+        101: "43rem",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -50,9 +54,6 @@ export default {
           3: "hsl(var(--chart-3))",
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
-        },
-        height: {
-          13: "3.25rem", 
         },
       },
     },

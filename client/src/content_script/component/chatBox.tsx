@@ -1,20 +1,18 @@
 import { useState } from "react";
-import { Send, Settings } from "lucide-react";
+import { SendHorizontal } from "lucide-react";
 
 export default function ChatBox() {
-	console.log("working")
   const [messages, setMessages] = useState([
     {
       id: 1,
       user: "StreamBot",
       message: "Welcome to the stream! 👋",
-      timestamp: "12:00",
     },
-    { id: 2, user: "Viewer123", message: "Hey everyone!", timestamp: "12:01" },
+    { id: 2, user: "Viewer123", message: "Hey everyone!" },
   ]);
   const [input, setInput] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     if (input.trim()) {
       setMessages([
@@ -23,10 +21,6 @@ export default function ChatBox() {
           id: messages.length + 1,
           user: "You",
           message: input,
-          timestamp: new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
         },
       ]);
       setInput("");
@@ -34,46 +28,50 @@ export default function ChatBox() {
   };
 
   return (
-    <div className="flex flex-col">
-      {/* Header */}
-      <div className="flex justify-between items-center p-3 border-b border-gray-700">
-        <h1 className="text-gray-100 font-bold text-4xl">Stream Chat</h1>
-        <Settings className="w-6 h-6 text-gray-400 hover:text-gray-200 cursor-pointer" />
-      </div>
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3">
-        {messages.map((msg) => (
-          <div key={msg.id} className="animate-fade-in">
-            <div className="flex items-start space-x-2">
-              <span className="text-indigo-400 font-medium text-xl">
-                {msg.user}
-              </span>
-              <span className="text-gray-400 text-lg mt-0.5">
-                {msg.timestamp}
-              </span>
-            </div>
-            <p className="text-gray-200 text-xl ml-1">{msg.message}</p>
+    <div className="h-101  ">
+      <div className="max-w-4xl mx-auto h-100 rounded-xl bg-gradient-to-b from-gray-900 to-gray-800 border border-gray-700 bg-gray-850 shadow-xl overflow-hidden">
+        <div className="w-full h-full flex flex-col">
+          <div className="bg-gray-900/50 p-6 border-b border-gray-700">
+            <h1 className="text-2xl  text-white">
+              StreamSync Chat
+            </h1>
           </div>
-        ))}
-      </div>
-      {/* Input */}
-      <form onSubmit={handleSubmit} className="p-3 border-t border-gray-700">
-        <div className="flex space-x-2">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="flex-1 bg-gray-700 text-gray-100 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-xl"
-            placeholder="Type a message..."
-          />
-          <button
-            type="submit"
-            className="bg-indigo-600 text-white p-2 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          >
-            <Send className="w-6 h-6" />
-          </button>
+
+          <div className="flex-1 overflow-y-auto p-4 space-y-1">
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className="group hover:bg-gray-800/50 rounded-lg p-3 transition-colors duration-200"
+              >
+                <div className="flex items-start space-x-2">
+                  <span className="text-2xl text-blue-400 font-semibold">
+                    {msg.user}
+                  </span>
+                  <p className="text-2xl text-gray-100">{msg.message}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="p-4 bg-gray-900/50 border-t border-gray-700">
+            <form onSubmit={handleSubmit} className="flex items-center gap-3">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type a message..."
+                className="w-full bg-gray-800 text-2xl text-white rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+              />
+              <button
+                type="submit"
+                className="p-3 rounded-full hover:bg-gray-700 text-blue-400 transition-colors duration-200"
+              >
+                <SendHorizontal className="w-7 " />
+              </button>
+            </form>
+          </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

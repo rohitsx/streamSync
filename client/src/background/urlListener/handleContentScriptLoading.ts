@@ -9,9 +9,11 @@ export default async function handleContentScriptLoading(
   const isLive = await checkIfLiveStream(tab.url);
 
   try {
-    isLive
-      ? chrome.tabs.sendMessage(tabId, { type: "page-rendered" })
-      : chrome.tabs.sendMessage(tabId, { type: "remove-render" });
+    setTimeout(() => {
+      isLive
+        ? chrome.tabs.sendMessage(tabId, { type: "page-rendered" })
+        : chrome.tabs.sendMessage(tabId, { type: "remove-render" });
+    }, 400);
   } catch (err) {
     console.log("err", err);
   }

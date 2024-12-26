@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import styleSheet from "@/style.css?inline"; // Make sure your bundler supports this import
+import styleSheet from "@/style.css?inline"; 
 
 chrome.runtime.onMessage.addListener(function (request) {
   if (request && request.type === "page-rendered") {

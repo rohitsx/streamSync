@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/utils/logo";
 import Layout from "../../shared/layout/Layout";
-import { ChevronRight, Settings, Play } from "lucide-react";
+import { ChevronRight, Play, Settings } from "lucide-react";
 import useAuthRedirect from "@/hook/useAuthRedirect";
 import useChromeCookies from "@/hook/useChromeCookies";
 
@@ -55,12 +55,14 @@ const HomePage: React.FC = () => {
             onClick={handleHostStream}
             bgColor="bg-slate-800/60"
           />
-          {/*   <NavButton
+          {
+            /*   <NavButton
             icon={<LogIn className="text-purple-400" size={24} />}
             label="Join Stream"
             onClick={() => navigate("/join")}
             bgColor="bg-purple-900/60"
-          />*/}
+          />*/
+          }
           <NavButton
             icon={<Settings className="text-blue-400" size={24} />}
             label="Settings"
