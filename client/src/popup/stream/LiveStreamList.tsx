@@ -42,7 +42,7 @@ export default function LiveStream() {
         ? setYtThumbnail({ thumbnail, title })
         : setYtThumbnail("Not Live");
     } catch (error) {
-      console.error("Error fetching YouTube stream:", error);
+      console.error("No active live stream");
       setYtThumbnail("Not Live");
     } finally {
       setIsLoading(false);

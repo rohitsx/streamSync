@@ -1,27 +1,28 @@
 import { invalidRequest } from "../handlers/defaultResponse.ts";
-import streamRoom from "../handlers/stream/room.ts";
+import streamRoom from "../handlers/webSocket/streamRoom.ts";
 import { ApiRoutesProps } from "../types/types.ts";
+
 export default class webSocket {
   _req: Request;
   constructor(_req: Request) {
     this._req = _req;
   }
 
-  routes() {
-    const room = new streamRoom({ _req: this._req });
+  async routes() {
+    const room = new streamRoom();
     const routes = [
       {
         path: "/ws/create-room",
-        handler: () => room.create(),
+        handler: () => room.create(this._req),
       },
     ];
-    return this.handleRoutes({ routes });
+    return await this.handleRoutes({ routes });
   }
 
-  handleRoutes({ routes }: ApiRoutesProps): Response | Promise<Response> {
+  async handleRoutes({ routes }: ApiRoutesProps): Promise<Response> {
     const url = new URL(this._req.url);
     const route = routes.find(({ path }) => url.pathname === path);
-    if (route) return route.handler();
+    if (route) return await route.handler();
     else {
       return invalidRequest();
     }

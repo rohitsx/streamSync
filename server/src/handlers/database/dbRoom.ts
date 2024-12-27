@@ -19,4 +19,8 @@ export default class dbRoom {
   async detete(username: string) {
     return await this.collection.deleteOne({ username });
   }
+
+  async checkStream(streamId: string) {
+    return await this.collection.findOne({ streamId });
+  }
 }

@@ -21,9 +21,7 @@ export default function useAuthRedirect() {
   }, []);
 
   const handleToken = useCallback(async () => {
-    console.log("this on is running");
     const cookie = await getCookie({ name: "sessionToken" });
-    console.log({ "sessionToken": cookie?.value });
     if (!cookie) return createTab("auth");
 
     const token = cookie.value;
