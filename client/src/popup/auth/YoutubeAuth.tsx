@@ -1,5 +1,5 @@
 import Layout, { YouTubeButton } from "@/layout/Layout";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FAQSection from "./YoutubeAuthFAQ";
 import { ArrowLeft } from "lucide-react";
@@ -12,18 +12,17 @@ export default function YoutubeAuth() {
 
   const handleGoogleAuth = async (): Promise<void> => {
     const user = await getCookie({ name: "user" });
+    if (!user) return;
 
-    user &&
-      chrome.runtime.sendMessage(
-        {
-          action: "youtubeAuth",
-          clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-          api: import.meta.env.VITE_API + "youtube-auth",
-          host: import.meta.env.VITE_HOST,
-          id: JSON.parse(user.value).id,
-        },
-        ({ success }) => (success ? nav("/close") : console.error("error")),
-      );
+    const { status } = await chrome.runtime.sendMessage(
+      {
+        action: "youtubeAuth",
+        userId: JSON.parse(user.value).id,
+      },
+    );
+
+    console.log(status);
+    status ? nav("/close") : console.error("error");
   };
 
   const handelClick = async (): Promise<void> => {

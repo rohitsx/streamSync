@@ -34,6 +34,10 @@ export default class streamRoom {
       .catch(() => sendResponse("Invalid token", 500));
   }
 
+  join(_req:Request){
+
+  }
+
   async delete(socket: WsWithUsername) {
     try {
       await this.dbRoom.detete(socket.username);

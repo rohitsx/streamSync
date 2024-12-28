@@ -26,8 +26,10 @@ export default class YoutubeAuthHandler {
   async auth(_req: Request) {
     if (_req.method !== "POST") return invalidRequest();
 
-    const { authCode, id } = await _req.json();
     try {
+      const { authCode, id } = await _req.json();
+      console.log({ authCode, id });
+
       const oauth2Client = this.getOauth2Client();
 
       const { tokens } = await oauth2Client.getToken(authCode);

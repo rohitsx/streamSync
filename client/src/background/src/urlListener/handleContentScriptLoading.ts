@@ -9,6 +9,7 @@ export default async function handleContentScriptLoading(
 
   const videoId = new URL(tab.url).searchParams.get("v");
   const isLive = await checkIfLiveStream(tab.url);
+
   const sendPageRnder = async () => {
     axios.post(
       `${import.meta.env.VITE_API}check-stream`,
@@ -20,9 +21,9 @@ export default async function handleContentScriptLoading(
   try {
     setTimeout(async () => {
       isLive
-        ? await sendPageRnder()
+        ? chrome.tabs.sendMessage(tabId, { type: "page-rendered" })
         : chrome.tabs.sendMessage(tabId, { type: "remove-render" });
-    }, 400);
+    }, 800);
   } catch (err) {
     console.log("err", err);
   }

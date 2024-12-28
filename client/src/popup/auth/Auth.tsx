@@ -10,23 +10,21 @@ function Auth(): React.JSX.Element {
 
   const handleGoogleSignup = async (): Promise<void> => {
     setIsLoading(true);
-    chrome.runtime.sendMessage(
+    const res = await chrome.runtime.sendMessage(
       {
         action: "googleLogin",
-        clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-        host: import.meta.env.VITE_HOST,
-        api: import.meta.env.VITE_API + "google-auth",
-      },
-      async ({ status }: { status: string }) => {
-        setIsLoading(false);
-        if (status === "success") {
-          const user = await getCookie({ name: "user" });
-          user && JSON.parse(user.value).username
-            ? nav("/close")
-            : nav("/username");
-        } else console.log("error loging up");
       },
     );
+    res && handlerResponse(res);
+
+    async function handlerResponse({ status }: { status: string }) {
+      setIsLoading(false);
+      if (status !== "success") return console.log("error loging up");
+      const user = await getCookie({ name: "user" });
+      user && JSON.parse(user.value).username
+        ? nav("/close")
+        : nav("/username");
+    }
   };
 
   return (

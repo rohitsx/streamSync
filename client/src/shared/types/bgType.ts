@@ -1,14 +1,11 @@
 export interface AuthResponse {
   token: string;
-  user: any; 
+  user: any;
 }
 
 export interface MessageRequest {
-  action: "googleLogin" | "youtubeAuth" | "addChatBox";
-  clientId?: string;
-  api?: string;
-  host?: string;
-  id?: string;
+  action: string;
+  userId? :string;
 }
 
 export interface MessageResponse {
@@ -24,4 +21,9 @@ export type MessageHandler = (
 export interface handleContentScriptLoadingProp {
   tabId?: number;
   tab: chrome.tabs.Tab;
+}
+
+export interface HandleActionsProp {
+  request: MessageRequest;
+  sendResponse: (response: MessageResponse) => void;
 }
