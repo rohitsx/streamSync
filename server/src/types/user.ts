@@ -17,3 +17,12 @@ export interface DbUser {
   picture: string;
   ytRefreshToken: null | string | boolean;
 }
+
+export interface dbRoomUserProp {
+  streamId: string;
+  username: string;
+}
+
+export interface RoomUsersProp {
+  users: Array<string>;
+}

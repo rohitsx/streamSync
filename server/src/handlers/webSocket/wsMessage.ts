@@ -1,10 +1,14 @@
 import { WsMesageProps } from "../../types/types.ts";
 import streamRoom from "./streamRoom.ts";
 
-export default function wsHandler({ socket, response }: WsMesageProps) {
-  const stream= new streamRoom();
+export default function wsHandler(
+  { socket, response, streamId }: WsMesageProps,
+) {
+  const stream = new streamRoom();
 
-  socket.onclose = async () => await stream.delete(socket);
+  socket.onclose = async () =>
+    await stream.delete({ username: socket.username, streamId });
+
   socket.onmessage = (e) => console.log(`RECEIVED: ${e.data}`);
 
   return response;

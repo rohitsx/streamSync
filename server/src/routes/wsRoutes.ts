@@ -15,6 +15,11 @@ export default class webSocket {
         path: "/ws/create-room",
         handler: () => room.create(this._req),
       },
+
+      {
+        path: "/ws/join-room",
+        handler: () => room.join(this._req),
+      },
     ];
     return await this.handleRoutes({ routes });
   }

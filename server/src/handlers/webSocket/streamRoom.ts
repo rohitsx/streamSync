@@ -1,4 +1,8 @@
-import { WsWithUsername } from "../../types/types.ts";
+import {
+  StartWSProp,
+  StreamRoomDelProp,
+  WsWithUsername,
+} from "../../types/types.ts";
 import YoutubeAuthHandler from "../auth/youtubeAuth.ts";
 import dbRoom from "../database/dbRoom.ts";
 import sendResponse from "../defaultResponse.ts";
@@ -11,11 +15,11 @@ export default class streamRoom {
 
   create(_req: Request): Promise<Response> | Response {
     const url = new URL(_req.url);
-    const {
-      streamid: streamId,
-      username,
-      accestoken: accessToken,
-    } = Object.fromEntries(url.searchParams.entries());
+    console.log(url);
+    const { streamId, username, accessToken } = Object.fromEntries(
+      url.searchParams.entries(),
+    );
+    console.log(streamId, username, accessToken);
 
     if (!streamId || !username || !accessToken) return invalidRequest();
 
@@ -34,14 +38,23 @@ export default class streamRoom {
       .catch(() => sendResponse("Invalid token", 500));
   }
 
-  join(_req:Request){
+  async join(_req: Request) {
+    const url = new URL(_req.url);
+    const { streamId, username } = Object.fromEntries(
+      url.searchParams.entries(),
+    );
 
+    const check = await this.dbRoom.join({ streamId, username });
+	console.log(check)
+    return this.startWs({ _req, username, streamId });
   }
 
-  async delete(socket: WsWithUsername) {
+  async delete({ username, streamId }: StreamRoomDelProp) {
     try {
-      await this.dbRoom.detete(socket.username);
-      userWsObject.delete(socket.username);
+      console.log("deleted user", username);
+      userWsObject.delete(username);
+      console.log(userWsObject);
+      await this.dbRoom.detete({ username: username, streamId });
     } catch {
       console.log("error");
     }
@@ -56,11 +69,14 @@ export default class streamRoom {
     );
   }
 
-  startWs({ _req, username }: { _req: Request; username: string }) {
+  startWs(
+    { _req, username, streamId }: StartWSProp,
+  ) {
     const { socket, response } = Deno.upgradeWebSocket(_req);
     const ws = socket as WsWithUsername;
     ws.username = username;
     userWsObject.set(username, ws);
-    return wsHandler({ socket: ws, response });
+	console.log(userWsObject)
+    return wsHandler({ socket: ws, response, streamId });
   }
 }

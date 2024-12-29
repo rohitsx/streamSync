@@ -1,6 +1,7 @@
 import { handleContentScriptLoadingProp } from "@/types/bgType";
 import checkIfLiveStream from "./checkIfLiveStream";
 import axios from "axios";
+import env from "@/config/enviroment";
 
 export default async function handleContentScriptLoading(
   { tab, tabId }: handleContentScriptLoadingProp,
@@ -12,7 +13,7 @@ export default async function handleContentScriptLoading(
 
   const sendPageRnder = async () => {
     axios.post(
-      `${import.meta.env.VITE_API}check-stream`,
+      `${env.api}check-stream`,
       videoId,
     ).then(() => chrome.tabs.sendMessage(tabId, { type: "page-rendered" }))
       .catch(() => console.error("no active stream"));
@@ -21,7 +22,7 @@ export default async function handleContentScriptLoading(
   try {
     setTimeout(async () => {
       isLive
-        ? chrome.tabs.sendMessage(tabId, { type: "page-rendered" })
+        ? sendPageRnder()
         : chrome.tabs.sendMessage(tabId, { type: "remove-render" });
     }, 800);
   } catch (err) {

@@ -7,7 +7,7 @@ export default function ChatPopUp() {
 
   const ws = useMemo(() => {
     const url =
-      `${import.meta.env.VITE_WS}create-room?streamid=${params.streamId}&accestoken=${params.token}&username=${params.username}`;
+      `${import.meta.env.VITE_WS}create-room?streamId=${params.streamId}&accessToken=${params.token}&username=${params.username}`;
     return new WebSocket(url);
   }, []);
 

@@ -1,16 +1,32 @@
 import Header from "./header";
 import Chat from "./chats";
 import ChatInput from "./chatInput";
-import { useMemo } from "react";
+import { useCallback, useEffect } from "react";
+import env from "@/config/enviroment";
 
 export default function ChatBox() {
-  const ws = useMemo(async () => {
-    const currectUrl = window.location.href;
-    console.log(currectUrl);
-    const streamId = new URL(currectUrl).searchParams.get("v");
-    const res = await chrome.runtime.sendMessage({ action: "getUsername" });
-    console.log(res);
+  const handleWs = useCallback(() => {
+    let ws: WebSocket | undefined;
+
+    (async () => {
+      const currectUrl = window.location.href;
+      const streamId = new URL(currectUrl).searchParams.get("v");
+      const username = await chrome.runtime.sendMessage({
+        action: "getUsername",
+      });
+
+      const url =
+        `${env.wsApi}join-room?streamId=${streamId}&username=${username}`;
+
+      ws = new WebSocket(url);
+      console.log(ws);
+    })();
+
+    ws && (ws.onopen = () => {
+      ws?.send("connected rohit" );
+    });
   }, []);
+  useEffect(handleWs, []);
 
   return (
     <div className="w-full h-full flex flex-col">

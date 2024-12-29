@@ -26,4 +26,21 @@ export interface WsWithUsername extends WebSocket {
 export interface WsMesageProps {
   socket: WsWithUsername;
   response: Response;
+  streamId?: string;
+}
+
+export interface StartWSProp {
+  _req: Request;
+  username: string;
+  streamId?: string;
+}
+
+export interface DeleteUserProp {
+  streamId?: string;
+  username: string;
+}
+
+export interface StreamRoomDelProp {
+  username: string;
+  streamId?: string;
 }
