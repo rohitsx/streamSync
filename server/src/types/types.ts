@@ -14,7 +14,13 @@ export interface ApiRoutesProps {
   routes: { path: string; handler: () => Promise<Response> | Response }[];
 }
 
+//delete this id no dbRoom.ts
 export interface DbRoomCreateProp {
+  streamId: string;
+  username: string;
+}
+
+export interface RedisRoomMethodProp {
   streamId: string;
   username: string;
 }
@@ -26,13 +32,13 @@ export interface WsWithUsername extends WebSocket {
 export interface WsMesageProps {
   socket: WsWithUsername;
   response: Response;
-  streamId?: string;
+  streamId: string;
 }
 
 export interface StartWSProp {
   _req: Request;
   username: string;
-  streamId?: string;
+  streamId: string;
 }
 
 export interface DeleteUserProp {
@@ -42,5 +48,5 @@ export interface DeleteUserProp {
 
 export interface StreamRoomDelProp {
   username: string;
-  streamId?: string;
+  streamId: string;
 }

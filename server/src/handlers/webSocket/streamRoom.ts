@@ -4,23 +4,21 @@ import {
   WsWithUsername,
 } from "../../types/types.ts";
 import YoutubeAuthHandler from "../auth/youtubeAuth.ts";
-import dbRoom from "../database/dbRoom.ts";
+import UserHandler from "../database/dbUser.ts";
+import RedisRoom from "../database/redisRoom.ts";
 import sendResponse from "../defaultResponse.ts";
 import { invalidRequest } from "../defaultResponse.ts";
 import wsHandler from "./wsMessage.ts";
-export const userWsObject = new Map<string, WsWithUsername>();
+export const userWsObject = new Map<string, Map<string, WsWithUsername>>();
 
 export default class streamRoom {
-  private dbRoom = new dbRoom();
+  private room = new RedisRoom();
 
   create(_req: Request): Promise<Response> | Response {
     const url = new URL(_req.url);
-    console.log(url);
     const { streamId, username, accessToken } = Object.fromEntries(
       url.searchParams.entries(),
     );
-    console.log(streamId, username, accessToken);
-
     if (!streamId || !username || !accessToken) return invalidRequest();
 
     const ytAuth = new YoutubeAuthHandler();
@@ -28,12 +26,9 @@ export default class streamRoom {
     return ytAuth
       .validateAccessToken(accessToken, streamId)
       .then(async () => {
-        await this.dbRoom.create({
-          streamId: streamId,
-          username: username,
-        });
-
-        return this.startWs({ _req, username });
+        await this.room.createRoom({ streamId, username });
+        userWsObject.set(streamId, new Map<string, WsWithUsername>());
+        return this.startWs({ _req, username, streamId });
       })
       .catch(() => sendResponse("Invalid token", 500));
   }
@@ -44,17 +39,21 @@ export default class streamRoom {
       url.searchParams.entries(),
     );
 
-    const check = await this.dbRoom.join({ streamId, username });
-	console.log(check)
+    await this.room.addUserToRoom({ streamId, username });
     return this.startWs({ _req, username, streamId });
   }
 
   async delete({ username, streamId }: StreamRoomDelProp) {
     try {
-      console.log("deleted user", username);
-      userWsObject.delete(username);
-      console.log(userWsObject);
-      await this.dbRoom.detete({ username: username, streamId });
+      userWsObject.get(streamId)?.delete(username);
+      const userRemoved = await this.room.removeUserFromRoom({
+        streamId,
+        username,
+      });
+      if (userRemoved) return;
+      const roomdelete = await this.room.deleteRoom(streamId);
+      if (roomdelete) userWsObject.delete(streamId);
+      else throw new Error("Room not deleted");
     } catch {
       console.log("error");
     }
@@ -62,7 +61,7 @@ export default class streamRoom {
 
   async checkStream(_req: Request): Promise<Response> {
     const streamId = await _req.text();
-    const streamExits = await this.dbRoom.checkStream(streamId);
+    const streamExits = await this.room.checkRoomExists(streamId);
     return sendResponse(
       streamExits ? "Stream already exists" : "Stream not found",
       streamExits ? 200 : 404,
@@ -75,8 +74,7 @@ export default class streamRoom {
     const { socket, response } = Deno.upgradeWebSocket(_req);
     const ws = socket as WsWithUsername;
     ws.username = username;
-    userWsObject.set(username, ws);
-	console.log(userWsObject)
+    userWsObject.get(streamId)?.set(username, ws);
     return wsHandler({ socket: ws, response, streamId });
   }
 }
