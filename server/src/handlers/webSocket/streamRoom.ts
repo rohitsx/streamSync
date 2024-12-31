@@ -4,7 +4,6 @@ import {
   WsWithUsername,
 } from "../../types/types.ts";
 import YoutubeAuthHandler from "../auth/youtubeAuth.ts";
-import UserHandler from "../database/dbUser.ts";
 import RedisRoom from "../database/redisRoom.ts";
 import sendResponse from "../defaultResponse.ts";
 import { invalidRequest } from "../defaultResponse.ts";
@@ -50,6 +49,7 @@ export default class streamRoom {
         streamId,
         username,
       });
+      console.log("user removed");
       if (userRemoved) return;
       const roomdelete = await this.room.deleteRoom(streamId);
       if (roomdelete) userWsObject.delete(streamId);

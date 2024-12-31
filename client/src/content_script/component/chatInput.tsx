@@ -1,70 +1,72 @@
 import { SendHorizonal } from "lucide-react";
 import { useState } from "react";
 
-export default function ChatInput() {
+export default function ChatInput({ webSocket }: { webSocket: WebSocket }) {
   const [input, setInput] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
+      webSocket.send(input);
       setInput("");
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // List of all YouTube shortcuts
     const youtubeShortcuts = [
-      'k',      // Play/Pause
-      'j',      // Rewind 10 seconds
-      'l',      // Forward 10 seconds
-      'm',      // Mute
-      ',',      // Previous frame while paused
-      '.',      // Next frame while paused
-      '<',      // Decrease playback speed
-      '>',      // Increase playback speed
-      'f',      // Toggle full screen
-      't',      // Theater mode
-      'i',      // Mini player
-      '/',      // Focus on search
-      '?',      // Open keyboard shortcuts panel
-      'c',      // Toggle closed captions
-      'shift+n', // Next video
-      'shift+p', // Previous video
-      '0',      // Seek to beginning
-      '1',      // Seek to 10%
-      '2',      // Seek to 20%
-      '3',      // Seek to 30%
-      '4',      // Seek to 40%
-      '5',      // Seek to 50%
-      '6',      // Seek to 60%
-      '7',      // Seek to 70%
-      '8',      // Seek to 80%
-      '9',      // Seek to 90%
-      'home',   // Seek to beginning
-      'end',    // Seek to end
-      'space',  // Play/Pause
-      'up',     // Increase volume
-      'down',   // Decrease volume
-      'left',   // Rewind 5 seconds
-      'right'   // Forward 5 seconds
+      "k",
+      "j",
+      "l",
+      "m",
+      ",",
+      ".",
+      "<",
+      ">",
+      "f",
+      "t",
+      "i",
+      "/",
+      "?",
+      "c",
+      "shift+n",
+      "shift+p",
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "home",
+      "end",
+      "space",
+      "up",
+      "down",
+      "left",
+      "right",
     ];
 
     // If Ctrl or Cmd is pressed
     if (e.ctrlKey || e.metaKey) {
       // Allow only copy, paste, cut, and select all
-      const allowedKeys = ['c', 'v', 'x', 'a', 'backspace'];
+      const allowedKeys = ["c", "v", "x", "a", "backspace"];
       if (!allowedKeys.includes(e.key.toLowerCase())) {
         e.preventDefault();
         e.stopPropagation();
       }
     }
-    
+
     // For all YouTube shortcuts (including number keys)
-    const keyToCheck = e.shiftKey ? `shift+${e.key.toLowerCase()}` : e.key.toLowerCase();
+    const keyToCheck = e.shiftKey
+      ? `shift+${e.key.toLowerCase()}`
+      : e.key.toLowerCase();
     if (youtubeShortcuts.includes(keyToCheck)) {
       e.stopPropagation();
       // Don't prevent default for navigation keys (arrow keys) when editing text
-      if (!['left', 'right', 'home', 'end'].includes(keyToCheck)) {
+      if (!["left", "right", "home", "end"].includes(keyToCheck)) {
         e.preventDefault();
       }
     }

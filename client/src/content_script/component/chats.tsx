@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { MessageProp } from "@/types/api";
+import { useEffect, useState } from "react";
 
-export default function Chat() {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      user: "StreamBot",
-      message: "Welcome to the stream! 👋",
-    },
-    { id: 2, user: "Viewer123", message: "Hey everyone!" },
-  ]);
+
+export default function Chat({ webSocket }: { webSocket: WebSocket }) {
+  const [messages, setMessages] = useState<MessageProp[]>([]);
+  useEffect(() => {
+    webSocket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log(data);
+      setMessages((prev) => [...prev, data]);
+    };
+  }, [webSocket]);
 
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-1">

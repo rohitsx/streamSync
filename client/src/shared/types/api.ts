@@ -18,3 +18,10 @@ export interface ytThumbnail {
 }
 
 export type WebSocketWithId = WebSocket & { username: string };
+
+export type MessageProp = {
+  id: number;
+  user: string;
+  message: string;
+};
+
