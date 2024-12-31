@@ -2,17 +2,18 @@ import Header from "./header";
 import Chat from "./chats";
 import ChatInput from "./chatInput";
 import useWebSocket from "@/hook/useWebSocket";
-import useChromeCookies from "@/hook/useChromeCookies";
 import { useEffect, useState } from "react";
 
 export default function ChatBox() {
   const webSocket = useWebSocket();
-  const { getCookie } = useChromeCookies();
   const [checkUser, setCheckUser] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
-      setCheckUser(true);
+      const username = await chrome.runtime.sendMessage({
+        action: "getUsername",
+      });
+      username && setCheckUser(true);
     })();
   }, []);
 
