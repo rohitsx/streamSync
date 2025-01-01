@@ -7,7 +7,7 @@ export default function ChatInput({ webSocket }: { webSocket: WebSocket }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      webSocket.send(input);
+      webSocket.send(JSON.stringify({ liveMessage: input }));
       setInput("");
     }
   };

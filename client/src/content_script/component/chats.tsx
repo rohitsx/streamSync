@@ -1,14 +1,13 @@
 import { MessageProp } from "@/types/api";
 import { useEffect, useState } from "react";
 
-
 export default function Chat({ webSocket }: { webSocket: WebSocket }) {
   const [messages, setMessages] = useState<MessageProp[]>([]);
   useEffect(() => {
-    webSocket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data);
-      setMessages((prev) => [...prev, data]);
+    webSocket.onmessage = (ev) => {
+      const { liveMessage } = JSON.parse(ev.data);
+      console.log(liveMessage);
+      liveMessage && setMessages((prev) => [...prev, liveMessage]);
     };
   }, [webSocket]);
 

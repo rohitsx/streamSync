@@ -1,8 +1,8 @@
 import { MessageProp } from "@/types/api";
+import Call from "@/utils/Call";
 import clsx from "clsx";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import Call from "./Call";
 
 export default function ChatPopUp() {
   const params = useParams();
@@ -16,10 +16,10 @@ export default function ChatPopUp() {
   }, []);
 
   useEffect(() => {
-    webSocket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      console.log(data);
-      setMessages((prev) => [...prev, data]);
+    webSocket.onmessage = (ev) => {
+      const { liveMessage } = JSON.parse(ev.data);
+      console.log(liveMessage);
+      liveMessage && setMessages((prev) => [...prev, liveMessage]);
     };
   }, [webSocket]);
 

@@ -50,3 +50,19 @@ export interface StreamRoomDelProp {
   username: string;
   streamId: string;
 }
+
+export interface webRtcSignalingProp {
+  host: string;
+  stranger: string;
+  description: {
+    type: "offer" | "answer" | "rollback" | "pranswer";
+    sdp?: string;
+  };
+}
+
+export interface WsOnMessageProp {
+  liveMessage: string;
+  offer: webRtcSignalingProp;
+  answer: webRtcSignalingProp;
+  iceCandidate: webRtcSignalingProp
+}
