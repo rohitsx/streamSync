@@ -5,6 +5,7 @@ export default function Chat({ webSocket }: { webSocket: WebSocket }) {
   const [messages, setMessages] = useState<MessageProp[]>([]);
   useEffect(() => {
     webSocket.onmessage = (ev) => {
+		console.log("recived group messages")
       const { liveMessage } = JSON.parse(ev.data);
       console.log(liveMessage);
       liveMessage && setMessages((prev) => [...prev, liveMessage]);

@@ -3,6 +3,7 @@ import Chat from "./chats";
 import ChatInput from "./chatInput";
 import useWebSocket from "@/hook/useWebSocket";
 import { useEffect, useState } from "react";
+import LoginPrompt from "./loginPromt";
 
 export default function ChatBox() {
   const webSocket = useWebSocket();
@@ -13,6 +14,7 @@ export default function ChatBox() {
       const username = await chrome.runtime.sendMessage({
         action: "getUsername",
       });
+      if (username === "user not found") return;
       username && setCheckUser(true);
     })();
   }, []);
@@ -24,13 +26,7 @@ export default function ChatBox() {
         ? (
           <>
             <Chat webSocket={webSocket} />
-            {checkUser ? <ChatInput webSocket={webSocket} /> : (
-              <>
-                <div className="p-4 bg-gray-900/50 border-t border-gray-700">
-                  Please login to chat
-                </div>
-              </>
-            )}
+            {checkUser ? <ChatInput webSocket={webSocket} /> : <LoginPrompt />}
           </>
         )
         : <div>Connecting to server...</div>}

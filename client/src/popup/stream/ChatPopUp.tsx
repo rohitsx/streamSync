@@ -1,7 +1,7 @@
 import { MessageProp } from "@/types/api";
 import Call from "@/utils/Call";
 import clsx from "clsx";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export default function ChatPopUp() {
@@ -16,7 +16,9 @@ export default function ChatPopUp() {
   }, []);
 
   useEffect(() => {
+    console.log("working");
     webSocket.onmessage = (ev) => {
+      console.log("got group messages");
       const { liveMessage } = JSON.parse(ev.data);
       console.log(liveMessage);
       liveMessage && setMessages((prev) => [...prev, liveMessage]);
@@ -26,6 +28,11 @@ export default function ChatPopUp() {
   const isNewTab = useMemo(() => {
     const popup = window.innerWidth <= 380 && window.innerHeight <= 600;
     return !popup;
+  }, []);
+
+  const startCall = useCallback((_callUsername: string) => {
+    setCallUsername(_callUsername);
+    webSocket.send(JSON.stringify({ startCall: { callUsername } }));
   }, []);
 
   return (
@@ -52,7 +59,7 @@ export default function ChatPopUp() {
         <div className="flex-1 overflow-y-auto bg-gray-900 p-2 space-y-2">
           {messages?.map((msg) => (
             <div
-              onClick={() => setCallUsername(msg.user)}
+              onClick={() => startCall(msg.user)}
               key={msg.id}
               className="group hover:bg-gray-800/50 rounded-lg p-2 transition-all duration-300 ease-in-out border border-transparent hover:border-gray-700 shadow-sm hover:shadow-md"
             >

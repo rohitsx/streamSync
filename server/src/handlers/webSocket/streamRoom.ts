@@ -26,6 +26,7 @@ export default class streamRoom {
       .validateAccessToken(accessToken, streamId)
       .then(async () => {
         await this.room.createRoom({ streamId, username });
+		console.log("create map room")
         userWsObject.set(streamId, new Map<string, WsWithUsername>());
         return this.startWs({ _req, username, streamId });
       })
@@ -74,6 +75,7 @@ export default class streamRoom {
     const { socket, response } = Deno.upgradeWebSocket(_req);
     const ws = socket as WsWithUsername;
     ws.username = username;
+	console.log(username, "joined room ", streamId)
     userWsObject.get(streamId)?.set(username, ws);
     return wsHandler({ socket: ws, response, streamId });
   }

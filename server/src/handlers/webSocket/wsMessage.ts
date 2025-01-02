@@ -1,35 +1,23 @@
 import { WsMesageProps, WsOnMessageProp } from "../../types/types.ts";
-import streamRoom, { userWsObject } from "./streamRoom.ts";
+import streamRoom from "./streamRoom.ts";
+import wsOnMessage from "./wsOnmessage.ts";
 
 export default function wsHandler(
   { socket, response, streamId }: WsMesageProps,
 ) {
   const stream = new streamRoom();
+  const message = new wsOnMessage({ ws: socket, streamId });
 
   socket.onclose = async () =>
     await stream.delete({ username: socket.username, streamId });
 
   socket.onmessage = (e) => {
-    const { liveMessage, offer, answer, candidate }: WsOnMessageProp = JSON
+    const { liveMessage, offer, answer, iceCandidate }: WsOnMessageProp = JSON
       .parse(e.data);
-    const users = userWsObject.get(streamId);
 
-    if (liveMessage) {
-      const _liveMessage = {
-        id: 1,
-        message: liveMessage,
-        user: socket.username,
-      };
-      users?.forEach((ws) => {
-        ws.send(JSON.stringify({ liveMessage: _liveMessage }));
-      });
-    } else if (offer) {
-      users?.get(offer.stranger)?.send(JSON.stringify({ offer }));
-    } else if (answer) {
-      users?.get(answer.host)?.send(JSON.stringify({ answer }));
-    }else if(candidate) 
+    if (liveMessage) message.broadCastChat(liveMessage);
 
-    console.log(`RECEIVED: ${e.data}`);
+    return response;
   };
 
   return response;

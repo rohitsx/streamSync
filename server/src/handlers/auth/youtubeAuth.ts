@@ -28,12 +28,11 @@ export default class YoutubeAuthHandler {
 
     try {
       const { authCode, id } = await _req.json();
-      console.log({ authCode, id });
-
       const oauth2Client = this.getOauth2Client();
 
       const { tokens } = await oauth2Client.getToken(authCode);
       if (!tokens) return sendResponse("Authorization failed", 500);
+	  
 
       tokens.refresh_token &&
         this.db.setYtRefreshToken(id, tokens.refresh_token);

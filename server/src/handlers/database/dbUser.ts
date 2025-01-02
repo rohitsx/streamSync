@@ -13,7 +13,6 @@ export default class UserHandler {
 
     if (!user) return null;
 
-    console.log(user.ytRefreshToken);
     return {
       ...user,
       ytRefreshToken: !!user.ytRefreshToken,

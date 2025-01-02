@@ -1,4 +1,4 @@
-import { ioredis, RedisClientType } from "redis";
+import {  RedisClientType } from "redis";
 import getRedis from "../../config/redis.ts";
 import { RedisRoomMethodProp } from "../../types/types.ts";
 import { dbRoomUserProp } from "../../types/user.ts";
