@@ -64,5 +64,8 @@ export interface WsOnMessageProp {
   liveMessage: string;
   offer: webRtcSignalingProp;
   answer: webRtcSignalingProp;
-  iceCandidate: webRtcSignalingProp
+  iceCandidate: webRtcSignalingProp;
+  startCall: {
+    calleeUsername: string;
+  };
 }

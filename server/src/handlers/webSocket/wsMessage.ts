@@ -12,10 +12,10 @@ export default function wsHandler(
     await stream.delete({ username: socket.username, streamId });
 
   socket.onmessage = (e) => {
-    const { liveMessage, offer, answer, iceCandidate }: WsOnMessageProp = JSON
-      .parse(e.data);
+    const { liveMessage, startCall }: WsOnMessageProp = JSON.parse(e.data);
 
-    if (liveMessage) message.broadCastChat(liveMessage);
+    liveMessage && message.broadCastChat(liveMessage);
+    startCall && message.startCall(socket.username, startCall.calleeUsername);
 
     return response;
   };

@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 
 export default function ChatPopUp() {
   const params = useParams();
-  const [callUsername, setCallUsername] = useState<string | undefined>();
+  const [calleeUsername, setCalleeUsername] = useState<string | undefined>();
   const [messages, setMessages] = useState<MessageProp[]>([]);
 
   const webSocket = useMemo(() => {
@@ -16,12 +16,16 @@ export default function ChatPopUp() {
   }, []);
 
   useEffect(() => {
-    console.log("working");
-    webSocket.onmessage = (ev) => {
-      console.log("got group messages");
+    const handleMessage = (ev: MessageEvent) => {
       const { liveMessage } = JSON.parse(ev.data);
       console.log(liveMessage);
       liveMessage && setMessages((prev) => [...prev, liveMessage]);
+    };
+
+    webSocket.addEventListener("message", handleMessage);
+
+    return () => {
+      webSocket.removeEventListener("message", handleMessage);
     };
   }, [webSocket]);
 
@@ -30,9 +34,9 @@ export default function ChatPopUp() {
     return !popup;
   }, []);
 
-  const startCall = useCallback((_callUsername: string) => {
-    setCallUsername(_callUsername);
-    webSocket.send(JSON.stringify({ startCall: { callUsername } }));
+  const startCall = useCallback((calleeUsername: string) => {
+    webSocket.send(JSON.stringify({ startCall: { calleeUsername } }));
+    setCalleeUsername(calleeUsername);
   }, []);
 
   return (
@@ -53,7 +57,7 @@ export default function ChatPopUp() {
             StreamSyn
           </h1>
         </div>
-        <Call username={callUsername} webSocket={webSocket} />
+        <Call strangerUsername={calleeUsername}  webSocket={webSocket} />
 
         {/* Messages Container */}
         <div className="flex-1 overflow-y-auto bg-gray-900 p-2 space-y-2">

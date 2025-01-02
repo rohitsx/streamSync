@@ -19,6 +19,25 @@ export default function ChatBox() {
     })();
   }, []);
 
+  useEffect(() => {
+    const handleMessage = async (ev: MessageEvent) => {
+      const { startCall } = JSON.parse(ev.data);
+      if (startCall.hostName) {
+        await chrome.runtime.sendMessage(
+          {
+            action: "startCall",
+            hostName: startCall.hostName,
+          },
+        );
+      }
+      webSocket?.addEventListener("message", handleMessage);
+
+      return () => {
+        webSocket?.removeEventListener("message", handleMessage);
+      };
+    };
+  }, [webSocket]);
+
   return (
     <div className="w-full h-full flex flex-col">
       <Header />

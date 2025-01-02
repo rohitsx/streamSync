@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 export default function Chat({ webSocket }: { webSocket: WebSocket }) {
   const [messages, setMessages] = useState<MessageProp[]>([]);
   useEffect(() => {
-    webSocket.onmessage = (ev) => {
-		console.log("recived group messages")
+    const handleMessage = (ev: MessageEvent) => {
+      console.log("recived group messages", ev.data);
       const { liveMessage } = JSON.parse(ev.data);
-      console.log(liveMessage);
       liveMessage && setMessages((prev) => [...prev, liveMessage]);
+    };
+
+    webSocket.addEventListener("message", handleMessage);
+    return () => {
+      webSocket.removeEventListener("message", handleMessage);
     };
   }, [webSocket]);
 

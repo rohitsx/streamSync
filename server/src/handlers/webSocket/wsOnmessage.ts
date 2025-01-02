@@ -21,4 +21,10 @@ export default class wsOnMessage {
     });
   }
 
+  startCall(hostName: string, callee: string) {
+    const calleeWs = this.users?.get(callee);
+    calleeWs?.send(
+      JSON.stringify({ startCall: { hostName } }),
+    );
+  }
 }

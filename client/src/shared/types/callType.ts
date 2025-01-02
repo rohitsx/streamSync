@@ -1,6 +1,6 @@
 export interface CallProp {
-  username: string | undefined;
-  webSocket: WebSocket;
+  strangerUsername?: string | undefined;
+  webSocket?: WebSocket;
 }
 
 export interface webRtcSignalingProp {

@@ -5,7 +5,8 @@ export interface AuthResponse {
 
 export interface MessageRequest {
   action: string;
-  userId? :string;
+  userId?: string;
+  hostName?: string;
 }
 
 export interface MessageResponse {
