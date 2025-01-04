@@ -1,12 +1,16 @@
-import { MessageProp } from "@/types/api";
-import clsx from "clsx";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import Header from "./Header";
+import Call from "./Call";
+import ChatPopupMessage from "./Message";
 
-export default function ChatPopUp() {
+const ChatPopUp = () => {
   const params = useParams();
   const [calleeUsername, setCalleeUsername] = useState<string | undefined>();
-  const [messages, setMessages] = useState<MessageProp[]>([]);
+  const [callStatus, setCallStatus] = useState<
+    "idle" | "connecting" | "connected"
+  >("idle");
+  const [isMuted, setIsMuted] = useState(false);
 
   const webSocket = useMemo(() => {
     const url =
@@ -14,69 +18,40 @@ export default function ChatPopUp() {
     return new WebSocket(url);
   }, []);
 
-  useEffect(() => {
-    const handleMessage = (ev: MessageEvent) => {
-      const { liveMessage } = JSON.parse(ev.data);
-      console.log(liveMessage);
-      liveMessage && setMessages((prev) => [...prev, liveMessage]);
-    };
-
-    webSocket.addEventListener("message", handleMessage);
-
-    return () => {
-      webSocket.removeEventListener("message", handleMessage);
-    };
-  }, [webSocket]);
-
-  const isNewTab = useMemo(() => {
-    const popup = window.innerWidth <= 380 && window.innerHeight <= 600;
-    return !popup;
-  }, []);
-
   const startCall = useCallback((calleeUsername: string) => {
     webSocket.send(JSON.stringify({ startCall: { calleeUsername } }));
     setCalleeUsername(calleeUsername);
+    setCallStatus("connecting");
+  }, []);
+
+
+
+  const endCall = useCallback(() => {
+    setCallStatus("idle");
+    setCalleeUsername(undefined);
+    setIsMuted(false);
   }, []);
 
   return (
     <div
-      className={clsx(
-        "min-h-screen w-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900",
-        {
-          "flex items-center justify-center bg-[length:400%_400%] animate-gradient":
-            isNewTab,
-        },
-      )}
+      className={"min-h-screen w-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center bg-[length:400%_400%] animate-gradient"}
     >
-      {/* Main container with fixed header */}
       <div className="w-full max-w-4xl flex flex-col h-screen">
-        {/* Fixed Header */}
-        <div className="sticky top-0 z-10 bg-gray-950 border-b border-gray-800 p-4 rounded-t-lg shadow-lg">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-            StreamSyn
-          </h1>
-        </div>
-
-        {/* Messages Container */}
-        <div className="flex-1 overflow-y-auto bg-gray-900 p-2 space-y-2">
-          {messages?.map((msg) => (
-            <div
-              onClick={() => startCall(msg.user)}
-              key={msg.id}
-              className="group hover:bg-gray-800/50 rounded-lg p-2 transition-all duration-300 ease-in-out border border-transparent hover:border-gray-700 shadow-sm hover:shadow-md"
-            >
-              <div className="flex items-start space-x-4">
-                <span className="text-lg text-indigo-400 font-semibold">
-                  {msg.user}
-                </span>
-                <p className="text-lg text-gray-200 font-medium leading-relaxed">
-                  {msg.message}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Header />
+        <Call
+          calleeUsername={calleeUsername || ""}
+          callStatus={callStatus}
+          isMuted={isMuted}
+          setIsMuted={setIsMuted}
+          endCall={endCall}
+        />
+        <ChatPopupMessage
+          startCall={startCall}
+          webSocket={webSocket}
+        />
       </div>
     </div>
   );
-}
+};
+
+export default ChatPopUp;

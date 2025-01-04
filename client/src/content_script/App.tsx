@@ -28,7 +28,7 @@ export default function App() {
   return (
     <ContentBackground>
       {hostName
-        ? <Call hostName={hostName} />
+        ? <Call hostName={hostName} webSocket={webSocket} />
         : <ChatBox webSocket={webSocket} />}
     </ContentBackground>
   );

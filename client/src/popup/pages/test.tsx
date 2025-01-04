@@ -1,122 +1,139 @@
-import React, { useEffect, useState } from "react";
-import { Mic, MicOff, Phone, PhoneOff, User } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import { User, Phone, PhoneOff, Mic, MicOff, Camera, CameraOff } from "lucide-react";
+import { MessageProp } from "@/types/api";
 
-type CallStatus = "ringing" | "connected" | "disconnected";
-
-interface CallProps {
-  hostName: string;
-  onStatusChange?: (status: CallStatus) => void;
-  onMuteChange?: (isMuted: boolean) => void;
-}
-
-const Call: React.FC<CallProps> = ({ 
-  hostName, 
-  onStatusChange,
-  onMuteChange 
-}) => {
-  const [status, setStatus] = useState<CallStatus>("ringing");
-  const [isVisible, setIsVisible] = useState(false);
+const ChatPopUp = () => {
+  const params = useParams();
+  const [calleeUsername, setCalleeUsername] = useState<string | undefined>();
+  const [messages, setMessages] = useState<MessageProp[]>([]);
+  const [callStatus, setCallStatus] = useState<"idle" | "connecting" | "connected">("idle");
   const [isMuted, setIsMuted] = useState(false);
-  const [time, setTime] = useState(0);
+  const [isVideoOff, setIsVideoOff] = useState(false);
+
+  const webSocket = useMemo(() => {
+    const url = `${import.meta.env.VITE_WS}create-room?streamId=${params.streamId}&accessToken=${params.token}&username=${params.username}`;
+    return new WebSocket(url);
+  }, []);
 
   useEffect(() => {
-    setIsVisible(true);
-    let interval: NodeJS.Timeout;
-    
-    if (status === "connected") {
-      interval = setInterval(() => setTime(t => t + 1), 1000);
-    }
+    const handleMessage = (ev: MessageEvent) => {
+      const { liveMessage } = JSON.parse(ev.data);
+      liveMessage && setMessages((prev) => [...prev, liveMessage]);
+    };
+    webSocket.addEventListener("message", handleMessage);
+    return () => {
+      webSocket.removeEventListener("message", handleMessage);
+    };
+  }, [webSocket]);
 
-    return () => clearInterval(interval);
-  }, [status]);
+  const startCall = useCallback((calleeUsername: string) => {
+    webSocket.send(JSON.stringify({ startCall: { calleeUsername } }));
+    setCalleeUsername(calleeUsername);
+    setCallStatus("connecting");
+    // Simulate connection after 2 seconds
+    setTimeout(() => setCallStatus("connected"), 2000);
+  }, []);
 
-  const handleStatusChange = (newStatus: CallStatus) => {
-    setStatus(newStatus);
-    onStatusChange?.(newStatus);
-  };
+  const endCall = useCallback(() => {
+    setCallStatus("idle");
+    setCalleeUsername(undefined);
+    setIsMuted(false);
+    setIsVideoOff(false);
+  }, []);
 
-  const handleMuteToggle = () => {
-    const newMutedState = !isMuted;
-    setIsMuted(newMutedState);
-    onMuteChange?.(newMutedState);
-  };
-
-  const colors = {
-    gradient: {
-      primary: "from-indigo-500 to-violet-500",
-      ring1: "border-indigo-400/30",
-      ring2: "border-violet-400/20"
-    },
-    buttons: {
-      mute: {
-        active: "bg-indigo-500 hover:bg-indigo-600",
-        inactive: "bg-gray-600 hover:bg-gray-500"
-      },
-      accept: "bg-emerald-500 hover:bg-emerald-600",
-      decline: "bg-rose-500 hover:bg-rose-600"
-    }
-  };
+  const isNewTab = useMemo(() => {
+    const popup = window.innerWidth <= 380 && window.innerHeight <= 600;
+    return !popup;
+  }, []);
 
   return (
-    <div className="h-full flex flex-col bg-gradient-to-b from-gray-800/90 via-gray-700/90 to-gray-800/90">
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(129,140,248,0.2),rgba(255,255,255,0))]" />
-        <div className="absolute w-full h-full bg-[radial-gradient(ellipse_at_center,rgba(167,139,250,0.15),rgba(255,255,255,0))]" />
-        <div className="absolute inset-0 backdrop-blur-2xl opacity-20" />
-      </div>
-      <div className="flex-1 flex justify-center items-center">
-        <div className={`relative ${isVisible ? "scale-100" : "scale-95"} transition-all duration-700 ease-out`}>
-          <div className={`w-48 h-48 rounded-full bg-gradient-to-tr ${colors.gradient.primary} p-1`}>
-            <div className="w-full h-full rounded-full bg-gray-800 flex items-center justify-center">
-              <User className="w-24 h-24 text-gray-200" />
-            </div>
-          </div>
-          {status === "ringing" && (
-            <>
-              <div className={`absolute inset-0 -m-2 rounded-full border-2 ${colors.gradient.ring1} animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite]`} />
-              <div className={`absolute inset-0 -m-4 rounded-full border-2 ${colors.gradient.ring2} animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]`} />
-            </>
-          )}
-          <h2 className="mt-6 text-4xl font-bold text-white text-center">{hostName}</h2>
+    <div className={`min-h-screen w-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 
+      ${isNewTab ? "flex items-center justify-center bg-[length:400%_400%] animate-gradient" : ""}`}>
+      <div className="w-full max-w-4xl flex flex-col h-screen">
+        {/* Header */}
+        <div className="sticky top-0 z-10 bg-gray-950 border-b border-gray-800 p-4 rounded-t-lg shadow-lg">
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+            StreamSyn
+          </h1>
         </div>
-      </div>
-      <div className="p-8">
-        <div className="flex justify-center items-center gap-8">
-          <button
-            onClick={handleMuteToggle}
-            className={`p-6 rounded-full transition-all duration-300 hover:scale-110 ${
-              isMuted ? colors.buttons.mute.inactive : colors.buttons.mute.active
-            } shadow-lg hover:shadow-indigo-500/25`}
-          >
-            {isMuted ? <MicOff className="w-8 h-8 text-gray-200" /> : <Mic className="w-8 h-8 text-white" />}
-          </button>
-          {status === "ringing" ? (
-            <>
-              <button
-                onClick={() => handleStatusChange("connected")}
-                className={`p-8 rounded-full ${colors.buttons.accept} transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-emerald-500/25`}
-              >
-                <Phone className="w-10 h-10 text-white" />
-              </button>
-              <button
-                onClick={() => handleStatusChange("disconnected")}
-                className={`p-8 rounded-full ${colors.buttons.decline} transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-rose-500/25`}
-              >
-                <PhoneOff className="w-10 h-10 text-white" />
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={() => handleStatusChange("disconnected")}
-              className={`p-8 rounded-full ${colors.buttons.decline} transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-rose-500/25`}
-            >
-              <PhoneOff className="w-10 h-10 text-white" />
-            </button>
+
+        {/* Call UI Section */}
+        <div className="bg-gray-900 p-4">
+          {callStatus !== "idle" && (
+            <div className="bg-gray-800 rounded-lg p-6 space-y-4">
+              {/* Call Status and User Info */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center">
+                    <User className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">{calleeUsername}</h3>
+                    <p className="text-sm text-gray-400">
+                      {callStatus === "connecting" ? "Connecting..." : "Connected"}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  {/* Call Controls */}
+                  <button
+                    onClick={() => setIsMuted(!isMuted)}
+                    className={`p-2 rounded-full ${
+                      isMuted ? "bg-red-500" : "bg-gray-700 hover:bg-gray-600"
+                    }`}
+                  >
+                    {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                  </button>
+                  <button
+                    onClick={() => setIsVideoOff(!isVideoOff)}
+                    className={`p-2 rounded-full ${
+                      isVideoOff ? "bg-red-500" : "bg-gray-700 hover:bg-gray-600"
+                    }`}
+                  >
+                    {isVideoOff ? <CameraOff className="w-5 h-5" /> : <Camera className="w-5 h-5" />}
+                  </button>
+                  <button
+                    onClick={endCall}
+                    className="p-2 rounded-full bg-red-500 hover:bg-red-600"
+                  >
+                    <PhoneOff className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Video/Call Display Area */}
+              <div className="aspect-video bg-gray-900 rounded-lg flex items-center justify-center">
+                {isVideoOff ? (
+                  <div className="text-gray-500">Camera is off</div>
+                ) : (
+                  <div className="text-gray-500">Video stream would appear here</div>
+                )}
+              </div>
+            </div>
           )}
+        </div>
+
+        {/* Messages Container */}
+        <div className="flex-1 overflow-y-auto bg-gray-900 p-2 space-y-2">
+          {messages?.map((msg) => (
+            <div
+              onClick={() => startCall(msg.user)}
+              key={msg.id}
+              className="group hover:bg-gray-800/50 rounded-lg p-2 transition-all duration-300 ease-in-out border border-transparent hover:border-gray-700 shadow-sm hover:shadow-md cursor-pointer"
+            >
+              <div className="flex items-start space-x-4">
+                <span className="text-lg text-indigo-400 font-semibold">{msg.user}</span>
+                <p className="text-lg text-gray-200 font-medium leading-relaxed">
+                  {msg.message}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
   );
 };
 
-export default Call;
+export default ChatPopUp;
