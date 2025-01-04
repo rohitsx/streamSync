@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener(function (request) {
   if (request && request.type === "remove-render") {
     console.log("remove render");
 
-    document.querySelector("#crx-root")?.remove();
+     document.querySelector("#crx-root")?.remove();
   }
 });
 

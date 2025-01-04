@@ -8,7 +8,7 @@ import Setting from "./pages/Setting";
 import CloseTab from "./pages/closeTab";
 import LiveStream from "./stream/LiveStreamList";
 import ChatPopUp from "./stream/ChatPopUp";
-import Call from "@/utils/Call";
+import Call from "./pages/test";
 
 const App: React.FC = () => {
   return (
@@ -25,7 +25,9 @@ const App: React.FC = () => {
         />
         <Route path="/setting" element={<Setting />} />
         <Route path="/close" element={<CloseTab />} />
-        <Route path="/call/:hostName" element={<Call />} />
+
+        <Route path="/test" element={<Call hostName={"koki"} />} />
+
       </Routes>
     </HashRouter>
   );

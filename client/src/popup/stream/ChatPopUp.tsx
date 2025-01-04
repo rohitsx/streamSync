@@ -1,5 +1,4 @@
 import { MessageProp } from "@/types/api";
-import Call from "@/utils/Call";
 import clsx from "clsx";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -57,7 +56,6 @@ export default function ChatPopUp() {
             StreamSyn
           </h1>
         </div>
-        <Call strangerUsername={calleeUsername}  webSocket={webSocket} />
 
         {/* Messages Container */}
         <div className="flex-1 overflow-y-auto bg-gray-900 p-2 space-y-2">

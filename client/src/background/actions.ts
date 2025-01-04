@@ -9,7 +9,7 @@ export default async function handleActions(request: MessageRequest) {
     googleLogin: () => googAuth(),
     youtubeAuth: () => ytAuth(request),
     getUsername: () => getUsername(),
-    startCall: () => startCall(request.hostName)
+    startCall: () => startCall(request.hostName, request.webSocket)
   };
   const res = await actions[request.action]();
   return res;

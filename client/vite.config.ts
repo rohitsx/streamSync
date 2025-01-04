@@ -31,14 +31,18 @@ const manifest = defineManifest({
   content_scripts: [
     {
       run_at: "document_end",
-      matches: [ "https://www.youtube.com/*"],
+      matches: ["https://www.youtube.com/*"],
       js: ["src/content_script/ContentMain.tsx"],
     },
   ],
 });
 
 export default defineConfig({
-  plugins: [react(), crx({ manifest }), nodePolyfills()],
+  plugins: [
+    react(),
+    crx({ manifest }),
+    nodePolyfills(),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src/shared"),

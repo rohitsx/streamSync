@@ -1,12 +1,12 @@
-import Header from "./header";
 import Chat from "./chats";
 import ChatInput from "./chatInput";
-import useWebSocket from "@/hook/useWebSocket";
 import { useEffect, useState } from "react";
 import LoginPrompt from "./loginPromt";
+import Header from "../header";
 
-export default function ChatBox() {
-  const webSocket = useWebSocket();
+export default function ChatBox(
+  { webSocket }: { webSocket: WebSocket | null },
+) {
   const [checkUser, setCheckUser] = useState<boolean>(false);
 
   useEffect(() => {
@@ -18,25 +18,6 @@ export default function ChatBox() {
       username && setCheckUser(true);
     })();
   }, []);
-
-  useEffect(() => {
-    const handleMessage = async (ev: MessageEvent) => {
-      const { startCall } = JSON.parse(ev.data);
-      if (startCall.hostName) {
-        await chrome.runtime.sendMessage(
-          {
-            action: "startCall",
-            hostName: startCall.hostName,
-          },
-        );
-      }
-      webSocket?.addEventListener("message", handleMessage);
-
-      return () => {
-        webSocket?.removeEventListener("message", handleMessage);
-      };
-    };
-  }, [webSocket]);
 
   return (
     <div className="w-full h-full flex flex-col">

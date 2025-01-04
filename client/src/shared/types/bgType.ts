@@ -7,6 +7,7 @@ export interface MessageRequest {
   action: string;
   userId?: string;
   hostName?: string;
+  webSocket?: WebSocket;
 }
 
 export interface MessageResponse {
