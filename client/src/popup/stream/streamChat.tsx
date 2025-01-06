@@ -1,12 +1,12 @@
 import { MessageProp } from "@/types/api";
 import { useEffect, useState } from "react";
 
-interface ChatPopupMessageProp {
+interface ChatPopupProp{
   startCall: (calleeUsername: string) => void;
   webSocket: WebSocket
 }
 
-export default function ChatPopupMessage({  startCall, webSocket }: ChatPopupMessageProp) {
+export default function StreamChat({  startCall, webSocket }: ChatPopupProp) {
 
   const [messages, setMessages] = useState<MessageProp[]>([]);
 

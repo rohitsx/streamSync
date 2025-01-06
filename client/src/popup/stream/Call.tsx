@@ -1,16 +1,29 @@
-import { Mic, MicOff, PhoneOff, User } from "lucide-react";
+import { PhoneOff, User } from "lucide-react";
+import { useEffect } from "react";
 
 interface CallProps {
-	calleeUsername: string;
-	callStatus: "idle" | "connecting" | "connected";
-	isMuted: boolean;
-	setIsMuted: (isMuted: boolean) => void;
-	endCall: () => void;
+  calleeUsername: string | undefined;
+  callStatus: "idle" | "connecting" | "connected";
+  endCall: () => void;
+  webSocket: WebSocket;
 }
 
 export default function Call(
-  { calleeUsername, callStatus, isMuted, setIsMuted, endCall }: CallProps,
+  { calleeUsername, callStatus, endCall, webSocket }: CallProps,
 ) {
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      const { callStatus } = JSON.parse(e.data);
+      if (callStatus === "connect") {
+        console.log("connect");
+      } else if (callStatus) endCall();
+    };
+    webSocket.addEventListener("message", handleMessage);
+    return () => {
+      webSocket.removeEventListener("message", handleMessage);
+    };
+  }, [webSocket]);
+
   return (
     <>
       <div className="bg-gray-900 p-4">
@@ -35,16 +48,6 @@ export default function Call(
               </div>
               <div className="flex items-center space-x-4">
                 {/* Call Controls */}
-                <button
-                  onClick={() => setIsMuted(!isMuted)}
-                  className={`p-2 rounded-full ${
-                    isMuted ? "bg-red-500" : "bg-gray-700 hover:bg-gray-600"
-                  }`}
-                >
-                  {isMuted
-                    ? <MicOff className="w-5 h-5" />
-                    : <Mic className="w-5 h-5" />}
-                </button>
                 <button
                   onClick={endCall}
                   className="p-2 rounded-full bg-red-500 hover:bg-red-600"

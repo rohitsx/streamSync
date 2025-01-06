@@ -2,12 +2,11 @@ import { ContentBackground } from "@/layout/contentScriptLayout";
 import ChatBox from "./component/chatBox/chatBox";
 import { useEffect, useState } from "react";
 import useWebSocket from "@/hook/useWebSocket";
-import Call from "./component/Call";
-
+import Call from "./component/call/Call";
 
 export default function App() {
   const webSocket = useWebSocket();
-  const [hostName, setHostName] = useState<string>();
+  const [hostName, setHostName] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -27,8 +26,8 @@ export default function App() {
 
   return (
     <ContentBackground>
-      {hostName
-        ? <Call hostName={hostName} webSocket={webSocket} />
+      {hostName && webSocket
+        ? <Call hostName={hostName} webSocket={webSocket} setHostName={setHostName} />
         : <ChatBox webSocket={webSocket} />}
     </ContentBackground>
   );

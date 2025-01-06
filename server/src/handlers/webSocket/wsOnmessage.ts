@@ -27,4 +27,23 @@ export default class wsOnMessage {
       JSON.stringify({ startCall: { hostName } }),
     );
   }
+
+  callStatus(
+    data: { callStatus: "connected" | "connect" | "disconnected"; to: string },
+  ) {
+    const { callStatus, to } = data;
+    console.log("recived callStatus", { callStatus, to });
+    this.users?.get(to)?.send(JSON.stringify({ callStatus }));
+  }
+
+  send(name: string, { to, data }: {
+    to: string;
+    data: string | Record<string, unknown>;
+  }) {
+    const receiverWs = this.users?.get(to);
+    if (!receiverWs) throw new Error("user not found");
+    receiverWs.send(
+      JSON.stringify({ name, data, to, sender: this.ws.username }),
+    );
+  }
 }

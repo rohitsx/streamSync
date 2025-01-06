@@ -1,5 +1,5 @@
 import Layout, { YouTubeButton } from "@/layout/Layout";
-import { useId, useState } from "react";
+import {  useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FAQSection from "./YoutubeAuthFAQ";
 import { ArrowLeft } from "lucide-react";

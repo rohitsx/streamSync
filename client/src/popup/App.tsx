@@ -26,8 +26,7 @@ const App: React.FC = () => {
         <Route path="/setting" element={<Setting />} />
         <Route path="/close" element={<CloseTab />} />
 
-        <Route path="/test" element={<Call hostName={"koki"} />} />
-
+        <Route path="/test" element={<Call />} />
       </Routes>
     </HashRouter>
   );

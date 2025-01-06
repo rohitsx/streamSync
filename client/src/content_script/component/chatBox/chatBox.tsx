@@ -2,7 +2,7 @@ import Chat from "./chats";
 import ChatInput from "./chatInput";
 import { useEffect, useState } from "react";
 import LoginPrompt from "./loginPromt";
-import Header from "../header";
+import Header from "./header";
 
 export default function ChatBox(
   { webSocket }: { webSocket: WebSocket | null },

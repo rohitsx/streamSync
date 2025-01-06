@@ -68,4 +68,8 @@ export interface WsOnMessageProp {
   startCall: {
     calleeUsername: string;
   };
+  callStatus: {
+    callStatus: "connected"| "connect" | "disconnected";
+    to: string;
+  };
 }

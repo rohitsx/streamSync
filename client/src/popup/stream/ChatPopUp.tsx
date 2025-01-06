@@ -1,8 +1,8 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import Header from "./Header";
 import Call from "./Call";
-import ChatPopupMessage from "./Message";
+import StreamChat from "./streamChat";
 
 const ChatPopUp = () => {
   const params = useParams();
@@ -10,7 +10,6 @@ const ChatPopUp = () => {
   const [callStatus, setCallStatus] = useState<
     "idle" | "connecting" | "connected"
   >("idle");
-  const [isMuted, setIsMuted] = useState(false);
 
   const webSocket = useMemo(() => {
     const url =
@@ -24,13 +23,15 @@ const ChatPopUp = () => {
     setCallStatus("connecting");
   }, []);
 
-
-
   const endCall = useCallback(() => {
+    webSocket.send(
+      JSON.stringify({
+        callStatus: { callStatus: "disconnect", to: calleeUsername },
+      }),
+    );
     setCallStatus("idle");
     setCalleeUsername(undefined);
-    setIsMuted(false);
-  }, []);
+  }, [webSocket, calleeUsername]);
 
   return (
     <div
@@ -39,13 +40,12 @@ const ChatPopUp = () => {
       <div className="w-full max-w-4xl flex flex-col h-screen">
         <Header />
         <Call
-          calleeUsername={calleeUsername || ""}
+          calleeUsername={calleeUsername}
           callStatus={callStatus}
-          isMuted={isMuted}
-          setIsMuted={setIsMuted}
           endCall={endCall}
+          webSocket={webSocket}
         />
-        <ChatPopupMessage
+        <StreamChat
           startCall={startCall}
           webSocket={webSocket}
         />
