@@ -12,7 +12,6 @@ export default class wsOnMessage {
 
   broadCastChat(message: string) {
     const _liveMessage = {
-      id: 1,
       message: message,
       user: this.ws.username,
     };

@@ -2,17 +2,18 @@ import { ContentBackground } from "@/layout/contentScriptLayout";
 import ChatBox from "./component/chatBox/chatBox";
 import { useEffect, useState } from "react";
 import useWebSocket from "@/hook/useWebSocket";
-import Call from "./component/call/Call";
+import Call from "@/components/call/Call";
 
 export default function App() {
   const webSocket = useWebSocket();
-  const [hostName, setHostName] = useState<string | null>(null);
+  const [stranger, setStranger] = useState<string | undefined>();
 
   useEffect(() => {
     try {
       const handleMessage = async (ev: MessageEvent) => {
         const { startCall } = JSON.parse(ev.data);
-        setHostName(startCall.hostName);
+        if (!startCall) return;
+        setStranger(startCall.hostName);
       };
 
       webSocket?.addEventListener("message", handleMessage);
@@ -26,8 +27,15 @@ export default function App() {
 
   return (
     <ContentBackground>
-      {hostName && webSocket
-        ? <Call hostName={hostName} webSocket={webSocket} setHostName={setHostName} />
+      {stranger && webSocket
+        ? (
+          <Call
+            stranger={stranger}
+            webSocket={webSocket}
+            setStranger={setStranger}
+            userType={"audience"}
+          />
+        )
         : <ChatBox webSocket={webSocket} />}
     </ContentBackground>
   );

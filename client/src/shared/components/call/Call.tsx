@@ -1,127 +1,82 @@
-import React, {
-  RefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import useMedia from "@/hook/useMedia";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Phone, PhoneOff } from "lucide-react";
+import useWebRtc from "@/hook/useWebRtc";
 
 type CallStatus = "ringing" | "connect" | "connected" | "disconnected";
 
 interface CallProps {
   stranger: string;
   webSocket: WebSocket;
-  setHostName: (hostName: string | null) => void;
-  audioRef: RefObject<HTMLAudioElement>;
+  setStranger: (hostName: string | undefined) => void;
+  userType: "host" | "audience";
 }
 
-export default function Call({ stranger, webSocket, audioRef }: CallProps) {
-  const { getStream, closeStream } = useMedia();
-  const [pc, setPc] = useState<RTCPeerConnection>();
-  const makingOfferRef = useRef(false);
-  const ignoreOfferRef = useRef(false);
-  const politeRef = useRef(false);
-  const iceCandidatesQueue = useRef<RTCIceCandidateInit[]>([]);
+const Call: React.FC<CallProps> = ({
+  stranger,
+  webSocket,
+  setStranger,
+  userType,
+}) => {
+  const [status, setStatus] = useState<CallStatus>("ringing");
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const { start, sendOffer, handleOffer, resetPc } = useWebRtc({
+    stranger,
+    webSocket,
+    audioRef,
+    politeInstance: userType === "host",
+  });
 
-  const start = useCallback(async () => {
-    if (pc?.connectionState === "connected") resetPc();
+  const handleDisconnect = useCallback(() => {
+    console.log("working");
+    setStatus("disconnected");
+    setStranger(undefined);
+  }, [webSocket]);
 
-    const newPeerConnection = new RTCPeerConnection({
-      iceServers: [{ urls: "stun:stun.mystunserver.tld" }],
-    });
-    setPc(newPeerConnection);
-  }, [pc]);
+  const handleStatusChange = useCallback((newStatus: CallStatus) => {
+    setStatus(newStatus);
+    webSocket.send(
+      JSON.stringify({ callStatus: { callStatus: newStatus, to: stranger } }),
+    );
 
-  const sendOffer = useCallback(() => {
-    if (!pc) return;
-    try {
-      pc.onnegotiationneeded = async () => {
-        makingOfferRef.current = true;
-        await pc.setLocalDescription();
-        webSocket.send(JSON.stringify({
-          offer: {
-            description: pc,
-            to: stranger,
-          },
-        }));
-      };
-    } catch (err) {
-      console.log(err);
-    } finally {
-      makingOfferRef.current = false;
-    }
-  }, [pc]);
-
-  const handleAnswer = useCallback(() => {
-	if (!pc) return;
-	try {
-	  pc.onnegotiationneeded = async () => {
-		await pc.setRemoteDescription();
-		await pc.setLocalDescription();
-		webSocket.send(JSON.stringify({
-		  answer: {
-			description: pc,
-			to: stranger,
-		  },
-		}));
-	  };
-	} catch (err) {
-	  console.log(err);
-	}
-  }, [pc]);
+    if (newStatus === "disconnected") handleDisconnect();
+  }, []);
 
   useEffect(() => {
-    if (!pc) return;
-    pc.ontrack = ({ track, streams }) => {
-      track.onunmute = () => {
-        if (!audioRef.current) return;
-        if (audioRef.current.srcObject) return;
-        audioRef.current.srcObject = streams[0];
-      };
+    const handleMessage = (e: MessageEvent) => {
+      const { callStatus } = JSON.parse(e.data);
+      if (!callStatus) return;
+      callStatus === "disconnected" && handleDisconnect();
+      callStatus === "connect" && setStatus("connected");
     };
-
-    pc.onicecandidate = ({ candidate }) => {
-      webSocket.send(JSON.stringify({
-        iceCandidates: {
-          candidate,
-          to: stranger,
-        },
-      }));
-    };
-
-    let stream: MediaStream | null;
-    (async () => {
-      stream = await getStream();
-      if (!stream) return;
-      for (const track of stream.getTracks()) pc.addTrack(track, stream);
-    })();
-
+    webSocket.addEventListener("message", handleMessage);
     return () => {
-      stream && closeStream(stream);
+      webSocket.removeEventListener("message", handleMessage);
     };
-  }, [pc]);
+  }, [webSocket]);
 
-  const resetPc = useCallback(() => {
-    if (pc) {
-      // Close all tracks
-      pc.getSenders().forEach((sender) => {
-        if (sender.track) {
-          sender.track.stop();
-        }
-      });
+  return (
+    <div className="flex flex-col ">
+      <audio ref={audioRef} className="hidden"></audio>
+      <h1>status: {status}</h1>
+      <div className="p-8">
+        {userType !== "host" && status === "ringing" && (
+          <button
+            onClick={() => handleStatusChange("connect")}
+            className={`p-6 rounded-full bg-emerald-500 hover:bg-emerald-600 transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-emerald-500/25`}
+          >
+            <Phone className="w-10 h-10 text-white" />
+          </button>
+        )}
 
-      // Close the connection
-      pc.close();
+        <button
+          onClick={() => handleStatusChange("disconnected")}
+          className={`p-6 rounded-full bg-rose-500 hover:bg-rose-600 transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-rose-500/25`}
+        >
+          <PhoneOff className="w-10 h-10 text-white" />
+        </button>
+      </div>
+    </div>
+  );
+};
 
-      // Reset all refs
-      makingOfferRef.current = false;
-      ignoreOfferRef.current = false;
-      politeRef.current = false;
-      iceCandidatesQueue.current = [];
-
-      // Reset the state
-      setPc(undefined);
-    }
-  }, [pc]);
-}
+export default Call;

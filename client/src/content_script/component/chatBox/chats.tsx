@@ -3,11 +3,14 @@ import { useEffect, useState } from "react";
 
 export default function Chat({ webSocket }: { webSocket: WebSocket }) {
   const [messages, setMessages] = useState<MessageProp[]>([]);
+  const [messageId, setMessagesId] = useState(0);
   useEffect(() => {
     try {
       const handleMessage = (ev: MessageEvent) => {
         const { liveMessage } = JSON.parse(ev.data);
-        liveMessage && setMessages((prev) => [...prev, liveMessage]);
+        if (!liveMessage) return;
+        setMessagesId((prev) => prev + 1);
+        setMessages((prev) => [...prev, { ...liveMessage, id: messageId }]);
       };
 
       webSocket.addEventListener("message", handleMessage);
@@ -17,7 +20,7 @@ export default function Chat({ webSocket }: { webSocket: WebSocket }) {
     } catch (e) {
       console.log(e);
     }
-  }, [webSocket]);
+  }, [webSocket, messageId]);
 
   return (
     <div className="flex-1 overflow-y-auto p-4 space-y-1">

@@ -1,25 +1,27 @@
 import { MessageProp } from "@/types/api";
 import { useEffect, useState } from "react";
 
-interface ChatPopupProp{
+interface ChatPopupProp {
   startCall: (calleeUsername: string) => void;
-  webSocket: WebSocket
+  webSocket: WebSocket;
 }
 
-export default function StreamChat({  startCall, webSocket }: ChatPopupProp) {
-
+export default function StreamChat({ startCall, webSocket }: ChatPopupProp) {
   const [messages, setMessages] = useState<MessageProp[]>([]);
+  const [messageId, setMessagesId] = useState(0);
 
   useEffect(() => {
     const handleMessage = (ev: MessageEvent) => {
       const { liveMessage } = JSON.parse(ev.data);
-      liveMessage && setMessages((prev) => [...prev, liveMessage]);
+      if (!liveMessage) return;
+      setMessagesId((prev) => prev + 1);
+      setMessages((prev) => [...prev, { ...liveMessage, id: messageId }]);
     };
     webSocket.addEventListener("message", handleMessage);
     return () => {
       webSocket.removeEventListener("message", handleMessage);
     };
-  }, [webSocket]);
+  }, [webSocket, messageId]);
 
   return (
     <>

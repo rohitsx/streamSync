@@ -1,37 +1,24 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import Header from "./Header";
-import Call from "./Call";
 import StreamChat from "./streamChat";
+import env from "@/config/enviroment";
+import Call from "@/components/call/Call";
 
 const ChatPopUp = () => {
   const params = useParams();
-  const [calleeUsername, setCalleeUsername] = useState<string | undefined>();
-  const [callStatus, setCallStatus] = useState<
-    "idle" | "connecting" | "connected"
-  >("idle");
+  const [stranger, setStranger] = useState<string | undefined>();
 
   const webSocket = useMemo(() => {
     const url =
-      `${import.meta.env.VITE_WS}create-room?streamId=${params.streamId}&accessToken=${params.token}&username=${params.username}`;
+      `${env.wsApi}create-room?streamId=${params.streamId}&accessToken=${params.token}&username=${params.username}`;
     return new WebSocket(url);
   }, []);
 
   const startCall = useCallback((calleeUsername: string) => {
     webSocket.send(JSON.stringify({ startCall: { calleeUsername } }));
-    setCalleeUsername(calleeUsername);
-    setCallStatus("connecting");
+    setStranger(calleeUsername);
   }, []);
-
-  const endCall = useCallback(() => {
-    webSocket.send(
-      JSON.stringify({
-        callStatus: { callStatus: "disconnect", to: calleeUsername },
-      }),
-    );
-    setCallStatus("idle");
-    setCalleeUsername(undefined);
-  }, [webSocket, calleeUsername]);
 
   return (
     <div
@@ -39,12 +26,14 @@ const ChatPopUp = () => {
     >
       <div className="w-full max-w-4xl flex flex-col h-screen">
         <Header />
-        <Call
-          calleeUsername={calleeUsername}
-          callStatus={callStatus}
-          endCall={endCall}
-          webSocket={webSocket}
-        />
+        {stranger && (
+          <Call
+            stranger={stranger}
+            setStranger={setStranger}
+            webSocket={webSocket}
+            userType={"host"}
+          />
+        )}
         <StreamChat
           startCall={startCall}
           webSocket={webSocket}

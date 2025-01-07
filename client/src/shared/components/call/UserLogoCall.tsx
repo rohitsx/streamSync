@@ -1,6 +1,6 @@
 import { User } from "lucide-react";
 
-export default function UserLogoCall({ isVisible, status, hostName }: any) {
+export default function UserLogoCall({ isVisible, status, stranger }: any) {
   const colors = {
     gradient: {
       primary: "from-indigo-500 to-violet-500",
@@ -34,7 +34,7 @@ export default function UserLogoCall({ isVisible, status, hostName }: any) {
           </>
         )}
         <h2 className="mt-6 text-4xl font-bold text-white text-center">
-          {hostName}
+          {stranger}
         </h2>
       </div>
     </div>
