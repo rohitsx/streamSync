@@ -30,7 +30,15 @@ const Call: React.FC<CallProps> = ({
     console.log("working");
     setStatus("disconnected");
     setStranger(undefined);
-  }, [webSocket]);
+    resetPc();
+  }, []);
+
+  const handleConnect = useCallback(() => {
+    start();
+    sendOffer();
+    handleOffer();
+    setStatus("connected");
+  }, []);
 
   const handleStatusChange = useCallback((newStatus: CallStatus) => {
     setStatus(newStatus);
@@ -45,8 +53,9 @@ const Call: React.FC<CallProps> = ({
     const handleMessage = (e: MessageEvent) => {
       const { callStatus } = JSON.parse(e.data);
       if (!callStatus) return;
+
       callStatus === "disconnected" && handleDisconnect();
-      callStatus === "connect" && setStatus("connected");
+      callStatus === "connect" && handleConnect();
     };
     webSocket.addEventListener("message", handleMessage);
     return () => {

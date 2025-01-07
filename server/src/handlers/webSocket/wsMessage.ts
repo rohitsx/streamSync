@@ -13,14 +13,17 @@ export default function wsHandler(
       await stream.delete({ username: socket.username, streamId });
 
     socket.onmessage = (e) => {
-      const { liveMessage, startCall, callStatus }: WsOnMessageProp = JSON
-        .parse(
-          e.data,
-        );
+      const { liveMessage, startCall, callStatus, description, candidate }:
+        WsOnMessageProp = JSON
+          .parse(
+            e.data,
+          );
 
       liveMessage && message.broadCastChat(liveMessage);
       startCall && message.startCall(socket.username, startCall.calleeUsername);
       callStatus && message.callStatus(callStatus);
+      description && message.webRtc(description);
+      candidate && message.webRtcCandidate(candidate);
     };
   } catch (err) {
     console.log(err);

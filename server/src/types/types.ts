@@ -51,10 +51,13 @@ export interface StreamRoomDelProp {
   streamId: string;
 }
 
-export interface webRtcSignalingProp {
-  host: string;
-  stranger: string;
+export interface WebRtcSignalingProp {
+  to: string;
   description: {
+    type: "offer" | "answer" | "rollback" | "pranswer";
+    sdp?: string;
+  };
+  candidate: {
     type: "offer" | "answer" | "rollback" | "pranswer";
     sdp?: string;
   };
@@ -62,14 +65,13 @@ export interface webRtcSignalingProp {
 
 export interface WsOnMessageProp {
   liveMessage: string;
-  offer: webRtcSignalingProp;
-  answer: webRtcSignalingProp;
-  iceCandidate: webRtcSignalingProp;
+  description: WebRtcSignalingProp;
+  candidate: WebRtcSignalingProp;
   startCall: {
     calleeUsername: string;
   };
   callStatus: {
-    callStatus: "connected"| "connect" | "disconnected";
+    callStatus: "connected" | "connect" | "disconnected";
     to: string;
   };
 }

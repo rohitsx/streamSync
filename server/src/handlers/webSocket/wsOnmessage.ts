@@ -1,4 +1,4 @@
-import { WsWithUsername } from "../../types/types.ts";
+import { WebRtcSignalingProp, WsWithUsername } from "../../types/types.ts";
 import { userWsObject } from "./streamRoom.ts";
 
 export default class wsOnMessage {
@@ -44,5 +44,17 @@ export default class wsOnMessage {
     receiverWs.send(
       JSON.stringify({ name, data, to, sender: this.ws.username }),
     );
+  }
+
+  webRtc(description: WebRtcSignalingProp) {
+    console.log("recived description sanding it to ", description.to);
+    const strangerws = this.users?.get(description.to);
+    strangerws?.send(JSON.stringify({ description: description.description }));
+  }
+
+  webRtcCandidate(description: WebRtcSignalingProp) {
+    console.log("recived candidate sanding it to ", description.to);
+    const strangerws = this.users?.get(description.to);
+    strangerws?.send(JSON.stringify({ candidate: description.candidate }));
   }
 }
