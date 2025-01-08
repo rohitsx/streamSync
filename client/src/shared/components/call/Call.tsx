@@ -19,7 +19,7 @@ const Call: React.FC<CallProps> = ({
 }) => {
   const [status, setStatus] = useState<CallStatus>("ringing");
   const audioRef = useRef<HTMLAudioElement>(null);
-  const { start, sendOffer, handleOffer, resetPc } = useWebRtc({
+  const { pc, sendOffer, resetPc } = useWebRtc({
     stranger,
     webSocket,
     audioRef,
@@ -34,11 +34,9 @@ const Call: React.FC<CallProps> = ({
   }, []);
 
   const handleConnect = useCallback(() => {
-    start();
     sendOffer();
-    handleOffer();
     setStatus("connected");
-  }, []);
+  }, [pc]);
 
   const handleStatusChange = useCallback((newStatus: CallStatus) => {
     setStatus(newStatus);
@@ -47,7 +45,8 @@ const Call: React.FC<CallProps> = ({
     );
 
     if (newStatus === "disconnected") handleDisconnect();
-  }, []);
+    if (newStatus === "connect") handleConnect();
+  }, [pc]);
 
   useEffect(() => {
     const handleMessage = (e: MessageEvent) => {
@@ -61,7 +60,7 @@ const Call: React.FC<CallProps> = ({
     return () => {
       webSocket.removeEventListener("message", handleMessage);
     };
-  }, [webSocket]);
+  }, [webSocket, pc]);
 
   return (
     <div className="flex flex-col ">

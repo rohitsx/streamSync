@@ -31,7 +31,6 @@ export default class wsOnMessage {
     data: { callStatus: "connected" | "connect" | "disconnected"; to: string },
   ) {
     const { callStatus, to } = data;
-    console.log("recived callStatus", { callStatus, to });
     this.users?.get(to)?.send(JSON.stringify({ callStatus }));
   }
 
@@ -47,13 +46,18 @@ export default class wsOnMessage {
   }
 
   webRtc(description: WebRtcSignalingProp) {
-    console.log("recived description sanding it to ", description.to);
+    console.log(
+      "description type,",
+      description.description.type,
+      "to",
+      description.to,
+    );
     const strangerws = this.users?.get(description.to);
     strangerws?.send(JSON.stringify({ description: description.description }));
   }
 
   webRtcCandidate(description: WebRtcSignalingProp) {
-    console.log("recived candidate sanding it to ", description.to);
+    console.log("candidate");
     const strangerws = this.users?.get(description.to);
     strangerws?.send(JSON.stringify({ candidate: description.candidate }));
   }

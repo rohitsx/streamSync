@@ -17,19 +17,49 @@ export default function useWebRtc(
   const ignoreOffer = useRef(false);
   const polite = useRef(politeInstance);
 
-  const start = useCallback(async () => {
-    if (pc?.connectionState === "connected") resetPc();
-
-    const newPeerConnection = new RTCPeerConnection({
+  useEffect(() => {
+    let stream: MediaStream | null;
+    const peerConnection = new RTCPeerConnection({
       iceServers: [{ urls: "stun:stun.mystunserver.tld" }],
     });
-    setPc(newPeerConnection);
-  }, [pc]);
+
+    (async () => {
+      stream = await getStream();
+      if (!stream) return;
+      for (const track of stream.getTracks()) {
+        peerConnection.addTrack(track, stream);
+      }
+    })();
+
+    setPc(peerConnection);
+    return () => {
+      resetPc();
+      stream && closeStream(stream);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!pc) return;
+
+    pc.onicecandidate = ({ candidate }) =>
+      webSocket.send(JSON.stringify({
+        candidate: {
+          candidate,
+          to: stranger,
+        },
+      }));
+
+    pc.ontrack = ({ track, streams }) =>
+      track.onunmute = () =>
+        audioRef?.current?.srcObject &&
+        (audioRef.current.srcObject = streams[0]);
+  }, [pc, webSocket]);
 
   const sendOffer = useCallback(() => {
     if (!pc) return;
-    try {
-      pc.onnegotiationneeded = async () => {
+
+    pc.onnegotiationneeded = async () => {
+      try {
         makingOffer.current = true;
         await pc.setLocalDescription();
         webSocket.send(JSON.stringify({
@@ -38,20 +68,20 @@ export default function useWebRtc(
             to: stranger,
           },
         }));
-      };
-    } catch (err) {
-      console.log(err);
-    } finally {
-      makingOffer.current = false;
-    }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        makingOffer.current = false;
+      }
+    };
   }, [pc]);
 
-  const handleOffer = useCallback(async () => {
+  useEffect(() => {
     if (!pc) return;
 
     const handleMessage = async (e: MessageEvent) => {
       const { description, candidate } = JSON.parse(e.data);
-      if (!description || !candidate) return;
+      if (!description && !candidate) return;
 
       if (description) {
         const offerCollision = description.type === "offer" &&
@@ -80,64 +110,25 @@ export default function useWebRtc(
       }
     };
 
-    try {
-      webSocket.addEventListener("message", handleMessage);
-    } catch (err) {
-      console.log(err);
-    }
+    webSocket.addEventListener("message", handleMessage);
+
     return () => {
       webSocket.removeEventListener("message", handleMessage);
     };
-  }, [pc]);
-
-  useEffect(() => {
-    if (!pc) return;
-    pc.ontrack = ({ track, streams }) => {
-      track.onunmute = () => {
-        if (!audioRef?.current) return;
-        if (audioRef.current.srcObject) return;
-        audioRef.current.srcObject = streams[0];
-      };
-    };
-
-    pc.onicecandidate = ({ candidate }) => {
-      webSocket.send(JSON.stringify({
-        candidate: {
-          candidate,
-          to: stranger,
-        },
-      }));
-    };
-
-    let stream: MediaStream | null;
-    (async () => {
-      stream = await getStream();
-      if (!stream) return;
-      for (const track of stream.getTracks()) pc.addTrack(track, stream);
-    })();
-
-    return () => {
-      stream && closeStream(stream);
-    };
-  }, [pc]);
+  }, [pc, webSocket]);
 
   const resetPc = useCallback(() => {
     if (pc) {
-      pc.getSenders().forEach((sender) => {
-        if (sender.track) {
-          sender.track.stop();
-        }
-      });
+      pc.getSenders().forEach((sender) => sender?.track?.stop());
 
       pc.close();
+      setPc(undefined);
 
       makingOffer.current = false;
       ignoreOffer.current = false;
       polite.current = politeInstance;
-
-      setPc(undefined);
     }
   }, [pc]);
 
-  return { start, sendOffer, handleOffer, resetPc };
+  return { pc, sendOffer, resetPc };
 }

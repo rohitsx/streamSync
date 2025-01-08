@@ -14,10 +14,7 @@ export default function wsHandler(
 
     socket.onmessage = (e) => {
       const { liveMessage, startCall, callStatus, description, candidate }:
-        WsOnMessageProp = JSON
-          .parse(
-            e.data,
-          );
+        WsOnMessageProp = JSON.parse(e.data);
 
       liveMessage && message.broadCastChat(liveMessage);
       startCall && message.startCall(socket.username, startCall.calleeUsername);
