@@ -63,6 +63,7 @@ const Call: React.FC<CallProps> = ({
   }, [webSocket, pc]);
 
   return (
+
     <div className="flex flex-col ">
       <audio ref={audioRef} className="hidden"></audio>
       <h1>status: {status}</h1>

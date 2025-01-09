@@ -21,23 +21,23 @@ const ChatPopUp = () => {
   }, []);
 
   return (
-    <div
-      className={"min-h-screen w-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center bg-[length:400%_400%] animate-gradient"}
-    >
-      <div className="w-full max-w-4xl flex flex-col h-screen">
+    <div className="min-h-screen w-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900">
+      <div className="max-w-6xl mx-auto h-screen flex flex-col">
         <Header />
-        {stranger && (
-          <Call
-            stranger={stranger}
-            setStranger={setStranger}
+        <main className="flex-1 flex flex-col gap-4 p-4">
+          {stranger && (
+            <Call
+              stranger={stranger}
+              setStranger={setStranger}
+              webSocket={webSocket}
+              userType={"host"}
+            />
+          )}
+          <StreamChat
+            startCall={startCall}
             webSocket={webSocket}
-            userType={"host"}
           />
-        )}
-        <StreamChat
-          startCall={startCall}
-          webSocket={webSocket}
-        />
+        </main>
       </div>
     </div>
   );
