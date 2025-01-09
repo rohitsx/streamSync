@@ -27,11 +27,11 @@ const Call: React.FC<CallProps> = ({
   });
 
   const handleDisconnect = useCallback(() => {
-    console.log("working");
     setStatus("disconnected");
+    console.log("disconnected");
     setStranger(undefined);
     resetPc();
-  }, []);
+  }, [pc]);
 
   const handleConnect = useCallback(() => {
     sendOffer();
