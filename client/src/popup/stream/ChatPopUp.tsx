@@ -21,10 +21,15 @@ const ChatPopUp = () => {
   }, []);
 
   return (
-    <div className="min-h-screen w-screen bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900">
-      <div className="max-w-6xl mx-auto h-screen flex flex-col">
+    <div className="min-h-screen w-screen bg-slate-950">
+      <div className="flex flex-col h-screen">
         <Header />
         <main className="flex-1 flex flex-col gap-4 p-4">
+          <StreamChat
+            startCall={startCall}
+            webSocket={webSocket}
+          />
+
           {stranger && (
             <Call
               stranger={stranger}
@@ -33,10 +38,6 @@ const ChatPopUp = () => {
               userType={"host"}
             />
           )}
-          <StreamChat
-            startCall={startCall}
-            webSocket={webSocket}
-          />
         </main>
       </div>
     </div>
