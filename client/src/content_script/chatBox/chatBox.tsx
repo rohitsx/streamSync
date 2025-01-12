@@ -40,7 +40,7 @@ export default function ChatBox() {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col bg-slate-950">
       <Header />
       {webSocket
         ? (

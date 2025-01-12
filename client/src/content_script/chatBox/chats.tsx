@@ -1,9 +1,11 @@
 import { MessageProp } from "@/types/api";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Chat({ webSocket }: { webSocket: WebSocket }) {
   const [messages, setMessages] = useState<MessageProp[]>([]);
   const [messageId, setMessagesId] = useState(0);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     try {
       const handleMessage = (ev: MessageEvent) => {
@@ -22,19 +24,35 @@ export default function Chat({ webSocket }: { webSocket: WebSocket }) {
     }
   }, [webSocket, messageId]);
 
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <div className="flex-1 overflow-y-auto p-4 space-y-1">
+    <div
+      className="h-full overflow-y-auto px-4 md:px-6 py-6 space-y-4"
+      ref={chatContainerRef}
+    >
       {messages.map((msg) => (
         <div
           key={msg.id}
-          className="group hover:bg-gray-800/50 rounded-lg p-3 transition-colors duration-200"
+          className="group relative flex gap-4 p-4 rounded-2xl max-w-4xl mx-auto"
         >
-          <div className="flex items-start space-x-2">
-            <span className="text-2xl text-blue-400 font-semibold">
-              {msg.user}
-            </span>
-            <p className="text-2xl text-gray-100">{msg.message}</p>
+          <div>
+            <div className="w-9 h-9 rounded-xl bg-blue-950 flex items-center justify-center text-blue-200">
+              {msg.user[0].toUpperCase()}
+            </div>
           </div>
+
+          <p className="mt-2 text-slate-300 text-2xl">
+            <span className="opacity-70 font-medium text-zinc-300 truncate">
+              {msg.user + "   "}
+            </span>
+            {msg.message}
+          </p>
         </div>
       ))}
     </div>
