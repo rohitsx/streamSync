@@ -19,6 +19,7 @@ function Main() {
   if (!chatContainer) throw new Error("secondary-inner not found");
 
   const appContainer = document.createElement("div");
+
   const shadowHost = document.createElement("div");
   const styleElement = document.createElement("style");
 

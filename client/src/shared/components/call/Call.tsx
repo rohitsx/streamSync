@@ -91,8 +91,16 @@ const Call: React.FC<CallProps> = ({
   const avatar = useMemo(() => getInitialAvatar(), []);
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center">
-      <div className="bg-slate-900/90 backdrop-blur-md rounded-3xl p-8 flex flex-col items-center gap-6 w-96 border border-blue-900/30 shadow-2xl shadow-blue-500/10">
+    <div
+      className="fixed inset-0 bg-slate-950/80 blur-sm flex items-center justify-center"
+      style={{ transform: userType === "audience" ? "scale(2)" : "none" }}
+    >
+      <div
+        className="bg-slate-900/90 backdrop-blur-md rounded-3xl p-8 flex flex-col items-center gap-6 w-80 border border-blue-900/30 shadow-2xl shadow-blue-500/10"
+        style={userType === "audience"
+          ? { width: "11%" }
+          : { transform: "none" }}
+      >
         <audio ref={audioRef} className="hidden" />
 
         <div className="bg-blue-950 w-20 h-20 rounded-2xl flex items-center justify-center mb-2 transform hover:scale-105 transition-all duration-300 border border-blue-800/30 shadow-lg shadow-blue-900/20">

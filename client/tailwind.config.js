@@ -8,24 +8,13 @@ export default {
         13: "3.25rem",
         100: "42rem",
         101: "43rem",
-      },	
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      width: {
-        // Add your custom widths here
-        '128': '32rem',
-        '144': '36rem',
-        '160': '40rem',
-        // You can use any unit
-        'custom': '46.875rem',
-        // You can also use pixels
-        'special': '800px',
-        // Or percentages
-        '45p': '45%',
-      },
+
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
