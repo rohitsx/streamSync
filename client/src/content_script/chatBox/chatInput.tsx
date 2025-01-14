@@ -42,7 +42,7 @@ export default function ChatInput({ webSocket }: { webSocket: WebSocket }) {
       "9",
       "home",
       "end",
-      "space",
+      " ",
       "up",
       "down",
       "left",
@@ -57,18 +57,22 @@ export default function ChatInput({ webSocket }: { webSocket: WebSocket }) {
         e.preventDefault();
         e.stopPropagation();
       }
+      return;
     }
 
-    // For all YouTube shortcuts (including number keys)
+    // Special handling for space key
+    if (e.key === " ") {
+      e.stopPropagation();
+      return;
+    }
+
+    // For all other YouTube shortcuts
     const keyToCheck = e.shiftKey
       ? `shift+${e.key.toLowerCase()}`
       : e.key.toLowerCase();
+    
     if (youtubeShortcuts.includes(keyToCheck)) {
       e.stopPropagation();
-      // Don't prevent default for navigation keys (arrow keys) when editing text
-      if (!["left", "right", "home", "end"].includes(keyToCheck)) {
-        e.preventDefault();
-      }
     }
   };
 

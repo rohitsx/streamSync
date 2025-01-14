@@ -9,18 +9,26 @@ export default function wsHandler(
   const message = new wsOnMessage({ ws: socket, streamId });
 
   try {
-    socket.onclose = async () =>
+    socket.onclose = async () => {
       await stream.delete({ username: socket.username, streamId });
+    };
 
     socket.onmessage = (e) => {
-      const { liveMessage, startCall, callStatus, description, candidate }:
-        WsOnMessageProp = JSON.parse(e.data);
+      const {
+        liveMessage,
+        startCall,
+        callStatus,
+        description,
+        candidate,
+        streamStatus,
+      }: WsOnMessageProp = JSON.parse(e.data);
 
       liveMessage && message.broadCastChat(liveMessage);
       startCall && message.startCall(socket.username, startCall.calleeUsername);
       callStatus && message.callStatus(callStatus);
       description && message.webRtc(description);
       candidate && message.webRtcCandidate(candidate);
+      streamStatus && message.broadCastStreamStatus();
     };
   } catch (err) {
     console.log(err);

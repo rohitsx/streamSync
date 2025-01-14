@@ -74,4 +74,8 @@ export interface WsOnMessageProp {
     callStatus: "connected" | "connect" | "disconnected";
     to: string;
   };
+
+  streamStatus: {
+    status: "end";
+  };
 }

@@ -55,7 +55,7 @@ export default function Chat({ webSocket }: { webSocket: WebSocket }) {
           </div>
         )))
         : (
-          <div className="flex items-center justify-center h-64 text-slate-400">
+          <div className="flex text-2xl items-center justify-center h-64 text-slate-400">
             No messages yet
           </div>
         )}

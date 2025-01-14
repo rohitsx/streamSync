@@ -61,4 +61,11 @@ export default class wsOnMessage {
     const strangerws = this.users?.get(description.to);
     strangerws?.send(JSON.stringify({ candidate: description.candidate }));
   }
+
+  broadCastStreamStatus() {
+    console.log(this.users);
+    this.users?.forEach((ws: WsWithUsername) => {
+      ws.send(JSON.stringify({ streamStatus: "end" }));
+    });
+  }
 }
