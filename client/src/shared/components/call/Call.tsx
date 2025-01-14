@@ -92,11 +92,11 @@ const Call: React.FC<CallProps> = ({
 
   return (
     <div
-      className="fixed inset-0 bg-slate-950/80 blur-sm flex items-center justify-center"
-      style={{ transform: userType === "audience" ? "scale(2)" : "none" }}
+      className="fixed inset-0 bg-slate-950/80 flex items-center justify-center"
+      style={{ transform: userType === "audience" ? "scale(2)" : "none", zIndex: 999 }}
     >
       <div
-        className="bg-slate-900/90 backdrop-blur-md rounded-3xl p-8 flex flex-col items-center gap-6 w-80 border border-blue-900/30 shadow-2xl shadow-blue-500/10"
+        className="bg-slate-900/90 rounded-3xl p-8 flex flex-col items-center gap-6 w-80 border border-blue-900/30 shadow-2xl shadow-blue-500/10"
         style={userType === "audience"
           ? { width: "11%" }
           : { transform: "none" }}
