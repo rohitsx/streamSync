@@ -8,7 +8,7 @@ const manifest = defineManifest({
   version: "1.0.0",
   manifest_version: 3,
   name: "StreamSync",
-  description: "This is a Chrome extension built with React and TypeScript",
+  description: "StreamSync lets you integrate audio calls with YouTube Live chat",
   action: {
     default_popup: "index.html",
   },
@@ -27,7 +27,7 @@ const manifest = defineManifest({
     "activeTab",
     "webRequest",
   ],
-  host_permissions: ["https://localhost:8000/api/*", "https://*.youtube.com/*"],
+  host_permissions: ["https://streamsync-server.devrohit.tech/*", "https://*.youtube.com/*"],
   content_scripts: [
     {
       run_at: "document_end",
