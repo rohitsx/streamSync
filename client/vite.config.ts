@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react";
 import { crx, defineManifest } from "@crxjs/vite-plugin";
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
-import env from "./src/shared/config/enviroment"
 
 const manifest = defineManifest({
   version: "1.0.0",
@@ -26,7 +25,7 @@ const manifest = defineManifest({
     "cookies",
     "webRequest",
   ],
-  host_permissions: ["https://localhost:8000/*", "https://*.youtube.com/*"],
+  host_permissions: ["https://streamsync-server.devrohit.tech/*", "https://*.youtube.com/*"],
   content_scripts: [
     {
       run_at: "document_end",
