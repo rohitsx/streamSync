@@ -23,7 +23,6 @@ const manifest = defineManifest({
     "tabs",
     "identity",
     "cookies",
-    "webRequest",
   ],
   host_permissions: ["https://streamsync-server.devrohit.tech/*", "https://*.youtube.com/*"],
   content_scripts: [
