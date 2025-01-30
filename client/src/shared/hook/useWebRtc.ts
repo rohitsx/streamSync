@@ -8,9 +8,12 @@ interface CallProps {
   politeInstance: boolean;
 }
 
-export default function useWebRtc(
-  { stranger, webSocket, audioRef, politeInstance }: CallProps,
-) {
+export default function useWebRtc({
+  stranger,
+  webSocket,
+  audioRef,
+  politeInstance,
+}: CallProps) {
   const { getStream, closeStream } = useMedia();
   const [stream, setStream] = useState<MediaStream | null>();
   const [pc, setPc] = useState<RTCPeerConnection>();
@@ -22,14 +25,15 @@ export default function useWebRtc(
     if (pc?.connectionState === "connected") resetPc();
 
     const peerConnection = new RTCPeerConnection({
-      iceServers: [{ urls: "stun:stun.mystunserver.tld" }],
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
     });
 
-    pc && (pc.oniceconnectionstatechange = () => {
-      if (pc?.connectionState === "connected") {
-        console.log("peer connected");
-      }
-    });
+    pc &&
+      (pc.oniceconnectionstatechange = () => {
+        if (pc?.connectionState === "connected") {
+          console.log("peer connected");
+        }
+      });
     setPc(peerConnection);
     return () => {
       resetPc();
@@ -37,13 +41,11 @@ export default function useWebRtc(
   }, []);
 
   useEffect(() => {
-    if (!pc) return;
-    pc.ontrack = ({ track, streams }) => {
-      track.onunmute = () =>
-        audioRef?.current?.srcObject &&
-        (audioRef.current.srcObject = streams[0]);
+    if (!pc || !audioRef?.current) return;
+    pc.ontrack = ({ streams }) => {
+      audioRef.current!.srcObject = streams[0];
     };
-  }, [pc, webSocket]);
+  }, [pc, audioRef]);
 
   const sendOffer = useCallback(() => {
     if (!pc) return;
@@ -60,23 +62,27 @@ export default function useWebRtc(
     })();
 
     pc.onicecandidate = ({ candidate }) =>
-      webSocket.send(JSON.stringify({
-        candidate: {
-          candidate,
-          to: stranger,
-        },
-      }));
+      webSocket.send(
+        JSON.stringify({
+          candidate: {
+            candidate,
+            to: stranger,
+          },
+        }),
+      );
 
     pc.onnegotiationneeded = async () => {
       try {
         makingOffer.current = true;
         await pc.setLocalDescription();
-        webSocket.send(JSON.stringify({
-          description: {
-            description: pc.localDescription,
-            to: stranger,
-          },
-        }));
+        webSocket.send(
+          JSON.stringify({
+            description: {
+              description: pc.localDescription,
+              to: stranger,
+            },
+          }),
+        );
       } catch (err) {
         console.log(err);
       } finally {
@@ -89,37 +95,41 @@ export default function useWebRtc(
     };
   }, [pc]);
 
-  const handleOffer = useCallback(async (e: MessageEvent) => {
-    if (!pc) return;
-    const { description, candidate } = JSON.parse(e.data);
-    if (!description && !candidate) return;
+  const handleOffer = useCallback(
+    async (e: MessageEvent) => {
+      if (!pc) return;
+      const { description, candidate } = JSON.parse(e.data);
+      if (!description && !candidate) return;
 
-    if (description) {
-      const offerCollision = description.type === "offer" &&
-        (makingOffer.current || pc.signalingState !== "stable");
+      if (description) {
+        const offerCollision =
+          description.type === "offer" &&
+          (makingOffer.current || pc.signalingState !== "stable");
 
-      ignoreOffer.current = !polite.current && offerCollision;
-      if (ignoreOffer.current) return;
+        ignoreOffer.current = !polite.current && offerCollision;
+        if (ignoreOffer.current) return;
 
-      await pc.setRemoteDescription(description);
-      if (description.type !== "offer") return;
+        await pc.setRemoteDescription(description);
+        if (description.type !== "offer") return;
 
-      await pc.setLocalDescription();
-      webSocket.send(
-        JSON.stringify({
-          description: { description: pc.localDescription, to: stranger },
-        }),
-      );
-    } else if (candidate) {
-      try {
-        await pc.addIceCandidate(candidate);
-      } catch (err) {
-        if (!ignoreOffer) {
-          throw err;
+        await pc.setLocalDescription();
+        webSocket.send(
+          JSON.stringify({
+            description: { description: pc.localDescription, to: stranger },
+          }),
+        );
+      } else if (candidate) {
+        try {
+          await pc.addIceCandidate(candidate);
+        } catch (err) {
+          if (!ignoreOffer.current) {
+            throw err;
+          }
         }
       }
-    }
-  }, [pc]);
+    },
+    [pc],
+  );
 
   useEffect(() => {
     webSocket.addEventListener("message", handleOffer);

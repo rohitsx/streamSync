@@ -5,10 +5,11 @@ import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 const manifest = defineManifest({
-  version: "1.0.0",
+  version: "1.0.3",
   manifest_version: 3,
   name: "StreamSync",
-  description: "StreamSync lets you integrate audio calls with YouTube Live chat",
+  description:
+    "StreamSync lets you integrate audio calls with YouTube Live chat",
   action: {
     default_popup: "index.html",
   },
@@ -19,12 +20,11 @@ const manifest = defineManifest({
     service_worker: "src/background/bg.ts",
     type: "module",
   },
-  permissions: [
-    "tabs",
-    "identity",
-    "cookies",
+  permissions: ["tabs", "identity", "cookies"],
+  host_permissions: [
+    "https://streamsync-server.devrohit.tech/*",
+    "https://*.youtube.com/*",
   ],
-  host_permissions: ["https://streamsync-server.devrohit.tech/*", "https://*.youtube.com/*"],
   content_scripts: [
     {
       run_at: "document_end",
@@ -35,11 +35,7 @@ const manifest = defineManifest({
 });
 
 export default defineConfig({
-  plugins: [
-    react(),
-    crx({ manifest }),
-    nodePolyfills(),
-  ],
+  plugins: [react(), crx({ manifest }), nodePolyfills()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src/shared"),
