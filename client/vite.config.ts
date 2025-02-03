@@ -10,6 +10,15 @@ const manifest = defineManifest({
   name: "StreamSync",
   description:
     "StreamSync lets you integrate audio calls with YouTube Live chat",
+  key: `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjR/q927sYuzEtEK8FkEG
+YUnHCdKY92dIYTCD6hHIXnblFHxSv2ArngoyH1nieE6bv3LRUkSN6usmTnHztKYN
+OAHN7lqrKcrB6G++5sAf2NbkBMfWW7ZJmy0cIUt8rll//N/8mMUqJAPOHWM0zQLq
+qCEa3RBrT6w3+lZ2i/71LzBo+giaoeRGM57Il1dV+0ufuLW3fBUNZWMT7lSulKV3
+MyfgkF8OIUrpBVXxLuNKhGQVs6jyPIPVKnoFAf/X+bRgdFMXe35DmSfb2D89eXVF
+s1AW8LyOCQlYGWEBTVXsflUoz83j3R0+KEl2IRngoSMEL70vRFozZjiKpxVZNF3V
+EwIDAQAB
+-----END PUBLIC KEY-----`,
   action: {
     default_popup: "index.html",
   },

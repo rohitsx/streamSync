@@ -7,7 +7,6 @@ export default function ChatInput({ webSocket }: { webSocket: WebSocket }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-		console.log("send message")
       webSocket.send(JSON.stringify({ liveMessage: input }));
       setInput("");
     }
@@ -71,7 +70,7 @@ export default function ChatInput({ webSocket }: { webSocket: WebSocket }) {
     const keyToCheck = e.shiftKey
       ? `shift+${e.key.toLowerCase()}`
       : e.key.toLowerCase();
-    
+
     if (youtubeShortcuts.includes(keyToCheck)) {
       e.stopPropagation();
     }
