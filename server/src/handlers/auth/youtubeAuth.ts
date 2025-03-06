@@ -30,9 +30,10 @@ export default class YoutubeAuthHandler {
       const { authCode, id } = await _req.json();
       const oauth2Client = this.getOauth2Client();
 
+      console.dir("ytauth successful", authCode);
+
       const { tokens } = await oauth2Client.getToken(authCode);
       if (!tokens) return sendResponse("Authorization failed", 500);
-	  
 
       tokens.refresh_token &&
         this.db.setYtRefreshToken(id, tokens.refresh_token);
@@ -44,7 +45,6 @@ export default class YoutubeAuthHandler {
           ms: tokens.expiry_date,
         });
       }
-      console.dir("ytauth successful");
 
       return sendResponse("Authorization successful", 200);
     } catch (error) {

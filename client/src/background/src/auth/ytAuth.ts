@@ -2,21 +2,16 @@ import env from "@/config/enviroment";
 import { MessageRequest } from "@/types/bgType";
 import axios from "axios";
 
-export default async function ytAuth(
-  request: MessageRequest,
-) {
+export default async function ytAuth(request: MessageRequest) {
   if (!request.userId) return { status: "No user id" };
   const scope = "https://www.googleapis.com/auth/youtube.readonly";
   const redirectUri = chrome.identity.getRedirectURL("google");
-  const authUrl =
-    `https://accounts.google.com/o/oauth2/v2/auth?client_id=${env.clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&access_type=offline`;
+  const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${env.clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&access_type=offline`;
 
-  const responseUrl = await chrome.identity.launchWebAuthFlow(
-    {
-      url: authUrl,
-      interactive: true,
-    },
-  );
+  const responseUrl = await chrome.identity.launchWebAuthFlow({
+    url: authUrl,
+    interactive: true,
+  });
 
   if (!responseUrl) return { status: "No response URL" };
 
@@ -31,8 +26,11 @@ async function handleYtAuth(responseUrl: string, userId: string) {
     const authCode = urlObj.searchParams.get("code");
     if (!authCode) throw new Error("No auth code");
 
-    const response = await axios.post(env.api+"youtube-auth", { authCode, id: userId });
-	console.log(response)
+    console.log(authCode);
+    const response = await axios.post(env.api + "youtube-auth", {
+      authCode,
+      id: userId,
+    });
 
     if (response.status === 200) {
       const currentUser = await chrome.cookies.get({
