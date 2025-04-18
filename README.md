@@ -3,7 +3,7 @@
 
 #### StreamSync integrates voice with super chats for a more interactive streaming experience. 
 
-🔴 **[Live Demo](http://streamsync.fun/)** - Or checkout demo video below 
+🔴 **[Live Link](http://streamsync.fun/)** - Or checkout demo video below 
 
 [![StreamSync Demo](https://img.youtube.com/vi/36hbYPvvbVQ/0.jpg)](https://www.youtube.com/watch?v=36hbYPvvbVQ&t=1s) 
 
