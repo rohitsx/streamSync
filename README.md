@@ -9,7 +9,7 @@
 
 ## Introduction 
 
-StreamSync is a tool designed for creators and their audience, offering a more interactive alternative to traditional super chats limited to text messages. With StreamSync, users can send super chats, but with a unique twist: if the creator is interested, they can directly speak with the audience member through our extension. This tool is handy for creators in finance, ed-tech, or consultancy, allowing them to interact more directly with their audience while maintaining the familiar experience of superchats. 
+StreamSync is a tool designed for creators and their audience, offering a more interactive alternative to traditional super chats limited to text messages. With StreamSync, users can send super chats, but with a unique twist: if the creator is interested, they can directly speak with the audience member through our extension. 
 
 ## Chrome Extension
 
