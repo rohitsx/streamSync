@@ -3,40 +3,23 @@
 
 #### StreamSync integrates voice with super chats for a more interactive streaming experience.
 
-Live Demo: [https://stream-sync.devrohit.tech/](https://stream-sync.devrohit.tech/)  
-New Ui (incomplete): [https://stream-sync-ui-sample.vercel.app](https://stream-sync-ui-sample.vercel.app/)
-
-
-## Table of Contents
-- [Introduction](#introduction)
-- [Features](#features)
-- [Installation](#installation)
-- [Development](#development)
-- [Testing as a Browser Extension](#testing-as-a-browser-extension)
-- [License](#license)
+🔴 **[Live Demo](http://streamSync.fun/)** - Or checkout demo video below
+[![SquadX Demo](https://img.youtube.com/vi/36hbYPvvbVQ&t=1s/0.jpg)](https://www.youtube.com/watch?v=36hbYPvvbVQ&t=1s)
 
 ## Introduction
 
 StreamSync is a tool designed for creators and their audience, offering a more interactive alternative to traditional super chats limited to text messages. With StreamSync, users can send super chats, but with a unique twist: if the creator is interested, they can directly speak with the audience member through our extension.
 
-Currently, we support Solana (with plans to integrate more currencies). Users can send Solana to creators, and similar to traditional super chats, messages from those who pay are prioritized—those who contribute more will have their messages featured higher. However, the payment will only be debited from the user’s account once they’ve had a conversation with the creator.
-
 This tool is handy for creators in finance, ed-tech, or consultancy, allowing them to interact more directly with their audience while maintaining the familiar experience of superchats.
 
-## Features
 
-- **Personal Wallet**: Create your wallet to receive Solana from your audience.
-- **Priority Interactions**: Prioritize interactions with top supporters.
-- **Seamless Integration**: Integrate StreamSync effortlessly into your existing streaming setup.
-
-## Installation
+## Development
 
 ### Prerequisites
 
 Ensure you have the following installed:
 - Node.js
-- npm
-- Git
+- Docker and Docker Compose
 
 ### Steps to Install
 
@@ -46,41 +29,13 @@ Ensure you have the following installed:
    cd streamSync
    ```
 
-2. **Install Client Dependencies:**
-   ```bash
-   cd client
-   npm install
-   ```
-
-3. **Configure Client Environment:**
+2. **Configure Client/Sever Environment:**
    Update the `.env` file with your environment variables.
 
-4. **Install Server Dependencies:**
+3. **Run Docker-Compose:**
    ```bash
-   cd ../server
-   npm install
+   Docker compose up -d
    ```
-
-5. **Configure Server Environment:**
-   Update the `.env` file with your environment variables.
-
-## Development
-
-To start developing both the client and server, use the following commands:
-
-**Start the Client:**
-```bash
-cd client
-npm run dev
-```
-
-**Start the Server:**
-```bash
-cd ../server
-npm run dev
-```
-
-This will start both the client and server in development mode with live reloading.
 
 ## Testing as a Browser Extension
 
