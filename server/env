@@ -1,0 +1,13 @@
+PORT=8000
+WEBSOCKET_URL=http://localhost:5173/
+JWT_SECRET=
+MONGO_URL=mongodb://myuser:dummyPass@mongodb:27017/streamSync?authSource=admin
+
+GOOGLE_CLIENT_ID=
+GOOGLE_REDIRECT_URI=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_API_KEY=
+
+
+REDIS_URL=redis://:dummyPass@redis:6379
+
